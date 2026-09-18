@@ -15,7 +15,7 @@ o C gerado.
    `=` e `==` e por que `LOGOUTx` continua sendo um identificador.
 3. Exibir as produções de expressão, termo e fator no relatório. Comparar as ASTs
    de `2 + 3 * 4` e `(2 + 3) * 4` usando a opção `--ast`.
-4. Transpilar `testes/02_valido_completo.starwars`, mostrar o C e executá-lo com a
+4. Transpilar `examples/valid/02_complete.starwars`, mostrar o C e executá-lo com a
    entrada fornecida. Explicar por que são usados `%d`, `%f`, `%g` e `%s`.
 5. Executar novamente com `0` repetições e nível `1` para demonstrar o ramo alternativo.
 6. Rodar os arquivos de erro léxico, sintático e semântico separadamente. Mostrar
