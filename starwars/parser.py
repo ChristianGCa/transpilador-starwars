@@ -40,7 +40,11 @@ class Parser:
 
     def found(self) -> str:
         token = self.current()
-        return TokenKind.EOF.value if token.kind is TokenKind.EOF else f"'{token.lexeme}'"
+        if token.kind is TokenKind.EOF:
+            return TokenKind.EOF.value
+        if token.kind is TokenKind.STRING:
+            return token.lexeme
+        return f"'{token.lexeme}'"
 
     def expect(self, kind: TokenKind) -> Token:
         if not self.check(kind):

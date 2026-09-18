@@ -39,6 +39,7 @@ class ParserTest(unittest.TestCase):
             program("Hello There (1"): "esperado ')', encontrado 'LOGOUT'",
             "INICIA_SISTEMA\nx = 1;": "esperado 'LOGOUT', encontrado fim do arquivo",
             program("x: Você era o escolhido = ;"): "esperado identificador, número ou '(', encontrado ';'",
+            program('Hello There (1 "b");'): "esperado ')', encontrado \"b\"",
         }
         for source, message in cases.items():
             with self.subTest(source=source):
