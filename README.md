@@ -14,19 +14,18 @@ condicionais, repetição e entrada/saída. O transpilador percorre as etapas:
 ## Executar um programa
 
 ```bash
-python3 transpilador_hacker.py testes/02_valido_completo.starwars -o gerados/02_valido_completo.c
-gcc -std=c99 -Wall -Wextra gerados/02_valido_completo.c -o gerados/completo.bin
-./gerados/completo.bin < testes/02_valido_completo.entrada.txt
+python3 -m starwars examples/valid/02_complete.starwars -o examples/generated/02_complete.c
+gcc -std=c99 -Wall -Wextra examples/generated/02_complete.c -o examples/generated/complete.bin
+./examples/generated/complete.bin < examples/valid/02_complete.input.txt
 ```
 
 A entrada de demonstração contém `3` e `1.5`. A saída esperada está em
-[`testes/02_valido_completo.esperado.txt`](testes/02_valido_completo.esperado.txt).
-Para digitar os valores interativamente, execute `./gerados/completo.bin` sem o redirecionamento.
+[`examples/valid/02_complete.expected.txt`](examples/valid/02_complete.expected.txt).
+Para digitar os valores interativamente, execute `./examples/generated/complete.bin` sem o redirecionamento.
 
 O transpilador gera C; a execução do programa é uma etapa posterior, feita com GCC.
 Sem `-o`, o código C é impresso na saída padrão. Sem o argumento do arquivo,
-o transpilador procura exatamente um `.starwars` na pasta atual, preservando o uso
-original de `python3 transpilador_hacker.py` com `teste.starwars`.
+o transpilador procura exatamente um `.starwars` na pasta atual.
 Se houver zero ou vários arquivos, é necessário informar o caminho explicitamente.
 A pasta de saída deve existir. Erros retornam código de saída 1 e não geram nem
 sobrescrevem o arquivo C solicitado; um arquivo antigo, se existir, permanece antigo.
@@ -66,51 +65,55 @@ e a gramática estão no [`RELATORIO.md`](RELATORIO.md).
 ## Testar
 
 ```bash
-python3 -B -m unittest discover -s testes -v
+python3 -B -m unittest discover -s tests -v
 ```
 
-A suíte testa o lexer, a AST, erros semânticos, escopos, entrada/saída, argumentos
-da interface e a compilação/execução real dos programas C em uma pasta temporária.
-Ela também confere que os arquivos em `gerados/` correspondem às fontes atuais.
+A suíte tem um arquivo por fase do transpilador (`tests/test_lexer.py`,
+`tests/test_parser.py`, `tests/test_semantic.py`, `tests/test_codegen.py`, ...), além de
+`tests/test_examples.py`, que confere que os arquivos em `examples/generated/`
+correspondem às fontes atuais e compila/executa os programas C em uma pasta temporária,
+e `tests/test_cli.py`, para os argumentos da interface.
 
 | Arquivo | Objetivo |
 | --- | --- |
-| `testes/01_valido_basico.starwars` | Declaração, atribuição e saída |
-| `testes/02_valido_completo.starwars` | Dois tipos, entrada, saída, if/else, while, precedência e parênteses |
-| `testes/03_erro_lexico.starwars` | Caractere inválido |
-| `testes/04_erro_sintatico.starwars` | Expressão ausente na declaração |
-| `testes/05_erro_semantico.starwars` | Variável não declarada |
-| `testes/06_erro_redeclaracao.starwars` | Declaração duplicada no mesmo escopo |
-| `testes/07_erro_tipo.starwars` | Real atribuído a inteiro na declaração |
-| `testes/08_erro_escopo.starwars` | Uso de variável fora do bloco |
+| `examples/valid/01_basic.starwars` | Declaração, atribuição e saída |
+| `examples/valid/02_complete.starwars` | Dois tipos, entrada, saída, if/else, while, precedência e parênteses |
+| `examples/invalid/03_lexical_error.starwars` | Caractere inválido |
+| `examples/invalid/04_syntax_error.starwars` | Expressão ausente na declaração |
+| `examples/invalid/05_semantic_error.starwars` | Variável não declarada |
+| `examples/invalid/06_redeclaration_error.starwars` | Declaração duplicada no mesmo escopo |
+| `examples/invalid/07_type_error.starwars` | Real atribuído a inteiro na declaração |
+| `examples/invalid/08_scope_error.starwars` | Uso de variável fora do bloco |
 
 Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
 
 ```bash
-python3 transpilador_hacker.py testes/03_erro_lexico.starwars
-python3 transpilador_hacker.py testes/04_erro_sintatico.starwars
-python3 transpilador_hacker.py testes/05_erro_semantico.starwars
+python3 -m starwars examples/invalid/03_lexical_error.starwars
+python3 -m starwars examples/invalid/04_syntax_error.starwars
+python3 -m starwars examples/invalid/05_semantic_error.starwars
 ```
 
 ## Inspecionar as etapas
 
 ```bash
-python3 transpilador_hacker.py testes/01_valido_basico.starwars --tokens --ast -o gerados/01_valido_basico.c
+python3 -m starwars examples/valid/01_basic.starwars --tokens --ast -o examples/generated/01_basic.c
 ```
 
-`--tokens` mostra categoria, lexema e linha. `--ast` mostra a árvore em JSON,
-anotada pela análise semântica com tipos e nomes de destino. Essas informações vão
-para a saída de diagnóstico (`stderr`), separadas do código C.
+`--tokens` mostra categoria, lexema, linha e coluna, e é impresso mesmo quando a análise
+sintática falha. `--ast` mostra a árvore em JSON, anotada pela análise semântica com
+tipos e nomes de destino. Essas informações vão para a saída de diagnóstico (`stderr`),
+separadas do código C.
 
 ## Organização
 
-- `transpilador_hacker.py`: implementação, mantido o nome original do arquivo.
+- `starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`, `semantic`,
+  `codegen`, `cli`, entre outros).
 - `RELATORIO.md`: especificação formal e explicação da implementação.
-- `testes/`: fontes válidas/inválidas, entrada, saídas esperadas e suíte automatizada.
-- `gerados/`: C dos dois exemplos obrigatórios e do exemplo original.
-- `teste.starwars`: exemplo original preservado.
-- `ROTEIRO_APRESENTACAO.md`: sequência de demonstração e tópicos para a defesa técnica.
-- O arquivo com `Trabalho_Pratico_1_Linguagem_Tematica_v6` no nome é o enunciado.
+- `tests/`: suíte automatizada, um arquivo por módulo/fase.
+- `examples/`: `valid/` e `invalid/` com fontes de exemplo, `generated/` com o C gerado
+  e `demo.starwars` com o exemplo de demonstração.
+- `docs/presentation.md`: sequência de demonstração e tópicos para a defesa técnica.
+- `docs/assignment.md`: enunciado do trabalho.
 
 ## Autoria e apresentação
 
