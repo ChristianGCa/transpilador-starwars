@@ -45,7 +45,8 @@ class Parser:
         return self.advance()
 
     def error(self, message: str) -> CompilerError:
-        return CompilerError(ErrorKind.SYNTAX, message, self.current().line)
+        token = self.current()
+        return CompilerError(ErrorKind.SYNTAX, message, token.line, token.column)
 
     def parse_program(self) -> Program:
         self.expect(TokenKind.BEGIN)

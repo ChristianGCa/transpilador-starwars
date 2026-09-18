@@ -8,8 +8,9 @@ class ErrorKind(Enum):
 
 
 class CompilerError(Exception):
-    def __init__(self, kind: ErrorKind, message: str, line: int):
-        super().__init__(f"{kind.value} (linha {line}): {message}")
+    def __init__(self, kind: ErrorKind, message: str, line: int, column: int):
+        super().__init__(f"{kind.value} (linha {line}, coluna {column}): {message}")
         self.kind = kind
         self.message = message
         self.line = line
+        self.column = column

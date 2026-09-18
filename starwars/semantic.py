@@ -123,4 +123,4 @@ class SemanticAnalyzer:
 
     @staticmethod
     def error(node: Positioned, message: str) -> CompilerError:
-        return CompilerError(ErrorKind.SEMANTIC, message, node.line)
+        return CompilerError(ErrorKind.SEMANTIC, message, node.line, node.column)

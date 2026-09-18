@@ -27,7 +27,7 @@ class CliTest(unittest.TestCase):
     def test_writes_c_and_prints_tokens_and_ast(self):
         result = run_cli(DEMO, "-o", self.output, "--tokens", "--ast")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("[BEGIN:INICIA_SISTEMA]", result.stderr)
+        self.assertIn("linha 1, coluna 1: [BEGIN:INICIA_SISTEMA]", result.stderr)
         self.assertIn('"node": "Program"', result.stderr)
         self.assertEqual(read(self.output), read(DEMO_C))
 

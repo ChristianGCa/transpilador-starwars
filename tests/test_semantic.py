@@ -64,9 +64,9 @@ class SemanticTest(unittest.TestCase):
         self.assertEqual(declaration.c_name, "sw_v0")
         self.assertEqual((expression.type_name, expression.left.c_name), ("float", "sw_v0"))
 
-    def test_error_line(self):
-        error = self.assert_semantic_error("Hello There (1);\nx = 2;", "nao declarada")
-        self.assertEqual(error.line, 3)
+    def test_error_position(self):
+        error = self.assert_semantic_error("Hello There (1);\n  x = 2;", "nao declarada")
+        self.assertEqual((error.line, error.column), (3, 3))
 
 
 if __name__ == "__main__":

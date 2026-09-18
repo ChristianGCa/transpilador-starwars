@@ -43,7 +43,7 @@ def run(args: argparse.Namespace) -> None:
     tokens = tokenize(source.read_text(encoding="utf-8"))
     if args.tokens:
         for token in tokens:
-            print(f"linha {token.line}: {token!r}", file=sys.stderr)
+            print(f"linha {token.line}, coluna {token.column}: {token!r}", file=sys.stderr)
     program = build_program(tokens)
     if args.ast:
         print(json.dumps(to_dict(program), ensure_ascii=False, indent=2), file=sys.stderr)

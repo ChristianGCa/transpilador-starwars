@@ -22,7 +22,8 @@ class LexerTest(unittest.TestCase):
         self.assertEqual(kinds("INICIA_SISTEMA\r\n# comentario\rLOGOUT"), kinds("INICIA_SISTEMA\nLOGOUT"))
         with self.assertRaises(CompilerError) as caught:
             tokenize("INICIA_SISTEMA\r\n# comentario\r@")
-        self.assertEqual((caught.exception.kind, caught.exception.line), (ErrorKind.LEXICAL, 3))
+        self.assertEqual((caught.exception.kind, caught.exception.line, caught.exception.column),
+                         (ErrorKind.LEXICAL, 3, 1))
 
     def test_invalid_strings(self):
         for text in ('"sem fim', '"linha\nquebrada"', r'"escape\q"'):
@@ -30,6 +31,11 @@ class LexerTest(unittest.TestCase):
                 with self.assertRaises(CompilerError) as caught:
                     tokenize(text)
                 self.assertEqual(caught.exception.kind, ErrorKind.LEXICAL)
+
+    def test_lexical_error_column(self):
+        with self.assertRaises(CompilerError) as caught:
+            tokenize("x = @")
+        self.assertEqual((caught.exception.line, caught.exception.column), (1, 5))
 
     def test_lines_and_columns(self):
         tokens = tokenize("x = 1;\r\n  ação: y")

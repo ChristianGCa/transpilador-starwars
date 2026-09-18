@@ -51,7 +51,7 @@ def tokenize(source: str) -> List[Token]:
             continue
         match = SIMPLE_TOKEN.match(source, pos)
         if match is None:
-            raise CompilerError(ErrorKind.LEXICAL, f"caractere invalido '{source[pos]}'", line)
+            raise CompilerError(ErrorKind.LEXICAL, f"caractere invalido '{source[pos]}'", line, column)
         name, pos = match.lastgroup, match.end()
         if name == "NEWLINE":
             line, line_start = line + 1, pos
