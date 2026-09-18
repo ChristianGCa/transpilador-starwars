@@ -64,6 +64,12 @@ class CliTest(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("deve ser diferente", result.stderr)
 
+    def test_prints_tokens_before_syntax_error(self):
+        result = run_cli(EXAMPLES / "invalid" / "04_syntax_error.starwars", "--tokens")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("[BEGIN:INICIA_SISTEMA]", result.stderr)
+        self.assertIn("ERRO SINTATICO", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()

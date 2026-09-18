@@ -8,8 +8,9 @@ from typing import List, Optional
 
 from .codegen import generate_c
 from .errors import CompilerError
+from .lexer import tokenize
 from .nodes import to_dict
-from .pipeline import analyze
+from .pipeline import build_program
 
 
 class CliError(Exception):
@@ -39,13 +40,14 @@ def run(args: argparse.Namespace) -> None:
     source = find_source(args.source)
     if args.output is not None and args.output.resolve() == source.resolve():
         raise CliError("O arquivo de saida deve ser diferente do arquivo fonte.")
-    tokens, program = analyze(source.read_text(encoding="utf-8"))
-    code = generate_c(program)
+    tokens = tokenize(source.read_text(encoding="utf-8"))
     if args.tokens:
         for token in tokens:
             print(f"linha {token.line}: {token!r}", file=sys.stderr)
+    program = build_program(tokens)
     if args.ast:
         print(json.dumps(to_dict(program), ensure_ascii=False, indent=2), file=sys.stderr)
+    code = generate_c(program)
     if args.output is None:
         print(code, end="")
     else:
