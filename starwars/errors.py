@@ -2,9 +2,9 @@ from enum import Enum
 
 
 class ErrorKind(Enum):
-    LEXICAL = "ERRO LEXICO"
-    SYNTAX = "ERRO SINTATICO"
-    SEMANTIC = "ERRO SEMANTICO"
+    LEXICAL = "ERRO LÉXICO"
+    SYNTAX = "ERRO SINTÁTICO"
+    SEMANTIC = "ERRO SEMÂNTICO"
 
 
 class CompilerError(Exception):

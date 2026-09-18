@@ -20,7 +20,7 @@ class CliError(Exception):
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="starwars", description="Transpila a linguagem Star Wars para C.")
     parser.add_argument("source", nargs="?", type=Path, metavar="arquivo", help="arquivo .starwars")
-    parser.add_argument("-o", "--saida", dest="output", type=Path, help="salva o codigo C neste caminho")
+    parser.add_argument("-o", "--saida", dest="output", type=Path, help="salva o código C neste caminho")
     parser.add_argument("--tokens", action="store_true", help="mostra os tokens no stderr")
     parser.add_argument("--ast", action="store_true", help="mostra a AST no stderr")
     return parser
@@ -39,7 +39,7 @@ def find_source(source: Optional[Path]) -> Path:
 def run(args: argparse.Namespace) -> None:
     source = find_source(args.source)
     if args.output is not None and args.output.resolve() == source.resolve():
-        raise CliError("O arquivo de saida deve ser diferente do arquivo fonte.")
+        raise CliError("O arquivo de saída deve ser diferente do arquivo fonte.")
     tokens = tokenize(source.read_text(encoding="utf-8"))
     if args.tokens:
         for token in tokens:
@@ -52,7 +52,7 @@ def run(args: argparse.Namespace) -> None:
         print(code, end="")
     else:
         args.output.write_text(code, encoding="utf-8")
-        print(f"Codigo C salvo em {args.output}", file=sys.stderr)
+        print(f"Código C salvo em {args.output}", file=sys.stderr)
 
 
 def main(argv: Optional[List[str]] = None) -> int:

@@ -48,7 +48,7 @@ class SemanticAnalyzer:
 
     def check_declaration(self, node: Declaration) -> None:
         if self.symbols.declared_here(node.name):
-            raise self.error(node, f"variavel '{node.name}' ja declarada neste escopo")
+            raise self.error(node, f"variável '{node.name}' já declarada neste escopo")
         # O nome só fica visível depois do inicializador: `x: int = x;` é erro.
         if node.init is not None:
             self.check_assignable(node.type_name, node.init, node.name, node)
@@ -86,12 +86,12 @@ class SemanticAnalyzer:
         value_type = self.type_of(value)
         if target_type == INT and value_type == FLOAT:
             raise self.error(node, "incompatibilidade de tipos: "
-                                   f"nao e possivel atribuir float a variavel int '{name}'")
+                                   f"não é possível atribuir float à variável int '{name}'")
 
     def resolve(self, name: str, node: Positioned) -> Symbol:
         symbol = self.symbols.lookup(name)
         if symbol is None:
-            raise self.error(node, f"variavel '{name}' nao declarada neste escopo")
+            raise self.error(node, f"variável '{name}' não declarada neste escopo")
         return symbol
 
     def type_of(self, node: Expression) -> str:

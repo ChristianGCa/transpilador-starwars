@@ -40,7 +40,7 @@ class CliTest(unittest.TestCase):
         self.output.write_text("anterior", encoding="utf-8")
         result = run_cli(EXAMPLES / "invalid" / "05_semantic_error.starwars", "-o", self.output)
         self.assertEqual(result.returncode, 1)
-        self.assertIn("ERRO SEMANTICO", result.stderr)
+        self.assertIn("ERRO SEMÂNTICO", result.stderr)
         self.assertEqual(read(self.output), "anterior")
 
     def test_error_does_not_create_output(self):
@@ -68,7 +68,7 @@ class CliTest(unittest.TestCase):
         result = run_cli(EXAMPLES / "invalid" / "04_syntax_error.starwars", "--tokens")
         self.assertEqual(result.returncode, 1)
         self.assertIn("[BEGIN:INICIA_SISTEMA]", result.stderr)
-        self.assertIn("ERRO SINTATICO", result.stderr)
+        self.assertIn("ERRO SINTÁTICO", result.stderr)
 
 
 if __name__ == "__main__":

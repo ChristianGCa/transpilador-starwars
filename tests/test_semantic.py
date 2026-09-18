@@ -29,10 +29,10 @@ class SemanticTest(unittest.TestCase):
                      "Hello There (x);", "Faça, ou não faça (x == 1) LOGOUT",
                      "Eu sinto uma perturbação na força (x > 0) LOGOUT"):
             with self.subTest(body=body):
-                self.assert_semantic_error(body, "nao declarada")
+                self.assert_semantic_error(body, "não declarada")
 
     def test_redeclaration_in_same_scope(self):
-        self.assert_semantic_error(f"x: {INT_DECL}; x: {INT_DECL};", "ja declarada")
+        self.assert_semantic_error(f"x: {INT_DECL}; x: {INT_DECL};", "já declarada")
 
     def test_float_is_not_assignable_to_int(self):
         for body in (f"x: {INT_DECL} = 1.5;", f"{INT_DECL} x Eu alterei o acordo 1.5;",
@@ -48,9 +48,9 @@ class SemanticTest(unittest.TestCase):
                       f"Faça, ou não faça (1 == 0) Tentativa não há x: {INT_DECL}; LOGOUT",
                       f"Eu sinto uma perturbação na força (1 == 0) x: {INT_DECL}; LOGOUT"):
             with self.subTest(block=block):
-                self.assert_semantic_error(block + " Hello There (x);", "nao declarada")
+                self.assert_semantic_error(block + " Hello There (x);", "não declarada")
         self.assert_semantic_error(f"Faça, ou não faça (1 == 1) x: {INT_DECL}; "
-                                   "Tentativa não há Hello There (x); LOGOUT", "nao declarada")
+                                   "Tentativa não há Hello There (x); LOGOUT", "não declarada")
 
     def test_literal_limits(self):
         for literal in ("2147483648", "9" * 5000, "9" * 40 + ".0"):
@@ -65,7 +65,7 @@ class SemanticTest(unittest.TestCase):
         self.assertEqual((expression.type_name, expression.left.c_name), ("float", "sw_v0"))
 
     def test_error_position(self):
-        error = self.assert_semantic_error("Hello There (1);\n  x = 2;", "nao declarada")
+        error = self.assert_semantic_error("Hello There (1);\n  x = 2;", "não declarada")
         self.assertEqual((error.line, error.column), (3, 3))
 
 

@@ -93,7 +93,7 @@ class Parser:
     def parse_statement(self) -> Statement:
         parse = self.statement_parsers.get(self.current().kind)
         if parse is None:
-            raise self.error(f"comando invalido comecando com '{self.current().lexeme}'")
+            raise self.error(f"comando inválido começando com '{self.current().lexeme}'")
         return parse()
 
     def parse_assignment(self) -> Assignment:

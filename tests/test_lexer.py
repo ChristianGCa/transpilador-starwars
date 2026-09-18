@@ -37,6 +37,11 @@ class LexerTest(unittest.TestCase):
             tokenize("x = @")
         self.assertEqual((caught.exception.line, caught.exception.column), (1, 5))
 
+    def test_lexical_error_message(self):
+        with self.assertRaises(CompilerError) as caught:
+            tokenize("@")
+        self.assertEqual(str(caught.exception), "ERRO LÉXICO (linha 1, coluna 1): caractere inválido '@'")
+
     def test_lines_and_columns(self):
         tokens = tokenize("x = 1;\r\n  ação: y")
         self.assertEqual([(t.lexeme, t.line, t.column) for t in tokens], [
