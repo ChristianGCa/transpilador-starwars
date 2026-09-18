@@ -38,10 +38,13 @@ class Parser:
         self.pos += 1
         return token
 
+    def found(self) -> str:
+        token = self.current()
+        return TokenKind.EOF.value if token.kind is TokenKind.EOF else f"'{token.lexeme}'"
+
     def expect(self, kind: TokenKind) -> Token:
         if not self.check(kind):
-            token = self.current()
-            raise self.error(f"esperado {kind.name}, encontrado {token.kind.name} ('{token.lexeme}')")
+            raise self.error(f"esperado {kind.value}, encontrado {self.found()}")
         return self.advance()
 
     def error(self, message: str) -> CompilerError:
@@ -75,7 +78,7 @@ class Parser:
             name = self.advance()
             self.expect(TokenKind.COLON)
             if not self.check(*TYPE_KEYWORDS):
-                raise self.error(f"esperado tipo inteiro ou real, encontrado '{self.current().lexeme}'")
+                raise self.error(f"esperado tipo inteiro ou real, encontrado {self.found()}")
             type_token = self.advance()
         else:
             type_token = self.advance()
@@ -151,7 +154,7 @@ class Parser:
         self.expect(TokenKind.LPAREN)
         left = self.parse_expression()
         if not self.check(*COMPARISON_OPERATORS):
-            raise self.error(f"esperado operador relacional, encontrado '{self.current().lexeme}'")
+            raise self.error(f"esperado operador relacional, encontrado {self.found()}")
         operator = self.advance()
         right = self.parse_expression()
         self.expect(TokenKind.RPAREN)
@@ -185,4 +188,4 @@ class Parser:
             node = self.parse_expression()
             self.expect(TokenKind.RPAREN)
             return node
-        raise self.error(f"esperado identificador, numero ou '(', encontrado '{token.lexeme}'")
+        raise self.error(f"esperado identificador, número ou '(', encontrado {self.found()}")

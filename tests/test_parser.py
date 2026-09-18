@@ -33,6 +33,19 @@ class ParserTest(unittest.TestCase):
         read = parse("x: Você era o escolhido;\n  Ajude-me Obi-Wan Kenobi (x);").statements[1]
         self.assertEqual((read.line, read.column), (3, 3))
 
+    def test_readable_error_messages(self):
+        cases = {
+            program("x = 1"): "esperado ';', encontrado 'LOGOUT'",
+            program("Hello There (1"): "esperado ')', encontrado 'LOGOUT'",
+            "INICIA_SISTEMA\nx = 1;": "esperado 'LOGOUT', encontrado fim do arquivo",
+            program("x: Você era o escolhido = ;"): "esperado identificador, número ou '(', encontrado ';'",
+        }
+        for source, message in cases.items():
+            with self.subTest(source=source):
+                with self.assertRaises(CompilerError) as caught:
+                    Parser(tokenize(source)).parse_program()
+                self.assertEqual(caught.exception.message, message)
+
     def test_invalid_syntax(self):
         for body in ('Hello There ();', 'Hello There (1,);', 'x: = 1;',
                      'Ajude-me Obi-Wan Kenobi ("x" x);', 'Faça, ou não faça (1) LOGOUT',
