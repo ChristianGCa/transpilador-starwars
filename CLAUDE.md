@@ -7,23 +7,24 @@ fonte → lexer → tokens → parser → AST → análise semântica → códig
 ## Comandos
 
 ```bash
-python3 -B -m unittest discover -s testes -v            # testes (exige GCC)
-python3 transpilador_hacker.py arquivo.starwars -o saida.c
-python3 transpilador_hacker.py arquivo.starwars --tokens --ast
+python3 -B -m unittest discover -s tests -v              # testes (exige GCC)
+python3 -m starwars arquivo.starwars -o saida.c
+python3 -m starwars arquivo.starwars --tokens --ast
 gcc -std=c99 -Wall -Wextra saida.c -o saida.bin
 ```
 
 - Somente a biblioteca padrão do Python (3.8+). Não adicione dependências externas.
-- Os arquivos em `gerados/` são verificados pelos testes: ao mudar a geração de C,
-  regenere-os a partir das fontes em `testes/`.
+- Os arquivos em `examples/generated/` são verificados pelos testes: ao mudar a geração
+  de C, regenere-os a partir das fontes em `examples/`.
+- Estrutura: `starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`.
 
 ## Idioma
 
 - Código em inglês: nomes de arquivos, módulos, classes, funções, variáveis e testes.
 - Textos voltados ao usuário em português: mensagens de erro, ajuda da CLI, documentação.
 - Comentários e docstrings, quando existirem, em português.
-- Palavras-chave da linguagem Star Wars e mensagens de erro (`ERRO LEXICO`, `ERRO SINTATICO`,
-  `ERRO SEMANTICO`, `ERRO DE ENTRADA`) fazem parte da especificação: não traduza.
+- Palavras-chave da linguagem Star Wars e mensagens de erro (`ERRO LÉXICO`, `ERRO SINTÁTICO`,
+  `ERRO SEMÂNTICO`, `ERRO DE ENTRADA`) fazem parte da especificação: não traduza.
 
 ## Estilo de código
 
