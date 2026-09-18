@@ -18,9 +18,10 @@ class CliError(Exception):
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="starwars", description="Transpila a linguagem Star Wars para C.")
+    parser = argparse.ArgumentParser(prog="python3 -m starwars", description="Transpila a linguagem Star Wars para C.")
     parser.add_argument("source", nargs="?", type=Path, metavar="arquivo", help="arquivo .starwars")
-    parser.add_argument("-o", "--saida", dest="output", type=Path, help="salva o código C neste caminho")
+    parser.add_argument("-o", "--saida", dest="output", type=Path, metavar="SAIDA",
+                        help="salva o código C neste caminho")
     parser.add_argument("--tokens", action="store_true", help="mostra os tokens no stderr")
     parser.add_argument("--ast", action="store_true", help="mostra a AST no stderr")
     return parser

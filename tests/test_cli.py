@@ -70,6 +70,12 @@ class CliTest(unittest.TestCase):
         self.assertIn("[BEGIN:INICIA_SISTEMA]", result.stderr)
         self.assertIn("ERRO SINTÁTICO", result.stderr)
 
+    def test_help_shows_portuguese_metavar_and_real_command(self):
+        result = run_cli("--help")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("-o SAIDA", result.stdout)
+        self.assertIn("usage: python3 -m starwars", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
