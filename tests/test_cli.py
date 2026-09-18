@@ -76,6 +76,12 @@ class CliTest(unittest.TestCase):
         self.assertIn("-o SAIDA", result.stdout)
         self.assertIn("usage: python3 -m starwars", result.stdout)
 
+    def test_tokens_with_lexical_error(self):
+        result = run_cli(EXAMPLES / "invalid" / "03_lexical_error.starwars", "--tokens")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("ERRO LÉXICO", result.stderr)
+        self.assertNotIn("[BEGIN:", result.stderr)
+
 
 if __name__ == "__main__":
     unittest.main()
