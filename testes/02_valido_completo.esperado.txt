@@ -1,0 +1,7 @@
+Repeticoes: Nivel inicial: 3
+2
+1
+Resultado: 14 / 20
+acesso liberado
+Codigo: 1
+Nivel: 10.5

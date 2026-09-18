@@ -1,0 +1,6 @@
+INICIA_SISTEMA
+# Declaracao com tipo depois do nome e atribuicao posterior.
+energia: Você era o escolhido = 2;
+energia = energia + 3 * 4;
+Hello There ("Energia: ", energia);
+LOGOUT
