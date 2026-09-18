@@ -37,23 +37,23 @@ class TranspiladorTests(unittest.TestCase):
         self.assertEqual(resultado.stdout, esperado)
 
     def test_exemplo_original(self):
-        r = self.executar_c((ROOT / "teste.starwars").read_text(encoding="utf-8"))
+        r = self.executar_c((ROOT / "examples" / "demo.starwars").read_text(encoding="utf-8"))
         self.assertEqual(r.returncode, 0)
         self.assertEqual(r.stdout, "3\n2\n1\nacesso liberado")
 
     def test_arquivos_validos_e_c_entregue(self):
-        for nome in ("01_valido_basico", "02_valido_completo"):
+        for nome in ("01_basic", "02_complete"):
             with self.subTest(nome=nome):
-                fonte = (ROOT / "testes" / f"{nome}.starwars").read_text(encoding="utf-8")
-                entrada = ROOT / "testes" / f"{nome}.entrada.txt"
+                fonte = (ROOT / "examples" / "valid" / f"{nome}.starwars").read_text(encoding="utf-8")
+                entrada = ROOT / "examples" / "valid" / f"{nome}.input.txt"
                 r = self.executar_c(fonte, entrada.read_text() if entrada.exists() else "")
                 self.assertEqual(r.returncode, 0, r.stderr)
-                esperado = (ROOT / "testes" / f"{nome}.esperado.txt").read_text()
+                esperado = (ROOT / "examples" / "valid" / f"{nome}.expected.txt").read_text()
                 self.assertEqual(r.stdout, esperado)
-                self.assertEqual((ROOT / "gerados" / f"{nome}.c").read_text(), sw.transpilar(fonte))
+                self.assertEqual((ROOT / "examples" / "generated" / f"{nome}.c").read_text(), sw.transpilar(fonte))
 
     def test_arquivos_invalidos(self):
-        for arquivo in sorted((ROOT / "testes").glob("*erro*.starwars")):
+        for arquivo in sorted((ROOT / "examples" / "invalid").glob("*.starwars")):
             with self.subTest(arquivo=arquivo.name):
                 categoria = "LEXICO" if arquivo.name.startswith("03") else (
                     "SINTATICO" if arquivo.name.startswith("04") else "SEMANTICO")
@@ -61,7 +61,7 @@ class TranspiladorTests(unittest.TestCase):
                     sw.transpilar(arquivo.read_text(encoding="utf-8"))
 
     def test_programa_completo_ramo_alternativo(self):
-        fonte = (ROOT / 'testes/02_valido_completo.starwars').read_text(encoding='utf-8')
+        fonte = (ROOT / 'examples/valid/02_complete.starwars').read_text(encoding='utf-8')
         r = self.executar_c(fonte, '0\n1\n')
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(r.stdout, 'Repeticoes: Nivel inicial: Resultado: 14 / 20\n'
@@ -193,19 +193,19 @@ class TranspiladorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as pasta:
             saida = pathlib.Path(pasta) / 'saida.c'
             cmd = [sys.executable, '-B', str(ROOT / 'transpilador_hacker.py')]
-            r = subprocess.run(cmd + [str(ROOT / 'teste.starwars'), '-o', str(saida), '--ast', '--tokens'],
+            r = subprocess.run(cmd + [str(ROOT / 'examples/demo.starwars'), '-o', str(saida), '--ast', '--tokens'],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             self.assertIn('Programa', r.stderr)
             self.assertIn('[INICIA:', r.stderr)
             anterior = saida.read_text()
-            r = subprocess.run(cmd + [str(ROOT / 'testes/05_erro_semantico.starwars'), '-o', str(saida)],
+            r = subprocess.run(cmd + [str(ROOT / 'examples/invalid/05_semantic_error.starwars'), '-o', str(saida)],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 1)
             self.assertIn('ERRO SEMANTICO', r.stderr)
             self.assertEqual(saida.read_text(), anterior)
             saida.unlink()
-            r = subprocess.run(cmd + [str(ROOT / 'testes/03_erro_lexico.starwars'), '-o', str(saida)],
+            r = subprocess.run(cmd + [str(ROOT / 'examples/invalid/03_lexical_error.starwars'), '-o', str(saida)],
                                capture_output=True, text=True)
             self.assertEqual(r.returncode, 1)
             self.assertFalse(saida.exists())
