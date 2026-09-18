@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 /gerados/*.bin
+
+# superpowers (specs e planos locais)
+docs/superpowers/
+.superpowers/
