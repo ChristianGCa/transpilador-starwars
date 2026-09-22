@@ -51,7 +51,10 @@ class Token:
 
 KEYWORD_PHRASES: List[Tuple[TokenKind, str]] = sorted([
     (TokenKind.BEGIN, "INICIA_SISTEMA"),
+    (TokenKind.BEGIN, "Há muito tempo, em uma galáxia muito, muito distante"),
     (TokenKind.END, "LOGOUT"),
+    (TokenKind.END, "Chewie, estamos em casa"),
+    (TokenKind.NEQ, "Estes não são os droides que você procura"),
     (TokenKind.INT_TYPE, "Você era o escolhido"),
     (TokenKind.FLOAT_TYPE, "Eu sou C3PO, ciborgue de relações humanas"),
     (TokenKind.ASSIGN, "Eu alterei o acordo"),

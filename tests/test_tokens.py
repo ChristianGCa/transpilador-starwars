@@ -14,8 +14,8 @@ class TokensTest(unittest.TestCase):
         thematic = {kind: symbols[kind] for kind, _ in KEYWORD_PHRASES if kind in symbols}
         self.assertEqual(thematic, {
             TokenKind.PLUS: "+", TokenKind.MINUS: "-", TokenKind.STAR: "*", TokenKind.SLASH: "/",
-            TokenKind.EQ: "==", TokenKind.GT: ">", TokenKind.GE: ">=", TokenKind.LT: "<",
-            TokenKind.LE: "<=",
+            TokenKind.EQ: "==", TokenKind.NEQ: "!=", TokenKind.GT: ">", TokenKind.GE: ">=",
+            TokenKind.LT: "<", TokenKind.LE: "<=",
         })
 
     def test_repr_shows_kind_and_lexeme(self):

@@ -18,6 +18,23 @@ class LexerTest(unittest.TestCase):
         token = tokenize("Que a força esteja com você")[0]
         self.assertEqual((token.kind, token.lexeme), (TokenKind.PLUS, "Que a força esteja com você"))
 
+    def test_thematic_phrases_for_begin_end_and_not_equal(self):
+        phrases = {
+            "Há muito tempo, em uma galáxia muito, muito distante": TokenKind.BEGIN,
+            "Chewie, estamos em casa": TokenKind.END,
+            "Estes não são os droides que você procura": TokenKind.NEQ,
+        }
+        for phrase, kind in phrases.items():
+            with self.subTest(phrase=phrase):
+                token = tokenize(phrase)[0]
+                self.assertEqual((token.kind, token.lexeme), (kind, phrase))
+
+    def test_thematic_program_matches_symbolic_program(self):
+        thematic = ("Há muito tempo, em uma galáxia muito, muito distante\n"
+                    "Faça, ou não faça (1 Estes não são os droides que você procura 2)\n"
+                    "Chewie, estamos em casa\nChewie, estamos em casa")
+        self.assertEqual(kinds(thematic), kinds("INICIA_SISTEMA Faça, ou não faça (1 != 2) LOGOUT LOGOUT"))
+
     def test_comments_and_line_breaks(self):
         self.assertEqual(kinds("INICIA_SISTEMA\r\n# comentario\rLOGOUT"), kinds("INICIA_SISTEMA\nLOGOUT"))
         with self.assertRaises(CompilerError) as caught:
