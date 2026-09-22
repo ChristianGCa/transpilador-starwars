@@ -39,6 +39,9 @@ A declaração prefixada `tipo nome = expressão;`, a saída com um item e as fr
 originais de operadores foram preservadas como formas alternativas. Assim, o arquivo
 original `teste.starwars` continua válido. Os exemplos novos exercitam as extensões.
 Os símbolos aritméticos e relacionais usuais são aliases das frases temáticas.
+Início, fim e diferença também ganharam frases (`Há muito tempo, em uma galáxia muito,
+muito distante`, `Chewie, estamos em casa` e `Estes não são os droides que você procura`),
+de modo que um programa pode ser escrito apenas com frases do tema.
 
 ## 3. Especificação léxica
 
@@ -66,8 +69,8 @@ reservadas são exatamente os apresentados na tabela.
 
 | Categoria | Padrão e exemplo de lexema | Descrição |
 | --- | --- | --- |
-| INICIA | `INICIA_SISTEMA` | Início do programa |
-| LOGOUT | `LOGOUT` | Final do programa ou de um bloco de controle |
+| INICIA | `INICIA_SISTEMA` ou `Há muito tempo, em uma galáxia muito, muito distante` | Início do programa |
+| LOGOUT | `LOGOUT` ou `Chewie, estamos em casa` | Final do programa ou de um bloco de controle |
 | NUM_TYPE | `Você era o escolhido` | Tipo inteiro |
 | REAL_TYPE | `Eu sou C3PO, ciborgue de relações humanas` | Tipo real |
 | ASSIGN | `Eu alterei o acordo` ou `=` | Atribuição/inicialização |
@@ -76,7 +79,7 @@ reservadas são exatamente os apresentados na tabela.
 | STAR | `Eu sou todos os jedi` ou `*` | Multiplicação |
 | SLASH | `Eu sou todos os sith` ou `/` | Divisão |
 | EQ | `Como deve ser` ou `==` | Igualdade |
-| NEQ | `!=` | Diferença |
+| NEQ | `Estes não são os droides que você procura` ou `!=` | Diferença |
 | GT | `I have the high ground` ou `>` | Maior |
 | GE | `A força é forte nele` ou `>=` | Maior ou igual |
 | LT | `Você subestima meu poder` ou `<` | Menor |

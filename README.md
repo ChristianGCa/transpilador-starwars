@@ -55,24 +55,36 @@ sobrescrevem o arquivo C solicitado; um arquivo antigo, se existir, permanece an
 ## Exemplo da linguagem
 
 ```text
-INICIA_SISTEMA
+Há muito tempo, em uma galáxia muito, muito distante
 energia: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Informe a energia: " -> energia);
-energia = energia + 3 * 4;
+energia Eu alterei o acordo energia Que a força esteja com você 3 Eu sou todos os jedi 4;
 Hello There ("Energia final: ", energia);
-LOGOUT
+Chewie, estamos em casa
 ```
 
 - `Você era o escolhido`: inteiro (`int`).
 - `Eu sou C3PO, ciborgue de relações humanas`: real (`float`).
-- `Faça, ou não faça (...) ... Tentativa não há ... LOGOUT`: decisão.
-- `Eu sinto uma perturbação na força (...) ... LOGOUT`: repetição enquanto a condição for verdadeira.
+- `Há muito tempo, em uma galáxia muito, muito distante` ... `Chewie, estamos em casa`:
+  início e fim do programa (ou `INICIA_SISTEMA` ... `LOGOUT`). A frase de fim também fecha blocos.
+- `Faça, ou não faça (...) ... Tentativa não há ... Chewie, estamos em casa`: decisão.
+- `Eu sinto uma perturbação na força (...) ... Chewie, estamos em casa`: repetição enquanto a condição for verdadeira.
 - `Ajude-me Obi-Wan Kenobi (variavel);`: leitura sem mensagem.
 - `Hello There (...)`: saída de um ou vários textos/expressões separados por vírgulas.
 - `#`: comentário até o fim da linha.
 
-Os operadores `+ - * / = == != > >= < <=` são aceitos. As frases temáticas
-originais também continuam válidas, assim como a declaração `tipo nome = valor;`.
+Cada operador tem uma frase temática, usada nos exemplos, e um símbolo equivalente:
+
+| Frase | Símbolo |
+| --- | --- |
+| `Eu alterei o acordo` | `=` |
+| `Que a força esteja com você` / `Acabou anakin` | `+` / `-` |
+| `Eu sou todos os jedi` / `Eu sou todos os sith` | `*` / `/` |
+| `Como deve ser` / `Estes não são os droides que você procura` | `==` / `!=` |
+| `I have the high ground` / `A força é forte nele` | `>` / `>=` |
+| `Você subestima meu poder` / `Não, eu sou seu pai` | `<` / `<=` |
+
+A declaração `tipo nome = valor;` também é aceita.
 `-` representa subtração binária; para escrever um valor negativo em uma expressão,
 use `0 - valor`. A entrada de dados aceita valores negativos.
 
