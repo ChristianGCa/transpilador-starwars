@@ -8,6 +8,8 @@ from starwars.semantic import SemanticAnalyzer
 
 INT_DECL = "Você era o escolhido"
 FLOAT_DECL = "Eu sou C3PO, ciborgue de relações humanas"
+DOUBLE = f"Execute a ordem 66 dobro(x: {INT_DECL}): {INT_DECL} Palpatine retornou x * 2; LOGOUT"
+GREET = 'Execute a ordem 66 saudar() Hello There ("oi"); LOGOUT'
 
 
 def check(body):
@@ -94,6 +96,76 @@ class SemanticTest(unittest.TestCase):
         loop = check("This is the way (i de 1 até 3) Hello There (i); LOGOUT").statements[0]
         self.assertEqual((loop.c_name, loop.limit_c_name, loop.body[0].items[0].c_name),
                          ("sw_v0", "sw_v1", "sw_v0"))
+
+    def test_functions_do_not_see_program_variables(self):
+        self.assert_semantic_error(f"{DOUBLE} Execute a ordem 66 f() Hello There (x); LOGOUT x: {INT_DECL};",
+                                   "variável 'x' não declarada")
+
+    def test_functions_may_call_each_other_in_any_order_and_recurse(self):
+        check(f"Execute a ordem 66 a(n: {INT_DECL}): {INT_DECL} Palpatine retornou b(n); LOGOUT "
+              f"Execute a ordem 66 b(n: {INT_DECL}): {INT_DECL} "
+              f"Faça, ou não faça (n > 0) Palpatine retornou a(n - 1); LOGOUT Palpatine retornou 0; LOGOUT "
+              "Hello There (a(3));")
+
+    def test_call_errors(self):
+        cases = {
+            "Hello There (f(1));": "função 'f' não declarada",
+            f"{DOUBLE} Hello There (dobro());": "a função 'dobro' espera 1 argumento, mas recebeu 0",
+            f"{DOUBLE} Hello There (dobro(1, 2));": "a função 'dobro' espera 1 argumento, mas recebeu 2",
+            f"{DOUBLE} Hello There (dobro(1.5));":
+                "incompatibilidade de tipos: o argumento 1 de 'dobro' deve ser int",
+            f"{GREET} Hello There (saudar());":
+                "a função 'saudar' não retorna valor e não pode ser usada em expressões",
+        }
+        for body, message in cases.items():
+            with self.subTest(body=body):
+                self.assert_semantic_error(body, message)
+
+    def test_valid_calls(self):
+        check(f"{DOUBLE} {GREET} Execute a ordem 66 metade(x: {FLOAT_DECL}): {FLOAT_DECL} "
+              "Palpatine retornou x / 2; LOGOUT saudar(); dobro(1); Hello There (metade(3) + dobro(2));")
+
+    def test_return_errors(self):
+        cases = {
+            "Palpatine retornou 1;": "'Palpatine retornou' só pode ser usado dentro de uma função",
+            "Execute a ordem 66 f() Palpatine retornou 1; LOGOUT": "a função 'f' não retorna valor",
+            f"Execute a ordem 66 f(): {INT_DECL} Palpatine retornou; LOGOUT":
+                "a função 'f' deve retornar um valor do tipo int",
+            f"Execute a ordem 66 f(): {INT_DECL} Palpatine retornou 1.5; LOGOUT":
+                "incompatibilidade de tipos: a função 'f' deve retornar int",
+        }
+        for body, message in cases.items():
+            with self.subTest(body=body):
+                self.assert_semantic_error(body, message)
+
+    def test_typed_function_must_return_on_every_path(self):
+        for body in ("Hello There (1);",
+                     "Faça, ou não faça (1 == 1) Palpatine retornou 1; LOGOUT",
+                     "Eu sinto uma perturbação na força (1 == 1) Palpatine retornou 1; LOGOUT"):
+            with self.subTest(body=body):
+                self.assert_semantic_error(f"Execute a ordem 66 f(): {INT_DECL} {body} LOGOUT",
+                                           "a função 'f' pode terminar sem 'Palpatine retornou'")
+        check(f"Execute a ordem 66 f(): {INT_DECL} Faça, ou não faça (1 == 1) Palpatine retornou 1; "
+              "Tentativa não há Palpatine retornou 2; LOGOUT LOGOUT")
+
+    def test_name_conflicts(self):
+        cases = {
+            f"{DOUBLE} {DOUBLE}": "função 'dobro' já declarada",
+            f"Execute a ordem 66 f(a: {INT_DECL}, a: {INT_DECL}) LOGOUT": "variável 'a' já declarada",
+            f"Execute a ordem 66 f(a: {INT_DECL}) a: {INT_DECL}; LOGOUT": "variável 'a' já declarada",
+            f"{DOUBLE} dobro: {INT_DECL};": "'dobro' já é o nome de uma função",
+            f"{DOUBLE} Execute a ordem 66 f(dobro: {INT_DECL}) LOGOUT": "'dobro' já é o nome de uma função",
+            f"{DOUBLE} This is the way (dobro de 1 até 2) LOGOUT": "'dobro' já é o nome de uma função",
+        }
+        for body, message in cases.items():
+            with self.subTest(body=body):
+                self.assert_semantic_error(body, message)
+
+    def test_function_annotations(self):
+        tree = check(f"{DOUBLE} Hello There (dobro(1));")
+        function, call = tree.functions[0], tree.statements[0].items[0]
+        self.assertEqual((function.c_name, function.params[0].c_name), ("sw_f0", "sw_v0"))
+        self.assertEqual((call.c_name, call.type_name), ("sw_f0", "int"))
 
     def test_error_position(self):
         error = self.assert_semantic_error("Hello There (1);\n  x = 2;", "não declarada")

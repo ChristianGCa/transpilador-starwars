@@ -1,22 +1,25 @@
 from __future__ import annotations
 
 import math
-from typing import List, Union
+from typing import Dict, List, Optional, Union
 
 from .errors import CompilerError, ErrorKind
-from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, For, If,
-                    Number, Print, Program, Read, Statement, StringLiteral, Variable, While)
+from .nodes import (FLOAT, INT, Assignment, BinaryOp, Call, CallStatement, Comparison, Declaration,
+                    Expression, For, Function, If, Number, Parameter, Print, Program, Read, Return,
+                    Statement, StringLiteral, Variable, While)
 from .symbols import Symbol, SymbolTable
 
 INT_MAX = 2147483647
 FLOAT_MAX = 3.4028234663852886e38
 
-Positioned = Union[Statement, Expression]
+Positioned = Union[Statement, Expression, Function, Parameter]
 
 
 class SemanticAnalyzer:
     def __init__(self):
         self.symbols = SymbolTable()
+        self.functions: Dict[str, Function] = {}
+        self.current_function: Optional[Function] = None
         self.statement_checks = {
             Declaration: self.check_declaration,
             Assignment: self.check_assignment,
@@ -25,15 +28,42 @@ class SemanticAnalyzer:
             If: self.check_if,
             While: self.check_while,
             For: self.check_for,
+            CallStatement: self.check_call_statement,
+            Return: self.check_return,
         }
         self.expression_types = {
             Number: self.type_of_number,
             Variable: self.type_of_variable,
             BinaryOp: self.type_of_binary_op,
+            Call: self.type_of_call,
         }
 
     def check(self, program: Program) -> None:
+        for function in program.functions:
+            self.register_function(function)
+        # Funções são verificadas antes do programa principal, cujas variáveis ainda não
+        # existem: assim uma função só enxerga seus parâmetros e variáveis.
+        for function in program.functions:
+            self.check_function(function)
         self.check_block(program.statements)
+
+    def register_function(self, function: Function) -> None:
+        if function.name in self.functions:
+            raise self.error(function, f"função '{function.name}' já declarada")
+        function.c_name = f"sw_f{len(self.functions)}"
+        self.functions[function.name] = function
+
+    def check_function(self, function: Function) -> None:
+        self.current_function = function
+        self.symbols.push()
+        for param in function.params:
+            self.check_new_name(param.name, param)
+            param.c_name = self.symbols.declare(param.name, param.type_name).c_name
+        self.check_block(function.body)
+        self.symbols.pop()
+        self.current_function = None
+        if function.return_type is not None and not always_returns(function.body):
+            raise self.error(function, f"a função '{function.name}' pode terminar sem 'Palpatine retornou'")
 
     def check_block(self, statements: List[Statement]) -> None:
         for statement in statements:
@@ -47,9 +77,14 @@ class SemanticAnalyzer:
         self.check_block(statements)
         self.symbols.pop()
 
+    def check_new_name(self, name: str, node: Positioned) -> None:
+        if self.symbols.declared_here(name):
+            raise self.error(node, f"variável '{name}' já declarada neste escopo")
+        if name in self.functions:
+            raise self.error(node, f"'{name}' já é o nome de uma função")
+
     def check_declaration(self, node: Declaration) -> None:
-        if self.symbols.declared_here(node.name):
-            raise self.error(node, f"variável '{node.name}' já declarada neste escopo")
+        self.check_new_name(node.name, node)
         # O nome só fica visível depois do inicializador: `x: int = x;` é erro.
         if node.init is not None:
             self.check_assignable(node.type_name, node.init, node.name, node)
@@ -84,10 +119,44 @@ class SemanticAnalyzer:
             if self.type_of(limit) != INT:
                 raise self.error(limit, "os limites do laço 'This is the way' devem ser inteiros")
         self.symbols.push()
+        self.check_new_name(node.name, node)
         node.c_name = self.symbols.declare(node.name, INT, read_only=True).c_name
         node.limit_c_name = self.symbols.new_c_name()
         self.check_block(node.body)
         self.symbols.pop()
+
+    def check_call_statement(self, node: CallStatement) -> None:
+        self.check_call(node.call)
+
+    def check_return(self, node: Return) -> None:
+        function = self.current_function
+        if function is None:
+            raise self.error(node, "'Palpatine retornou' só pode ser usado dentro de uma função")
+        if function.return_type is None:
+            if node.value is not None:
+                raise self.error(node, f"a função '{function.name}' não retorna valor")
+            return
+        if node.value is None:
+            raise self.error(node, f"a função '{function.name}' deve retornar um valor do tipo "
+                                   f"{function.return_type}")
+        if function.return_type == INT and self.type_of(node.value) == FLOAT:
+            raise self.error(node, "incompatibilidade de tipos: "
+                                   f"a função '{function.name}' deve retornar int")
+
+    def check_call(self, node: Call) -> Optional[str]:
+        function = self.functions.get(node.name)
+        if function is None:
+            raise self.error(node, f"função '{node.name}' não declarada")
+        expected, received = len(function.params), len(node.args)
+        if expected != received:
+            raise self.error(node, f"a função '{node.name}' espera {count_arguments(expected)}, "
+                                   f"mas recebeu {received}")
+        for position, (arg, param) in enumerate(zip(node.args, function.params), start=1):
+            if self.type_of(arg) == FLOAT and param.type_name == INT:
+                raise self.error(arg, "incompatibilidade de tipos: "
+                                      f"o argumento {position} de '{node.name}' deve ser int")
+        node.c_name = function.c_name
+        return function.return_type
 
     def check_condition(self, condition: Comparison) -> None:
         self.type_of(condition.left)
@@ -138,6 +207,29 @@ class SemanticAnalyzer:
         operand_types = (self.type_of(node.left), self.type_of(node.right))
         return FLOAT if FLOAT in operand_types else INT
 
+    def type_of_call(self, node: Call) -> str:
+        return_type = self.check_call(node)
+        if return_type is None:
+            raise self.error(node, f"a função '{node.name}' não retorna valor "
+                                   "e não pode ser usada em expressões")
+        return return_type
+
     @staticmethod
     def error(node: Positioned, message: str) -> CompilerError:
         return CompilerError(ErrorKind.SEMANTIC, message, node.line, node.column)
+
+
+def always_returns(statements: List[Statement]) -> bool:
+    return any(statement_always_returns(statement) for statement in statements)
+
+
+def statement_always_returns(statement: Statement) -> bool:
+    if isinstance(statement, Return):
+        return True
+    if isinstance(statement, If) and statement.else_block is not None:
+        return always_returns(statement.then_block) and always_returns(statement.else_block)
+    return False
+
+
+def count_arguments(count: int) -> str:
+    return f"{count} argumento" if count == 1 else f"{count} argumentos"
