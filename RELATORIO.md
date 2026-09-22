@@ -140,7 +140,7 @@ gulosas. CRLF é reconhecido antes das quebras isoladas.
 
 Espaços, tabulações, comentários e quebras de linha são ignorados entre tokens.
 LF, CRLF e CR contam como uma linha cada. Um caractere sem correspondência causa
-`ERRO LEXICO`, com linha e caractere, e interrompe o processamento.
+`ERRO LÉXICO`, com linha e coluna, e interrompe o processamento.
 Uma palavra-chave dentro de texto/comentário não é interpretada como comando.
 
 ## 4. Gramática livre de contexto G = (V, T, P, S)
@@ -230,9 +230,9 @@ Por exemplo, `2 + 3 * 4` produz `BinOp(2, +, BinOp(3, *, 4))`, enquanto
 `(2 + 3) * 4` produz `BinOp(BinOp(2, +, 3), *, 4)`. A precedência já está na AST;
 o gerador apenas conserva esse agrupamento com parênteses.
 
-`Parser` reconhece a forma e constrói os nós. `AnalisadorSemantico` percorre a árvore,
-valida contexto e a anota com tipos e nomes de destino. `gerar_codigo_c` percorre a
-árvore anotada. `analisar` e `transpilar` coordenam as fases; uma exceção interrompe
+`Parser` reconhece a forma e constrói os nós. `SemanticAnalyzer` percorre a árvore,
+valida contexto e a anota com tipos e nomes de destino. `generate_c` percorre a
+árvore anotada. `analyze` e `transpile` coordenam as fases; uma exceção interrompe
 as etapas seguintes. Não há substituição textual do programa fonte.
 
 ## 6. Regras semânticas
