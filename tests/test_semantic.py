@@ -87,7 +87,8 @@ class SemanticTest(unittest.TestCase):
         self.assert_semantic_error(f"This is the way (i de 1 até 3) i: {INT_DECL}; LOGOUT", "já declarada")
 
     def test_nested_block_may_shadow_for_variable(self):
-        check(f"This is the way (i de 1 até 3) Faça, ou não faça (1 == 1) i: {INT_DECL} = 0; i = 5; LOGOUT LOGOUT")
+        check("This is the way (i de 1 até 3) "
+              f"Faça, ou não faça (1 == 1) i: {INT_DECL} = 0; i = 5; LOGOUT LOGOUT")
 
     def test_for_annotates_c_names(self):
         loop = check("This is the way (i de 1 até 3) Hello There (i); LOGOUT").statements[0]

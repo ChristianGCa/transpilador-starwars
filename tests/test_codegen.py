@@ -53,7 +53,8 @@ class CodegenTest(unittest.TestCase):
         self.assert_output("This is the way (i de 0 - 1 até 2) Hello There (i); LOGOUT", "-1\n0\n1\n2\n")
 
     def test_for_with_empty_range(self):
-        self.assert_output('This is the way (i de 5 até 1) Hello There (i); LOGOUT Hello There ("fim");', "fim")
+        self.assert_output('This is the way (i de 5 até 1) Hello There (i); LOGOUT '
+                           'Hello There ("fim");', "fim")
 
     def test_for_evaluates_stop_once(self):
         self.assert_output(f"n: {INT_DECL} = 3; voltas: {INT_DECL};\n"
