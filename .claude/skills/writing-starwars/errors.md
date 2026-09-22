@@ -34,6 +34,19 @@ As listagens de `--tokens` também mostram a frase reconhecida.
 | `esperado identificador, encontrado ...` logo após `This is the way (` | faltou o nome da variável de controle | `(i de ...)` |
 | `os limites do laço 'This is the way' devem ser inteiros` | início ou fim real | usar expressões inteiras |
 | `variável de controle 'i' não pode ser alterada dentro do laço` | atribuição ou leitura na variável do `for` | usar outra variável ou um `while` |
+| `funções devem ser definidas logo após o início do programa` | função depois de um comando ou declaração | mover todas as funções para o topo |
+| `esperado ':'` dentro do cabeçalho da função | parâmetro sem tipo | `nome(x: Você era o escolhido)` |
+| `função 'f' não declarada` | nome errado ou função inexistente | conferir o nome |
+| `a função 'f' espera N argumento(s), mas recebeu M` | quantidade errada de argumentos | um argumento por parâmetro |
+| `o argumento N de 'f' deve ser int` | real passado a parâmetro inteiro | declarar o parâmetro como real |
+| `não retorna valor e não pode ser usada em expressões` | procedimento usado como valor | dar tipo à função ou chamá-la como comando |
+| `'Palpatine retornou' só pode ser usado dentro de uma função` | retorno no programa principal | remover |
+| `a função 'f' não retorna valor` | retorno com valor em procedimento | `Palpatine retornou;` ou dar tipo à função |
+| `a função 'f' deve retornar um valor do tipo ...` | `Palpatine retornou;` sem valor em função com tipo | informar o valor |
+| `a função 'f' deve retornar int` | retorno real em função inteira | mudar o tipo da função para real |
+| `a função 'f' pode terminar sem 'Palpatine retornou'` | algum caminho sem retorno | retorno no fim do corpo |
+| `'x' já é o nome de uma função` | variável ou parâmetro com nome de função | escolher outro nome |
+| `não declarada` dentro de uma função | uso de variável do programa principal | receber o valor por parâmetro |
 | `esperado 'LOGOUT', encontrado fim do arquivo` | falta `Chewie, estamos em casa` | um por `if`/laço, mais o do programa |
 | `esperado fim do arquivo` | fim a mais, geralmente antes de `Tentativa não há` | remover |
 | `encontrado "texto"` | texto em expressão, comparação ou atribuição | textos só em saída/leitura |
@@ -52,6 +65,7 @@ As listagens de `--tokens` também mostram a frase reconhecida.
       e nenhum seguido de `;`.
 - [ ] `;` em todo comando simples.
 - [ ] Variáveis declaradas antes do uso e visíveis no ponto de uso.
+- [ ] Funções no topo; as com tipo retornam em todo caminho; chamadas com os argumentos certos.
 - [ ] Nenhum `-x`, `%`, `&&`, `||`, `.5`, aspas simples ou texto fora de saída/leitura.
 - [ ] Resultados com casas decimais guardados em variáveis reais.
 - [ ] Espaços e `\n` da saída escritos dentro dos textos.

@@ -98,6 +98,44 @@ Chewie, estamos em casa
   pode declarar outra variável com o mesmo nome, mas evite.
 - `de` e `até` são palavras reservadas em qualquer lugar do programa.
 
+## Funções: `Execute a ordem 66`
+
+```starwars
+Há muito tempo, em uma galáxia muito, muito distante
+Execute a ordem 66 maior(a: Você era o escolhido, b: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (a I have the high ground b)
+        Palpatine retornou a;
+    Tentativa não há
+        Palpatine retornou b;
+    Chewie, estamos em casa
+Chewie, estamos em casa
+
+Execute a ordem 66 aviso(codigo: Você era o escolhido)
+    Hello There ("Aviso ", codigo);
+Chewie, estamos em casa
+
+aviso(maior(3, 8));
+Chewie, estamos em casa
+```
+
+- Todas as funções ficam **logo depois da frase de início**, antes de qualquer
+  declaração ou comando do programa. Definir função depois de um comando é erro.
+- Cabeçalho: `Execute a ordem 66 nome(p1: Tipo, p2: Tipo): TipoRetorno`. Parênteses
+  obrigatórios, mesmo sem parâmetros: `nome()`. Cada parâmetro usa `nome: Tipo`.
+- Sem `: TipoRetorno`, é procedimento: não devolve valor, só pode ser chamado como
+  comando (`aviso(1);`) e aceita `Palpatine retornou;` sem valor para sair antes.
+- Com tipo, `Palpatine retornou expr;` é obrigatório em todo caminho: no fim do corpo,
+  ou em um `if` com os dois ramos retornando. Retorno só dentro de laço não basta.
+  Real não pode ser retornado por função inteira.
+- Chamada: `nome(arg1, arg2)`, com a mesma quantidade de argumentos. Real não pode ir
+  para parâmetro inteiro; inteiro pode ir para parâmetro real. Função com tipo pode ser
+  chamada em expressão ou como comando (o valor é descartado).
+- Uma função pode chamar outra definida depois dela e a si mesma (recursão).
+- Escopo: a função só enxerga seus parâmetros e variáveis. As variáveis do programa
+  principal **não** são visíveis; passe os valores por parâmetro. Parâmetros são
+  cópias: alterar um parâmetro não muda a variável de quem chamou.
+- Nomes de funções não se repetem e não podem ser usados por variáveis.
+
 ## Receitas para o que não existe
 
 | Quero | Escreva |
@@ -108,7 +146,8 @@ Chewie, estamos em casa
 | `else if` | um `if` dentro do senão; cada `if` com seu próprio fim |
 | laço decrescente ou com passo 2 | `while` com contador: `i Eu alterei o acordo i Acabou anakin 1;` no fim do corpo |
 | booleano | `int` com `0`/`1` |
-| real → `int`, texto em variável, funções, vetores, `break` | não existem; reestruture |
+| devolver dois valores | duas funções, ou uma função por valor |
+| real → `int`, texto em variável, vetores, `break`, variável global | não existem; reestruture |
 
 ```starwars
 Há muito tempo, em uma galáxia muito, muito distante

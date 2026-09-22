@@ -6,7 +6,7 @@ description: Use when writing, editing, reviewing or debugging programs in the S
 # Escrevendo programas `.starwars`
 
 Linguagem mínima transpilada para C99: dois tipos numéricos, aritmética, `if/else`,
-`while`, `for` por intervalo, leitura e escrita. **O que não está aqui ou em `reference.md` não existe.**
+`while`, `for` por intervalo, funções, leitura e escrita. **O que não está aqui ou em `reference.md` não existe.**
 Não traga sintaxe de C ou Python.
 
 ## Frases reservadas: copie exatamente
@@ -24,6 +24,7 @@ mas só servem para ler código antigo.
 | Enquanto | `Eu sinto uma perturbação na força` | |
 | Para (intervalo) | `This is the way (i de início até fim)` | |
 | Escrever / ler | `Hello There` / `Ajude-me Obi-Wan Kenobi` | |
+| Definir função / retornar | `Execute a ordem 66` / `Palpatine retornou` | |
 | Atribuir | `Eu alterei o acordo` | `=` |
 | Somar / subtrair | `Que a força esteja com você` / `Acabou anakin` | `+` / `-` |
 | Multiplicar / dividir | `Eu sou todos os jedi` / `Eu sou todos os sith` | `*` / `/` |
@@ -35,7 +36,10 @@ mas só servem para ler código antigo.
 
 ```starwars
 Há muito tempo, em uma galáxia muito, muito distante
-# comentário até o fim da linha
+# comentário até o fim da linha; funções vêm logo depois do início
+Execute a ordem 66 media(total: Você era o escolhido, n: Você era o escolhido): Eu sou C3PO, ciborgue de relações humanas
+    Palpatine retornou total Eu sou todos os sith (n Eu sou todos os jedi 1.0);
+Chewie, estamos em casa
 n: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Informe n: " -> n);
 soma: Você era o escolhido Eu alterei o acordo 0;
@@ -43,8 +47,7 @@ This is the way (i de 1 até n)
     soma Eu alterei o acordo soma Que a força esteja com você i;
 Chewie, estamos em casa
 Faça, ou não faça (soma I have the high ground 10)
-    media: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo soma Eu sou todos os sith (n Eu sou todos os jedi 1.0);
-    Hello There ("Soma: ", soma, " / média: ", media);
+    Hello There ("Soma: ", soma, " / média: ", media(soma, n));
 Tentativa não há
     Hello There ("Soma pequena\n");
 Chewie, estamos em casa
@@ -72,12 +75,19 @@ Chewie, estamos em casa
   `a` e `b` são inteiros; `i` é criado pelo laço, só existe nele e **não pode ser alterado**.
   Para contar de trás para frente ou de 2 em 2, use `while`.
 - `de` e `até` são reservadas: não use como nome de variável.
+- Funções: `Execute a ordem 66 nome(a: Tipo, b: Tipo): Tipo` corpo fim, **todas logo após
+  o início**, antes de qualquer comando. Sem `: Tipo` é procedimento. Retorno:
+  `Palpatine retornou valor;` (procedimento: `Palpatine retornou;` ou nada). Chamada:
+  `nome(args)` em expressão ou `nome(args);` como comando.
+- Função **não enxerga** variáveis do programa: passe tudo por parâmetro. Função com tipo
+  precisa retornar em todo caminho (retorno no fim, ou `if` com os dois ramos retornando).
 - Variável declarada dentro de um bloco some no fim desse bloco.
 - Em `esperado ...`, os erros usam a forma curta (`'LOGOUT'`, `'='`): tradução em `errors.md`.
 
 ## Arquivos de apoio
 
-- `reference.md`: detalhes de tipos, saída, escopo, laços e receitas para resto, `||` e `else if`.
+- `reference.md`: detalhes de tipos, saída, escopo, laços, funções e receitas para resto,
+  `||` e `else if`.
 - `errors.md`: mensagem de erro → causa → correção, e o checklist antes de entregar.
 
 ## Validar
