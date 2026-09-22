@@ -71,6 +71,7 @@ Chewie, estamos em casa
 - Textos: aspas duplas, uma linha, só em `Hello There` ou na mensagem de leitura.
 - `Hello There` junta os itens sem espaço e pula linha sozinho só se houver algum número.
 - A leitura recebe uma variável: `(x)` ou `("mensagem" -> x)`. A seta `->` não tem frase.
+  A mensagem sai sem quebra de linha.
 - `for`: `This is the way (i de a até b)` conta de `a` até `b` **inclusive**, de 1 em 1.
   `a` e `b` são inteiros; `i` é criado pelo laço, só existe nele e **não pode ser alterado**.
   Para contar de trás para frente ou de 2 em 2, use `while`.
@@ -100,4 +101,6 @@ Na raiz do projeto do transpilador:
 ./sw run programa.starwars < entrada.txt
 ```
 
-Sempre transpile antes de entregar. Sem acesso a comandos, use o checklist de `errors.md`.
+O `./sw` aceita arquivos de qualquer pasta e grava o C e o executável em `build/`, dentro
+do projeto; defina `SW_BUILD_DIR=/outra/pasta` para gravar em outro lugar. Sempre transpile
+antes de entregar. Sem acesso a comandos, use o checklist de `errors.md`.

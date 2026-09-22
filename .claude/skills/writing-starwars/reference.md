@@ -6,7 +6,8 @@ Nesta página, "fim" é a frase `Chewie, estamos em casa`.
 
 - Arquivo UTF-8 com extensão `.starwars`: `Há muito tempo, em uma galáxia muito, muito distante`
   ... `Chewie, estamos em casa`. Depois do fim do programa, só espaços e comentários.
-- `#` comenta até o fim da linha. Não há comentário de bloco.
+- `#` comenta até o fim da linha, inclusive depois de código (`x: Tipo; # nota`).
+  Não há comentário de bloco.
 - Espaços e quebras de linha são livres e a indentação não tem significado (use 4 espaços).
   Uma expressão longa pode continuar na linha seguinte.
 - Identificadores: começam com letra ou `_`, seguem com letras, dígitos ou `_`. Acentos
@@ -27,6 +28,7 @@ Chewie, estamos em casa
 ```
 
 - A forma `Tipo nome [Eu alterei o acordo expr];` também vale, mas prefira `nome: Tipo ...`.
+- Sem valor inicial, inteiro vale `0` e real vale `0.0`.
 - Podem aparecer em qualquer ponto de um bloco. Não pode haver nome repetido no mesmo bloco.
 - O nome só passa a existir depois do inicializador. Por isso
   `x: Você era o escolhido Eu alterei o acordo x;` só funciona se houver um `x` em um bloco externo.
@@ -60,6 +62,12 @@ Chewie, estamos em casa
 
 - `(x);` ou `("Mensagem: " -> x);`. Recebe uma variável já declarada, nunca uma expressão.
 - Para ler duas variáveis, use dois comandos. O tipo da variável define o que é lido.
+- A mensagem vai para a saída padrão **sem quebra de linha**, e o valor digitado não é
+  repetido na saída. Com entrada redirecionada (`< arquivo`), a saída fica
+  `Mensagem: ` colada ao próximo `Hello There`. Para separar, use `\n` no início do
+  texto seguinte ou um `Hello There ("\n");`.
+- Na entrada, os números podem vir separados por espaços ou quebras de linha
+  (`90 95.5` serve para duas leituras). Variável real aceita `80`; inteira não aceita `8.5`.
 - Entrada não numérica encerra o programa com `ERRO DE ENTRADA`.
 
 ## Condições, `if` e `while`
