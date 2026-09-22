@@ -14,6 +14,13 @@ class SymbolTableTest(unittest.TestCase):
         self.assertEqual(table.lookup("x"), outer)
         self.assertEqual((outer.c_name, inner.c_name), ("sw_v0", "sw_v1"))
 
+    def test_read_only_symbols_and_fresh_names(self):
+        table = SymbolTable()
+        self.assertFalse(table.declare("x", "int").read_only)
+        self.assertTrue(table.declare("i", "int", read_only=True).read_only)
+        self.assertEqual(table.new_c_name(), "sw_v2")
+        self.assertIsNone(table.lookup("sw_v2"))
+
     def test_declared_here_and_missing_names(self):
         table = SymbolTable()
         table.declare("x", "int")

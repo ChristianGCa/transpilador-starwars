@@ -4,7 +4,7 @@ import math
 from typing import List, Union
 
 from .errors import CompilerError, ErrorKind
-from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, If,
+from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, For, If,
                     Number, Print, Program, Read, Statement, StringLiteral, Variable, While)
 from .symbols import Symbol, SymbolTable
 
@@ -24,6 +24,7 @@ class SemanticAnalyzer:
             Print: self.check_print,
             If: self.check_if,
             While: self.check_while,
+            For: self.check_for,
         }
         self.expression_types = {
             Number: self.type_of_number,
@@ -55,12 +56,12 @@ class SemanticAnalyzer:
         node.c_name = self.symbols.declare(node.name, node.type_name).c_name
 
     def check_assignment(self, node: Assignment) -> None:
-        symbol = self.resolve(node.name, node)
+        symbol = self.resolve_writable(node.name, node)
         node.c_name, node.type_name = symbol.c_name, symbol.type_name
         self.check_assignable(symbol.type_name, node.value, node.name, node)
 
     def check_read(self, node: Read) -> None:
-        symbol = self.resolve(node.name, node)
+        symbol = self.resolve_writable(node.name, node)
         node.c_name, node.type_name = symbol.c_name, symbol.type_name
 
     def check_print(self, node: Print) -> None:
@@ -78,6 +79,16 @@ class SemanticAnalyzer:
         self.check_condition(node.condition)
         self.check_scoped_block(node.body)
 
+    def check_for(self, node: For) -> None:
+        for limit in (node.start, node.stop):
+            if self.type_of(limit) != INT:
+                raise self.error(limit, "os limites do laço 'This is the way' devem ser inteiros")
+        self.symbols.push()
+        node.c_name = self.symbols.declare(node.name, INT, read_only=True).c_name
+        node.limit_c_name = self.symbols.new_c_name()
+        self.check_block(node.body)
+        self.symbols.pop()
+
     def check_condition(self, condition: Comparison) -> None:
         self.type_of(condition.left)
         self.type_of(condition.right)
@@ -92,6 +103,12 @@ class SemanticAnalyzer:
         symbol = self.symbols.lookup(name)
         if symbol is None:
             raise self.error(node, f"variável '{name}' não declarada neste escopo")
+        return symbol
+
+    def resolve_writable(self, name: str, node: Positioned) -> Symbol:
+        symbol = self.resolve(name, node)
+        if symbol.read_only:
+            raise self.error(node, f"variável de controle '{name}' não pode ser alterada dentro do laço")
         return symbol
 
     def type_of(self, node: Expression) -> str:

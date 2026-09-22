@@ -64,6 +64,36 @@ class SemanticTest(unittest.TestCase):
         self.assertEqual(declaration.c_name, "sw_v0")
         self.assertEqual((expression.type_name, expression.left.c_name), ("float", "sw_v0"))
 
+    def test_for_limits_must_be_int(self):
+        for header in ("i de 0 até 1.5", "i de 0.5 até 2"):
+            with self.subTest(header=header):
+                self.assert_semantic_error(f"This is the way ({header}) LOGOUT",
+                                           "os limites do laço 'This is the way' devem ser inteiros")
+
+    def test_for_variable_exists_only_inside_loop(self):
+        check("This is the way (i de 1 até 3) Hello There (i); LOGOUT")
+        self.assert_semantic_error("This is the way (i de 1 até 3) LOGOUT Hello There (i);", "não declarada")
+
+    def test_for_limits_use_outer_scope(self):
+        self.assert_semantic_error("This is the way (i de 0 até i) LOGOUT", "variável 'i' não declarada")
+
+    def test_for_variable_is_read_only(self):
+        for statement in ("i = 2;", "Ajude-me Obi-Wan Kenobi (i);"):
+            with self.subTest(statement=statement):
+                self.assert_semantic_error(f"This is the way (i de 1 até 3) {statement} LOGOUT",
+                                           "variável de controle 'i' não pode ser alterada")
+
+    def test_for_variable_cannot_be_redeclared_in_body(self):
+        self.assert_semantic_error(f"This is the way (i de 1 até 3) i: {INT_DECL}; LOGOUT", "já declarada")
+
+    def test_nested_block_may_shadow_for_variable(self):
+        check(f"This is the way (i de 1 até 3) Faça, ou não faça (1 == 1) i: {INT_DECL} = 0; i = 5; LOGOUT LOGOUT")
+
+    def test_for_annotates_c_names(self):
+        loop = check("This is the way (i de 1 até 3) Hello There (i); LOGOUT").statements[0]
+        self.assertEqual((loop.c_name, loop.limit_c_name, loop.body[0].items[0].c_name),
+                         ("sw_v0", "sw_v1", "sw_v0"))
+
     def test_error_position(self):
         error = self.assert_semantic_error("Hello There (1);\n  x = 2;", "não declarada")
         self.assertEqual((error.line, error.column), (3, 3))
