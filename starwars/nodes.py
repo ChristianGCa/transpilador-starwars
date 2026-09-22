@@ -107,7 +107,19 @@ class While:
     column: int
 
 
-Statement = Union[Declaration, Assignment, Print, Read, If, While]
+@dataclass
+class For:
+    name: str
+    start: Expression
+    stop: Expression
+    body: List[Statement]
+    line: int
+    column: int
+    c_name: Optional[str] = None
+    limit_c_name: Optional[str] = None
+
+
+Statement = Union[Declaration, Assignment, Print, Read, If, While, For]
 
 
 @dataclass

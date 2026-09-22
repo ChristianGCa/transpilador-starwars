@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Callable, List, Tuple, Union
 
 from .errors import CompilerError, ErrorKind
-from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, If,
+from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, For, If,
                     Number, Print, Program, Read, Statement, StringLiteral, Variable, While)
 from .tokens import ARITHMETIC_OPERATORS, COMPARISON_OPERATORS, Token, TokenKind
 
@@ -22,6 +22,7 @@ class Parser:
             TokenKind.INPUT: self.parse_read,
             TokenKind.IF: self.parse_if,
             TokenKind.WHILE: self.parse_while,
+            TokenKind.FOR: self.parse_for,
         }
 
     def current(self) -> Token:
@@ -153,6 +154,19 @@ class Parser:
         body = self.parse_block(TokenKind.END)
         self.expect(TokenKind.END)
         return While(condition, body, keyword.line, keyword.column)
+
+    def parse_for(self) -> For:
+        keyword = self.expect(TokenKind.FOR)
+        self.expect(TokenKind.LPAREN)
+        name = self.expect(TokenKind.ID)
+        self.expect(TokenKind.FROM)
+        start = self.parse_expression()
+        self.expect(TokenKind.TO)
+        stop = self.parse_expression()
+        self.expect(TokenKind.RPAREN)
+        body = self.parse_block(TokenKind.END)
+        self.expect(TokenKind.END)
+        return For(name.lexeme, start, stop, body, keyword.line, keyword.column)
 
     def parse_condition(self) -> Comparison:
         self.expect(TokenKind.LPAREN)

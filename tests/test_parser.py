@@ -3,6 +3,7 @@ import unittest
 from support import program
 from starwars.errors import CompilerError, ErrorKind
 from starwars.lexer import tokenize
+from starwars.nodes import For
 from starwars.parser import Parser
 
 
@@ -29,6 +30,13 @@ class ParserTest(unittest.TestCase):
         self.assertEqual((first.type_name, first.name, first.init.text), ("int", "x", "1"))
         self.assertEqual((second.type_name, second.name, second.init), ("float", "y", None))
 
+    def test_for_loop(self):
+        loop = parse("This is the way (i de 1 até n + 1)\n  Hello There (i);\nLOGOUT").statements[0]
+        self.assertIsInstance(loop, For)
+        self.assertEqual((loop.name, loop.start.text, loop.stop.op), ("i", "1", "+"))
+        self.assertEqual(len(loop.body), 1)
+        self.assertEqual((loop.line, loop.column), (2, 1))
+
     def test_node_positions(self):
         read = parse("x: Você era o escolhido;\n  Ajude-me Obi-Wan Kenobi (x);").statements[1]
         self.assertEqual((read.line, read.column), (3, 3))
@@ -40,6 +48,8 @@ class ParserTest(unittest.TestCase):
             "INICIA_SISTEMA\nx = 1;": "esperado 'LOGOUT', encontrado fim do arquivo",
             program("x: Você era o escolhido = ;"): "esperado identificador, número ou '(', encontrado ';'",
             program('Hello There (1 "b");'): "esperado ')', encontrado \"b\"",
+            program("This is the way (i 1 até 2) LOGOUT"): "esperado 'de', encontrado '1'",
+            program("This is the way (i de 1 2) LOGOUT"): "esperado 'até', encontrado '2'",
         }
         for source, message in cases.items():
             with self.subTest(source=source):
@@ -50,7 +60,9 @@ class ParserTest(unittest.TestCase):
     def test_invalid_syntax(self):
         for body in ('Hello There ();', 'Hello There (1,);', 'x: = 1;',
                      'Ajude-me Obi-Wan Kenobi ("x" x);', 'Faça, ou não faça (1) LOGOUT',
-                     'Faça, ou não faça (1 == 1)', 'Eu sinto uma perturbação na força (1 > 0)'):
+                     'Faça, ou não faça (1 == 1)', 'Eu sinto uma perturbação na força (1 > 0)',
+                     'This is the way (1 de 1 até 2) LOGOUT', 'This is the way i de 1 até 2 LOGOUT',
+                     'This is the way (i de 1 até 2)'):
             with self.subTest(body=body):
                 with self.assertRaises(CompilerError) as caught:
                     parse(body)
