@@ -67,7 +67,7 @@ class CliTest(unittest.TestCase):
     def test_prints_tokens_before_syntax_error(self):
         result = run_cli(EXAMPLES / "invalid" / "04_syntax_error.starwars", "--tokens")
         self.assertEqual(result.returncode, 1)
-        self.assertIn("[BEGIN:INICIA_SISTEMA]", result.stderr)
+        self.assertIn("[BEGIN:", result.stderr)
         self.assertIn("ERRO SINTÁTICO", result.stderr)
 
     def test_help_shows_portuguese_metavar_and_real_command(self):

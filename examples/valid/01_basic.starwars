@@ -1,6 +1,6 @@
-INICIA_SISTEMA
+Há muito tempo, em uma galáxia muito, muito distante
 # Declaracao com tipo depois do nome e atribuicao posterior.
-energia: Você era o escolhido = 2;
-energia = energia + 3 * 4;
+energia: Você era o escolhido Eu alterei o acordo 2;
+energia Eu alterei o acordo energia Que a força esteja com você 3 Eu sou todos os jedi 4;
 Hello There ("Energia: ", energia);
-LOGOUT
+Chewie, estamos em casa
