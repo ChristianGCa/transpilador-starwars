@@ -6,7 +6,7 @@ description: Use when writing, editing, reviewing or debugging programs in the S
 # Escrevendo programas `.starwars`
 
 Linguagem mínima transpilada para C99: dois tipos numéricos, aritmética, `if/else`,
-`while`, leitura e escrita. **O que não está aqui ou em `reference.md` não existe.**
+`while`, `for` por intervalo, leitura e escrita. **O que não está aqui ou em `reference.md` não existe.**
 Não traga sintaxe de C ou Python.
 
 ## Frases reservadas: copie exatamente
@@ -22,6 +22,7 @@ mas só servem para ler código antigo.
 | Tipo `int` / tipo `float` | `Você era o escolhido` / `Eu sou C3PO, ciborgue de relações humanas` | |
 | Se / senão | `Faça, ou não faça` / `Tentativa não há` | |
 | Enquanto | `Eu sinto uma perturbação na força` | |
+| Para (intervalo) | `This is the way (i de início até fim)` | |
 | Escrever / ler | `Hello There` / `Ajude-me Obi-Wan Kenobi` | |
 | Atribuir | `Eu alterei o acordo` | `=` |
 | Somar / subtrair | `Que a força esteja com você` / `Acabou anakin` | `+` / `-` |
@@ -38,10 +39,8 @@ Há muito tempo, em uma galáxia muito, muito distante
 n: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Informe n: " -> n);
 soma: Você era o escolhido Eu alterei o acordo 0;
-i: Você era o escolhido Eu alterei o acordo 1;
-Eu sinto uma perturbação na força (i Não, eu sou seu pai n)
+This is the way (i de 1 até n)
     soma Eu alterei o acordo soma Que a força esteja com você i;
-    i Eu alterei o acordo i Que a força esteja com você 1;
 Chewie, estamos em casa
 Faça, ou não faça (soma I have the high ground 10)
     media: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo soma Eu sou todos os sith (n Eu sou todos os jedi 1.0);
@@ -57,10 +56,11 @@ Chewie, estamos em casa
 - Declaração: `nome: Tipo;` ou `nome: Tipo Eu alterei o acordo expressão;`. Sem valor, vale `0`.
   Declare antes de usar.
 - Todo comando simples termina com `;`. `Chewie, estamos em casa` **nunca** leva `;`.
-- Cada `if` e cada laço fecham com **um** `Chewie, estamos em casa`, e o programa tem o seu.
+- Cada `if` e cada laço (`while` ou `for`) fecham com **um** `Chewie, estamos em casa`,
+  e o programa tem o seu.
   No `if/senão`, o fim vem só depois do senão.
 - Condição: `(a OP b)`, com exatamente um operador relacional. Não há `&&`, `||`, `!`,
-  encadeamento, `else if`, `for`, `break`, resto nem booleanos.
+  encadeamento, `else if`, `break`, resto nem booleanos.
 - Separe as frases dos nomes com espaço: `x Eu alterei o acordo 1;`.
 - Sem sinal unário: `0 Acabou anakin 1`, não `-1`. Reais: `0.5` e `5.0`, nunca `.5` ou `5.`.
 - Divisão entre `int` trunca; use um operando real (`x Eu sou todos os sith 2.0`).
@@ -68,12 +68,16 @@ Chewie, estamos em casa
 - Textos: aspas duplas, uma linha, só em `Hello There` ou na mensagem de leitura.
 - `Hello There` junta os itens sem espaço e pula linha sozinho só se houver algum número.
 - A leitura recebe uma variável: `(x)` ou `("mensagem" -> x)`. A seta `->` não tem frase.
+- `for`: `This is the way (i de a até b)` conta de `a` até `b` **inclusive**, de 1 em 1.
+  `a` e `b` são inteiros; `i` é criado pelo laço, só existe nele e **não pode ser alterado**.
+  Para contar de trás para frente ou de 2 em 2, use `while`.
+- `de` e `até` são reservadas: não use como nome de variável.
 - Variável declarada dentro de um bloco some no fim desse bloco.
 - Em `esperado ...`, os erros usam a forma curta (`'LOGOUT'`, `'='`): tradução em `errors.md`.
 
 ## Arquivos de apoio
 
-- `reference.md`: detalhes de tipos, saída, escopo e receitas para resto, `||`, `else if` e `for`.
+- `reference.md`: detalhes de tipos, saída, escopo, laços e receitas para resto, `||` e `else if`.
 - `errors.md`: mensagem de erro → causa → correção, e o checklist antes de entregar.
 
 ## Validar

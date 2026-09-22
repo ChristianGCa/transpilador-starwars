@@ -76,6 +76,28 @@ Chewie, estamos em casa
 - Dentro de um laço, uma declaração reinicia o valor a cada volta.
 - Um bloco interno pode reusar um nome externo (esconde o de fora). Evite.
 
+## Laço por intervalo: `This is the way`
+
+```starwars
+Há muito tempo, em uma galáxia muito, muito distante
+n: Você era o escolhido Eu alterei o acordo 3;
+This is the way (i de 1 até n Eu sou todos os jedi 2)
+    Hello There ("volta ", i);
+Chewie, estamos em casa
+Chewie, estamos em casa
+```
+
+- Forma: `This is the way (nome de início até fim)` bloco fim. Os parênteses e as
+  palavras `de` e `até` (com acento) são obrigatórios.
+- Conta de 1 em 1, do início até o fim **inclusive**. Se o início for maior que o fim,
+  o corpo não executa. Para decrescer ou pular valores, use `while`.
+- Início e fim são expressões **inteiras** (real é erro) avaliadas antes da primeira
+  volta; o fim não é recalculado, mesmo que as variáveis dele mudem no corpo.
+- A variável de controle é declarada pelo próprio laço (não declare antes), é inteira,
+  só existe no corpo e **não pode** receber atribuição nem leitura. Um bloco interno
+  pode declarar outra variável com o mesmo nome, mas evite.
+- `de` e `até` são palavras reservadas em qualquer lugar do programa.
+
 ## Receitas para o que não existe
 
 | Quero | Escreva |
@@ -84,7 +106,7 @@ Chewie, estamos em casa
 | `a && b` | um `if` dentro de outro |
 | `a \|\| b` | `ok` com `0`; um `if` por condição fazendo `ok Eu alterei o acordo 1;`; depois `(ok Como deve ser 1)` |
 | `else if` | um `if` dentro do senão; cada `if` com seu próprio fim |
-| `for` | contador declarado antes, laço com `(i Você subestima meu poder n)` e `i Eu alterei o acordo i Que a força esteja com você 1;` no fim do corpo |
+| laço decrescente ou com passo 2 | `while` com contador: `i Eu alterei o acordo i Acabou anakin 1;` no fim do corpo |
 | booleano | `int` com `0`/`1` |
 | real → `int`, texto em variável, funções, vetores, `break` | não existem; reestruture |
 

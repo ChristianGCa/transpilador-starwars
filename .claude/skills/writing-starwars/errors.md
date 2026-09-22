@@ -30,6 +30,10 @@ As listagens de `--tokens` também mostram a frase reconhecida.
 | `esperado ')', encontrado 'I have the high ground'` (ou outro comparador) | condição com parênteses extras ou encadeada | `(a I have the high ground b)` |
 | `esperado '('` | condição sem parênteses | `(x I have the high ground 0)` |
 | `esperado '->'` | vírgula na leitura | `("Texto: " -> x)` |
+| `esperado 'de'` ou `esperado 'até'` | cabeçalho do `for` incompleto ou `ate` sem acento | `This is the way (i de 1 até n)` |
+| `esperado identificador, encontrado ...` logo após `This is the way (` | faltou o nome da variável de controle | `(i de ...)` |
+| `os limites do laço 'This is the way' devem ser inteiros` | início ou fim real | usar expressões inteiras |
+| `variável de controle 'i' não pode ser alterada dentro do laço` | atribuição ou leitura na variável do `for` | usar outra variável ou um `while` |
 | `esperado 'LOGOUT', encontrado fim do arquivo` | falta `Chewie, estamos em casa` | um por `if`/laço, mais o do programa |
 | `esperado fim do arquivo` | fim a mais, geralmente antes de `Tentativa não há` | remover |
 | `encontrado "texto"` | texto em expressão, comparação ou atribuição | textos só em saída/leitura |
