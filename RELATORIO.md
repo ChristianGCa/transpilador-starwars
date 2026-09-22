@@ -88,7 +88,10 @@ reservadas são exatamente os apresentados na tabela.
 | ELSE | `Tentativa não há` | Alternativa do condicional |
 | PRINT | `Hello There` | Saída de dados |
 | INPUT | `Ajude-me Obi-Wan Kenobi` | Entrada de dados |
-| WHILE | `Eu sinto uma perturbação na força` | Repetição |
+| WHILE | `Eu sinto uma perturbação na força` | Repetição por condição |
+| FOR | `This is the way` | Repetição por intervalo |
+| FROM | `de` | Início do intervalo do `for` |
+| TO | `até` | Fim do intervalo do `for` |
 
 ### 3.3 Demais categorias
 
@@ -147,11 +150,11 @@ token da seção 3; aliases de um mesmo operador produzem a mesma categoria.
 ```text
 V = { Programa, Bloco, Tipo, Declaracao, Comando, Atribuicao,
       Leitura, Escrita, ItemSaida, Condicional, Repeticao,
-      ExprLogica, OpRel, Expressao, Termo, Fator }
+      RepeticaoIntervalo, ExprLogica, OpRel, Expressao, Termo, Fator }
 
 T = { INICIA, LOGOUT, NUM_TYPE, REAL_TYPE, ASSIGN,
       PLUS, MINUS, STAR, SLASH, EQ, NEQ, GT, GE, LT, LE,
-      IF, ELSE, PRINT, INPUT, WHILE, ID, NUM, STRING,
+      IF, ELSE, PRINT, INPUT, WHILE, FOR, FROM, TO, ID, NUM, STRING,
       LPAREN, RPAREN, SEMI, COLON, COMMA, ARROW }
 
 S = Programa
@@ -168,12 +171,14 @@ Bloco       ::= { Declaracao | Comando }
 Tipo        ::= NUM_TYPE | REAL_TYPE
 Declaracao  ::= ( Tipo ID | ID COLON Tipo ) [ ASSIGN Expressao ] SEMI
 Comando     ::= Atribuicao | Leitura | Escrita | Condicional | Repeticao
+              | RepeticaoIntervalo
 Atribuicao  ::= ID ASSIGN Expressao SEMI
 Leitura     ::= INPUT LPAREN [ STRING ARROW ] ID RPAREN SEMI
 Escrita     ::= PRINT LPAREN ItemSaida { COMMA ItemSaida } RPAREN SEMI
 ItemSaida   ::= STRING | Expressao
 Condicional ::= IF LPAREN ExprLogica RPAREN Bloco [ ELSE Bloco ] LOGOUT
 Repeticao   ::= WHILE LPAREN ExprLogica RPAREN Bloco LOGOUT
+RepeticaoIntervalo ::= FOR LPAREN ID FROM Expressao TO Expressao RPAREN Bloco LOGOUT
 ExprLogica  ::= Expressao OpRel Expressao
 OpRel       ::= EQ | NEQ | GT | GE | LT | LE
 Expressao   ::= Termo { ( PLUS | MINUS ) Termo }
@@ -202,6 +207,7 @@ Um `LOGOUT` adicional encerra o programa. Blocos e alternativas podem ser vazios
 | Escrita | Lista de textos/expressões e linha |
 | Condicional | Condição, bloco verdadeiro e bloco alternativo opcional |
 | Repeticao | Condição e corpo |
+| RepeticaoIntervalo (`For`) | Variável de controle, início, fim e corpo |
 | ExprLogica | Operandos e operador relacional |
 | BinOp | Operandos e operador aritmético |
 | Num, Var, StringLit | Literal ou referência a uma variável |
@@ -222,8 +228,8 @@ as etapas seguintes. Não há substituição textual do programa fonte.
    ser finitos e não ultrapassar o maior float de 32 bits. A precisão/representação
    segue o C de destino. Zeros iniciais continuam decimais: `08` representa oito.
 2. A tabela de símbolos é uma pilha de dicionários. Cada entrada contém nome fonte,
-   tipo e nome único no C. O programa tem um escopo; cada corpo de `if`, `else` ou
-   `while` abre seu próprio escopo. A busca ocorre do escopo interno para o externo.
+   tipo e nome único no C. O programa tem um escopo; cada corpo de `if`, `else`,
+   `while` ou `for` abre seu próprio escopo. A busca ocorre do escopo interno para o externo.
 3. Uso de variável exige declaração visível anterior, inclusive em inicializadores,
    condições, expressões e leitura. Duas declarações do mesmo nome no mesmo escopo
    são rejeitadas. Escopos distintos podem declarar o mesmo nome.
@@ -241,7 +247,13 @@ as etapas seguintes. Não há substituição textual do programa fonte.
 8. Leitura só recebe uma variável declarada; seu tipo escolhe `%d` ou `%f` no `scanf`.
    Uma falha de conversão ou fim de entrada encerra o programa gerado com mensagem
    e status 1. O consumo da entrada segue `scanf`, incluindo seus prefixos numéricos.
-9. Erros semânticos informam linha e a regra violada; erros sobre variáveis também
+9. No `for`, início e fim precisam ser inteiros e são avaliados no escopo externo,
+   antes da variável de controle existir. O intervalo é inclusivo e crescente, de 1 em 1;
+   se o início for maior que o fim, o corpo não executa. A variável de controle é
+   inteira, é declarada pelo próprio laço e só existe no corpo. Ela não pode ser
+   alterada por atribuição ou leitura, nem redeclarada no corpo; blocos internos
+   podem sombreá-la. O fim é avaliado uma única vez, antes da primeira repetição.
+10. Erros semânticos informam linha e a regra violada; erros sobre variáveis também
    identificam seu nome. Os limites numéricos em operações em tempo de execução,
    divisão por zero e entrada numérica fora da faixa não têm verificação adicional:
    os programas devem respeitar o domínio dos tipos do C adotado.
@@ -255,6 +267,9 @@ as etapas seguintes. Não há substituição textual do programa fonte.
 - Literais são normalizados para decimal; reais recebem sufixo `f`.
 - Operadores temáticos são mapeados para os símbolos C; os nós BinOp geram parênteses.
 - Condicional e repetição viram `if/else` e `while` com chaves, preservando os escopos.
+- `This is the way (i de a até b)` vira
+  `for (int sw_v0 = a, sw_v1 = b; sw_v0 <= sw_v1; sw_v0++)`. O limite fica em uma
+  variável própria, declarada depois do início, e por isso é avaliado uma única vez.
 - Textos são passados como argumento de `printf("%s", texto)`, portanto `%` e `%n`
   no texto são impressos literalmente. Interrogações são escapadas para evitar
   interpretação de trigraphs do C99. Os escapes de texto permitidos têm a mesma
@@ -266,8 +281,8 @@ as etapas seguintes. Não há substituição textual do programa fonte.
 - A leitura com mensagem imprime o texto, descarrega stdout e chama `scanf` para
   a variável correta. O retorno da leitura é verificado.
 
-A linguagem não inclui funções, `for`, booleanos armazenáveis, vetores ou variáveis
-de texto. O `while` atende ao requisito de repetição e os dois tipos numéricos
+A linguagem não inclui funções, booleanos armazenáveis, vetores ou variáveis de texto.
+O `while` e o `for` atendem ao requisito de repetição e os dois tipos numéricos
 atendem ao mínimo de tipos primitivos.
 
 ## 8. Erros e testes
@@ -279,9 +294,11 @@ atendem ao mínimo de tipos primitivos.
 | Semântico | `x = 1;` sem declaração | Linha, nome e declaração ausente |
 | Semântico | `x: Você era o escolhido = 1.5;` | Incompatibilidade de tipos |
 | Semântico | Uso de nome local fora de seu bloco | Nome não declarado no escopo atual |
+| Semântico | Atribuição à variável de controle do `for` | Variável de controle não pode ser alterada |
 
 Os arquivos 01 a 05 em `testes/` cumprem os cinco casos mínimos do enunciado.
-Os arquivos 06 a 08 demonstram mais erros semânticos. O programa completo contém
+Os arquivos 06 a 08 demonstram mais erros semânticos; 09 e 10 demonstram o `for`
+e a proteção da sua variável de controle. O programa completo contém
 leitura de inteiro e real, decisão com alternativa, repetição, saída composta,
 `2 + 3 * 4` e `(2 + 3) * 4`. Os arquivos de entrada e de saída esperada acompanham
 os exemplos. `gerados/` contém o código destino dos programas válidos.
