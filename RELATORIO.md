@@ -296,14 +296,15 @@ atendem ao mínimo de tipos primitivos.
 | Semântico | Uso de nome local fora de seu bloco | Nome não declarado no escopo atual |
 | Semântico | Atribuição à variável de controle do `for` | Variável de controle não pode ser alterada |
 
-Os arquivos 01 a 05 em `testes/` cumprem os cinco casos mínimos do enunciado.
+Os arquivos 01 a 05 em `examples/valid/` e `examples/invalid/` cumprem os cinco casos
+mínimos do enunciado.
 Os arquivos 06 a 08 demonstram mais erros semânticos; 09 e 10 demonstram o `for`
 e a proteção da sua variável de controle. O programa completo contém
 leitura de inteiro e real, decisão com alternativa, repetição, saída composta,
 `2 + 3 * 4` e `(2 + 3) * 4`. Os arquivos de entrada e de saída esperada acompanham
-os exemplos. `gerados/` contém o código destino dos programas válidos.
+os exemplos. `examples/generated/` contém o código destino dos programas válidos.
 
-A suíte `testes/test_transpilador.py` usa unittest e GCC. Verifica também a forma
+A suíte em `tests/`, com um arquivo por fase do transpilador, usa unittest e GCC. Verifica também a forma
 da AST, limites de palavras-chave, operadores com prefixos comuns, inicialização,
 sombreamento, erros em expressões, texto com `%`, escapes, nomes reservados no C,
 zeros iniciais, CR/LF e o comportamento da interface em falhas. Os testes compilam
@@ -312,7 +313,7 @@ e executam C temporário e comparam a saída observada com a esperada.
 Reprodução:
 
 ```bash
-python3 -B -m unittest discover -s testes -v
+./sw test        # ou: python3 -B -m unittest discover -s tests -v
 ```
 
 ## 9. Autoria e uso de IA
