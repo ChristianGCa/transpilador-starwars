@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, fields, is_dataclass
+from dataclasses import dataclass, field, fields, is_dataclass
 from typing import Any, List, Optional, Union
 
 INT = "int"
@@ -41,7 +41,17 @@ class BinaryOp:
     type_name: Optional[str] = None
 
 
-Expression = Union[Number, Variable, BinaryOp]
+@dataclass
+class Call:
+    name: str
+    args: List[Expression]
+    line: int
+    column: int
+    c_name: Optional[str] = None
+    type_name: Optional[str] = None
+
+
+Expression = Union[Number, Variable, BinaryOp, Call]
 
 
 @dataclass
@@ -119,12 +129,47 @@ class For:
     limit_c_name: Optional[str] = None
 
 
-Statement = Union[Declaration, Assignment, Print, Read, If, While, For]
+@dataclass
+class CallStatement:
+    call: Call
+    line: int
+    column: int
+
+
+@dataclass
+class Return:
+    value: Optional[Expression]
+    line: int
+    column: int
+
+
+Statement = Union[Declaration, Assignment, Print, Read, If, While, For, CallStatement, Return]
+
+
+@dataclass
+class Parameter:
+    name: str
+    type_name: str
+    line: int
+    column: int
+    c_name: Optional[str] = None
+
+
+@dataclass
+class Function:
+    name: str
+    params: List[Parameter]
+    return_type: Optional[str]
+    body: List[Statement]
+    line: int
+    column: int
+    c_name: Optional[str] = None
 
 
 @dataclass
 class Program:
     statements: List[Statement]
+    functions: List[Function] = field(default_factory=list)
 
 
 def to_dict(value: Any) -> Any:

@@ -3,7 +3,7 @@ import unittest
 from support import program
 from starwars.errors import CompilerError, ErrorKind
 from starwars.lexer import tokenize
-from starwars.nodes import For
+from starwars.nodes import Call, CallStatement, For, Return
 from starwars.parser import Parser
 
 
@@ -37,6 +37,30 @@ class ParserTest(unittest.TestCase):
         self.assertEqual(len(loop.body), 1)
         self.assertEqual((loop.line, loop.column), (2, 1))
 
+    def test_functions_come_before_statements(self):
+        tree = Parser(tokenize(
+            "INICIA_SISTEMA\n"
+            "Execute a ordem 66 media(a: Você era o escolhido, b: Eu sou C3PO, ciborgue de relações humanas)"
+            ": Eu sou C3PO, ciborgue de relações humanas\n"
+            "  Palpatine retornou (a + b) / 2;\nLOGOUT\n"
+            "Execute a ordem 66 saudar() Hello There (\"oi\"); Palpatine retornou; LOGOUT\n"
+            "saudar();\nLOGOUT")).parse_program()
+        average, greet = tree.functions
+        self.assertEqual((average.name, average.return_type), ("media", "float"))
+        self.assertEqual([(p.name, p.type_name) for p in average.params], [("a", "int"), ("b", "float")])
+        self.assertEqual((average.line, average.column), (2, 1))
+        self.assertIsInstance(average.body[0], Return)
+        self.assertEqual((greet.name, greet.return_type, greet.params), ("saudar", None, []))
+        self.assertIsNone(greet.body[1].value)
+        self.assertIsInstance(tree.statements[0], CallStatement)
+
+    def test_calls_inside_expressions(self):
+        expression = parse("Hello There (dobro(2, x + 1) + 1);").statements[0].items[0]
+        call = expression.left
+        self.assertIsInstance(call, Call)
+        self.assertEqual((call.name, len(call.args), call.args[1].op), ("dobro", 2, "+"))
+        self.assertEqual(parse("Hello There (agora());").statements[0].items[0].args, [])
+
     def test_node_positions(self):
         read = parse("x: Você era o escolhido;\n  Ajude-me Obi-Wan Kenobi (x);").statements[1]
         self.assertEqual((read.line, read.column), (3, 3))
@@ -50,6 +74,10 @@ class ParserTest(unittest.TestCase):
             program('Hello There (1 "b");'): "esperado ')', encontrado \"b\"",
             program("This is the way (i 1 até 2) LOGOUT"): "esperado 'de', encontrado '1'",
             program("This is the way (i de 1 2) LOGOUT"): "esperado 'até', encontrado '2'",
+            program("Hello There (1); Execute a ordem 66 f() LOGOUT"):
+                "funções devem ser definidas logo após o início do programa",
+            program("Execute a ordem 66 f(x) LOGOUT"): "esperado ':', encontrado ')'",
+            program("Execute a ordem 66 f(x: y) LOGOUT"): "esperado tipo inteiro ou real, encontrado 'y'",
         }
         for source, message in cases.items():
             with self.subTest(source=source):
@@ -62,7 +90,10 @@ class ParserTest(unittest.TestCase):
                      'Ajude-me Obi-Wan Kenobi ("x" x);', 'Faça, ou não faça (1) LOGOUT',
                      'Faça, ou não faça (1 == 1)', 'Eu sinto uma perturbação na força (1 > 0)',
                      'This is the way (1 de 1 até 2) LOGOUT', 'This is the way i de 1 até 2 LOGOUT',
-                     'This is the way (i de 1 até 2)'):
+                     'This is the way (i de 1 até 2)',
+                     'Execute a ordem 66 f( LOGOUT', 'Execute a ordem 66 (x: Você era o escolhido) LOGOUT',
+                     'Execute a ordem 66 f(): LOGOUT', 'Execute a ordem 66 f() Palpatine retornou 1 LOGOUT',
+                     'f(1;', 'f(1,);', 'Hello There (f(1);'):
             with self.subTest(body=body):
                 with self.assertRaises(CompilerError) as caught:
                     parse(body)

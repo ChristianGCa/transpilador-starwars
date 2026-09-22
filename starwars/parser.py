@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import Callable, List, Tuple, Union
 
 from .errors import CompilerError, ErrorKind
-from .nodes import (FLOAT, INT, Assignment, BinaryOp, Comparison, Declaration, Expression, For, If,
-                    Number, Print, Program, Read, Statement, StringLiteral, Variable, While)
+from .nodes import (FLOAT, INT, Assignment, BinaryOp, Call, CallStatement, Comparison, Declaration,
+                    Expression, For, Function, If, Number, Parameter, Print, Program, Read, Return,
+                    Statement, StringLiteral, Variable, While)
 from .tokens import ARITHMETIC_OPERATORS, COMPARISON_OPERATORS, Token, TokenKind
 
 TYPE_KEYWORDS = {TokenKind.INT_TYPE: INT, TokenKind.FLOAT_TYPE: FLOAT}
@@ -17,12 +18,14 @@ class Parser:
         self.tokens = tokens
         self.pos = 0
         self.statement_parsers = {
-            TokenKind.ID: self.parse_assignment,
+            TokenKind.ID: self.parse_assignment_or_call,
             TokenKind.PRINT: self.parse_print,
             TokenKind.INPUT: self.parse_read,
             TokenKind.IF: self.parse_if,
             TokenKind.WHILE: self.parse_while,
             TokenKind.FOR: self.parse_for,
+            TokenKind.RETURN: self.parse_return,
+            TokenKind.FUNCTION: self.reject_late_function,
         }
 
     def current(self) -> Token:
@@ -58,10 +61,45 @@ class Parser:
 
     def parse_program(self) -> Program:
         self.expect(TokenKind.BEGIN)
+        functions = []
+        while self.check(TokenKind.FUNCTION):
+            functions.append(self.parse_function())
         statements = self.parse_block(TokenKind.END)
         self.expect(TokenKind.END)
         self.expect(TokenKind.EOF)
-        return Program(statements)
+        return Program(statements, functions)
+
+    def parse_function(self) -> Function:
+        keyword = self.expect(TokenKind.FUNCTION)
+        name = self.expect(TokenKind.ID)
+        self.expect(TokenKind.LPAREN)
+        params = []
+        if not self.check(TokenKind.RPAREN):
+            params.append(self.parse_parameter())
+            while self.check(TokenKind.COMMA):
+                self.advance()
+                params.append(self.parse_parameter())
+        self.expect(TokenKind.RPAREN)
+        return_type = None
+        if self.check(TokenKind.COLON):
+            self.advance()
+            return_type = self.parse_type()
+        body = self.parse_block(TokenKind.END)
+        self.expect(TokenKind.END)
+        return Function(name.lexeme, params, return_type, body, keyword.line, keyword.column)
+
+    def parse_parameter(self) -> Parameter:
+        name = self.expect(TokenKind.ID)
+        self.expect(TokenKind.COLON)
+        return Parameter(name.lexeme, self.parse_type(), name.line, name.column)
+
+    def parse_type(self) -> str:
+        if not self.check(*TYPE_KEYWORDS):
+            raise self.error(f"esperado tipo inteiro ou real, encontrado {self.found()}")
+        return TYPE_KEYWORDS[self.advance().kind]
+
+    def reject_late_function(self) -> Statement:
+        raise self.error("funções devem ser definidas logo após o início do programa")
 
     def parse_block(self, *terminators: TokenKind) -> List[Statement]:
         statements = []
@@ -82,24 +120,49 @@ class Parser:
         if self.check(TokenKind.ID):
             name = self.advance()
             self.expect(TokenKind.COLON)
-            if not self.check(*TYPE_KEYWORDS):
-                raise self.error(f"esperado tipo inteiro ou real, encontrado {self.found()}")
-            type_token = self.advance()
+            type_name = self.parse_type()
         else:
-            type_token = self.advance()
+            type_name = self.parse_type()
             name = self.expect(TokenKind.ID)
         init = None
         if self.check(TokenKind.ASSIGN):
             self.advance()
             init = self.parse_expression()
         self.expect(TokenKind.SEMI)
-        return Declaration(TYPE_KEYWORDS[type_token.kind], name.lexeme, init, start.line, start.column)
+        return Declaration(type_name, name.lexeme, init, start.line, start.column)
 
     def parse_statement(self) -> Statement:
         parse = self.statement_parsers.get(self.current().kind)
         if parse is None:
             raise self.error(f"comando inválido começando com '{self.current().lexeme}'")
         return parse()
+
+    def parse_assignment_or_call(self) -> Statement:
+        if self.peek().kind is TokenKind.LPAREN:
+            call = self.parse_call()
+            self.expect(TokenKind.SEMI)
+            return CallStatement(call, call.line, call.column)
+        return self.parse_assignment()
+
+    def parse_return(self) -> Return:
+        keyword = self.expect(TokenKind.RETURN)
+        value = None
+        if not self.check(TokenKind.SEMI):
+            value = self.parse_expression()
+        self.expect(TokenKind.SEMI)
+        return Return(value, keyword.line, keyword.column)
+
+    def parse_call(self) -> Call:
+        name = self.expect(TokenKind.ID)
+        self.expect(TokenKind.LPAREN)
+        args = []
+        if not self.check(TokenKind.RPAREN):
+            args.append(self.parse_expression())
+            while self.check(TokenKind.COMMA):
+                self.advance()
+                args.append(self.parse_expression())
+        self.expect(TokenKind.RPAREN)
+        return Call(name.lexeme, args, name.line, name.column)
 
     def parse_assignment(self) -> Assignment:
         name = self.expect(TokenKind.ID)
@@ -195,6 +258,8 @@ class Parser:
 
     def parse_factor(self) -> Expression:
         token = self.current()
+        if token.kind is TokenKind.ID and self.peek().kind is TokenKind.LPAREN:
+            return self.parse_call()
         if token.kind is TokenKind.ID:
             self.advance()
             return Variable(token.lexeme, token.line, token.column)

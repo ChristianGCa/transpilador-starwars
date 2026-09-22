@@ -20,6 +20,7 @@ class ToDictTest(unittest.TestCase):
                 }],
                 "line": 1, "column": 1,
             }],
+            "functions": [],
         })
 
 
