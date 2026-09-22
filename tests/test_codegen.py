@@ -49,6 +49,21 @@ class CodegenTest(unittest.TestCase):
                            f"Tentativa não há x: {INT_DECL} = 2; Hello There (x); LOGOUT\n"
                            "Hello There (x);", "8\n7\n")
 
+    def test_for_counts_inclusive_range(self):
+        self.assert_output("This is the way (i de 0 - 1 até 2) Hello There (i); LOGOUT", "-1\n0\n1\n2\n")
+
+    def test_for_with_empty_range(self):
+        self.assert_output('This is the way (i de 5 até 1) Hello There (i); LOGOUT Hello There ("fim");', "fim")
+
+    def test_for_evaluates_stop_once(self):
+        self.assert_output(f"n: {INT_DECL} = 3; voltas: {INT_DECL};\n"
+                           "This is the way (i de 1 até n) n = n + 1; voltas = voltas + 1; LOGOUT\n"
+                           'Hello There (voltas, ",", n);', "3,6\n")
+
+    def test_nested_for_loops(self):
+        self.assert_output("This is the way (i de 1 até 2) This is the way (j de i até 2) "
+                           'Hello There (i, "x", j); LOGOUT LOGOUT', "1x1\n1x2\n2x2\n")
+
     def test_int_float_and_prompt_input(self):
         self.assert_output(f"i: {INT_DECL}; r: {FLOAT_DECL};\n"
                            'Ajude-me Obi-Wan Kenobi (i); Ajude-me Obi-Wan Kenobi ("Real: " -> r);\n'

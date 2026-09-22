@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import List, Union
 
-from .nodes import (INT, Assignment, BinaryOp, Comparison, Declaration, Expression, If, Number,
-                    Print, Program, Read, Statement, StringLiteral, Variable, While)
+from .nodes import (INT, Assignment, BinaryOp, Comparison, Declaration, Expression, For, If,
+                    Number, Print, Program, Read, Statement, StringLiteral, Variable, While)
 
 INDENT = "    "
 
@@ -56,6 +56,7 @@ class CGenerator:
             Print: self.emit_print,
             If: self.emit_if,
             While: self.emit_while,
+            For: self.emit_for,
         }
 
     def block(self, statements: List[Statement], depth: int) -> List[str]:
@@ -104,3 +105,10 @@ class CGenerator:
     def emit_while(self, node: While, depth: int) -> List[str]:
         pad = INDENT * depth
         return [f"{pad}while ({c_condition(node.condition)}) {{", *self.block(node.body, depth + 1), f"{pad}}}"]
+
+    def emit_for(self, node: For, depth: int) -> List[str]:
+        pad = INDENT * depth
+        counter, limit = node.c_name, node.limit_c_name
+        header = (f"for (int {counter} = {c_expression(node.start)}, {limit} = {c_expression(node.stop)}; "
+                  f"{counter} <= {limit}; {counter}++) {{")
+        return [f"{pad}{header}", *self.block(node.body, depth + 1), f"{pad}}}"]
