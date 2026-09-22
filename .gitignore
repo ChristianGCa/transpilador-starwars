@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 /examples/generated/*.bin
+/build/
 
 # superpowers (specs e planos locais)
 docs/superpowers/
