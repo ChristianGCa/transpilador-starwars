@@ -161,6 +161,12 @@ class SemanticTest(unittest.TestCase):
             with self.subTest(body=body):
                 self.assert_semantic_error(body, message)
 
+    def test_return_value_is_annotated_in_float_function(self):
+        tree = check(f"Execute a ordem 66 metade(x: {FLOAT_DECL}): {FLOAT_DECL} "
+                     "Palpatine retornou x / 2; LOGOUT")
+        value = tree.functions[0].body[0].value
+        self.assertEqual((value.type_name, value.left.c_name), ("float", "sw_v0"))
+
     def test_function_annotations(self):
         tree = check(f"{DOUBLE} Hello There (dobro(1));")
         function, call = tree.functions[0], tree.statements[0].items[0]

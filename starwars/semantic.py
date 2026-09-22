@@ -139,7 +139,7 @@ class SemanticAnalyzer:
         if node.value is None:
             raise self.error(node, f"a função '{function.name}' deve retornar um valor do tipo "
                                    f"{function.return_type}")
-        if function.return_type == INT and self.type_of(node.value) == FLOAT:
+        if self.type_of(node.value) == FLOAT and function.return_type == INT:
             raise self.error(node, "incompatibilidade de tipos: "
                                    f"a função '{function.name}' deve retornar int")
 
