@@ -127,6 +127,7 @@ correspondem às fontes atuais e compila/executa os programas C em uma pasta tem
 | `examples/invalid/10_loop_variable_error.starwars` | Alteração da variável de controle do laço |
 | `examples/valid/11_functions.starwars` | Funções com retorno, recursão e procedimento |
 | `examples/invalid/12_argument_error.starwars` | Chamada com quantidade errada de argumentos |
+| `examples/valid/13_galaxy.starwars` | Programa completo: funções, recursão, `for`, `while`, `if` aninhado, leitura e escrita |
 
 Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
 

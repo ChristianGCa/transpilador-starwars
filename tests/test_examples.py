@@ -11,6 +11,7 @@ SOURCES = {
     "02_complete": VALID / "02_complete.starwars",
     "09_for": VALID / "09_for.starwars",
     "11_functions": VALID / "11_functions.starwars",
+    "13_galaxy": VALID / "13_galaxy.starwars",
     "demo": EXAMPLES / "demo.starwars",
 }
 INVALID_KINDS = {
@@ -32,7 +33,7 @@ class ExamplesTest(unittest.TestCase):
                 self.assertEqual(transpile(read(source)), read(GENERATED / f"{name}.c"))
 
     def test_valid_examples_produce_expected_output(self):
-        for name in ("01_basic", "02_complete", "09_for", "11_functions"):
+        for name in ("01_basic", "02_complete", "09_for", "11_functions", "13_galaxy"):
             with self.subTest(name=name):
                 stdin_file = VALID / f"{name}.input.txt"
                 stdin = read(stdin_file) if stdin_file.exists() else ""

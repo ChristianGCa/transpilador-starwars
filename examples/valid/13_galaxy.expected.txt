@@ -1,0 +1,18 @@
+Quantos pilotos? 
+Piloto 1: nota 85.95
+	patente: "Jedi"
+Piloto 2: nota 36
+	patente: Youngling
+Piloto 3: nota 54
+	patente: Padawan
+Piloto 4: nota -5
+	patente: inválida
+Média do esquadrão: 42.7375
+Pilotos com pontuação par: 3
+Melhor pontuação: 90 (faltam 10 para 100)
+Formações possíveis: 24
+Salto em 3...
+Salto em 2...
+Salto em 1...
+Desvio de rota corrigido: -5 graus
+Que a Força esteja com vocês!

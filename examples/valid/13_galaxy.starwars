@@ -1,0 +1,86 @@
+Há muito tempo, em uma galáxia muito, muito distante
+# Simulador de treinamento do Esquadrão Rogue
+
+# resto da divisão inteira (a linguagem não tem operador de resto)
+Execute a ordem 66 resto(a: Você era o escolhido, b: Você era o escolhido): Você era o escolhido
+    Palpatine retornou a Acabou anakin (a Eu sou todos os sith b) Eu sou todos os jedi b;
+Chewie, estamos em casa
+
+# formações possíveis do esquadrão: fatorial recursivo
+Execute a ordem 66 formacoes(n: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (n Não, eu sou seu pai 1)
+        Palpatine retornou 1;
+    Tentativa não há
+        Palpatine retornou n Eu sou todos os jedi formacoes(n Acabou anakin 1);
+    Chewie, estamos em casa
+Chewie, estamos em casa
+
+# nota do piloto: pontos ponderados pela precisão (em %)
+Execute a ordem 66 nota(pontos: Você era o escolhido, precisao: Eu sou C3PO, ciborgue de relações humanas): Eu sou C3PO, ciborgue de relações humanas
+    Palpatine retornou pontos Eu sou todos os jedi precisao Eu sou todos os sith 100.0;
+Chewie, estamos em casa
+
+# procedimento: mostra a patente conforme a nota
+Execute a ordem 66 patente(valor: Eu sou C3PO, ciborgue de relações humanas)
+    Faça, ou não faça (valor Você subestima meu poder 0.0)
+        Hello There ("\tpatente: inválida\n");
+        Palpatine retornou;
+    Chewie, estamos em casa
+    Faça, ou não faça (valor A força é forte nele 80.0)
+        Hello There ("\tpatente: \"Jedi\"\n");
+    Tentativa não há
+        Faça, ou não faça (valor I have the high ground 50.0)
+            Hello There ("\tpatente: Padawan\n");
+        Tentativa não há
+            Hello There ("\tpatente: Youngling\n");
+        Chewie, estamos em casa
+    Chewie, estamos em casa
+Chewie, estamos em casa
+
+pilotos: Você era o escolhido;
+Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
+Hello There ("\n");
+
+total: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0.0;
+pares: Você era o escolhido;
+melhor: Você era o escolhido Eu alterei o acordo 0;
+
+This is the way (i de 1 até pilotos)
+    # cada piloto informa pontos (inteiro) e precisão (real)
+    pontos: Você era o escolhido;
+    precisão: Eu sou C3PO, ciborgue de relações humanas;
+    Ajude-me Obi-Wan Kenobi (pontos);
+    Ajude-me Obi-Wan Kenobi (precisão);
+    resultado: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo nota(pontos, precisão);
+    Hello There ("Piloto ", i, ": nota ", resultado);
+    patente(resultado);
+    total Eu alterei o acordo total Que a força esteja com você resultado;
+    Faça, ou não faça (resto(pontos, 2) Como deve ser 0)
+        pares Eu alterei o acordo pares Que a força esteja com você 1;
+    Chewie, estamos em casa
+    Faça, ou não faça (pontos I have the high ground melhor)
+        melhor Eu alterei o acordo pontos;
+    Chewie, estamos em casa
+Chewie, estamos em casa
+
+Faça, ou não faça (pilotos I have the high ground 0)
+    média: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo total Eu sou todos os sith pilotos;
+    Hello There ("Média do esquadrão: ", média);
+    Hello There ("Pilotos com pontuação par: ", pares);
+    Hello There ("Melhor pontuação: ", melhor, " (faltam ", 100 Acabou anakin melhor, " para 100)");
+    Hello There ("Formações possíveis: ", formacoes(pilotos));
+Tentativa não há
+    Hello There ("Nenhum piloto para treinar.\n");
+Chewie, estamos em casa
+
+# contagem regressiva para o salto ao hiperespaço
+contagem: Você era o escolhido Eu alterei o acordo 3;
+Eu sinto uma perturbação na força (contagem Estes não são os droides que você procura 0)
+    Hello There ("Salto em ", contagem, "...");
+    contagem Eu alterei o acordo contagem Acabou anakin 1;
+Chewie, estamos em casa
+
+desvio: Você era o escolhido Eu alterei o acordo 0 Acabou anakin 5;
+Hello There ("Desvio de rota corrigido: ", desvio, " graus");
+Hello There ("Que a Força esteja com vocês!\n");
+Chewie, estamos em casa
