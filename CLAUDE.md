@@ -7,16 +7,20 @@ fonte → lexer → tokens → parser → AST → análise semântica → códig
 ## Comandos
 
 ```bash
-python3 -B -m unittest discover -s tests -v              # testes (exige GCC)
-python3 -m starwars arquivo.starwars -o saida.c
-python3 -m starwars arquivo.starwars --tokens --ast
-gcc -std=c99 -Wall -Wextra saida.c -o saida.bin
+./sw test                          # testes (exige GCC)
+./sw run arquivo.starwars          # transpila, compila e executa (artefatos em build/)
+./sw c arquivo.starwars --tokens --ast
+./sw regen                         # regenera examples/generated
+./sw                               # lista todos os comandos
 ```
+
+`./sw` apenas encadeia `python3 -m starwars` e `gcc -std=c99 -Wall -Wextra`.
 
 - Somente a biblioteca padrão do Python (3.8+). Não adicione dependências externas.
 - Os arquivos em `examples/generated/` são verificados pelos testes: ao mudar a geração
-  de C, regenere-os a partir das fontes em `examples/`.
-- Estrutura: `starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`.
+  de C, regenere-os com `./sw regen`.
+- Estrutura: `starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`,
+  `sw` (script de uso rápido, testado em `tests/test_script.py`).
 
 ## Idioma
 

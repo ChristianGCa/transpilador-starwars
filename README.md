@@ -11,17 +11,39 @@ condicionais, repetição e entrada/saída. O transpilador percorre as etapas:
 - GCC com suporte a C99 para compilar os programas gerados e executar os testes.
 - Arquivos fonte em UTF-8. Os comandos abaixo são para Linux, executados nesta pasta.
 
-## Executar um programa
+## Uso rápido: `./sw`
+
+O script `./sw` reúne as etapas em comandos curtos e pode ser chamado de qualquer pasta.
+Os arquivos gerados ficam em `build/`.
 
 ```bash
-python3 -m starwars examples/valid/02_complete.starwars -o examples/generated/02_complete.c
-gcc -std=c99 -Wall -Wextra examples/generated/02_complete.c -o examples/generated/complete.bin
-./examples/generated/complete.bin < examples/valid/02_complete.input.txt
+./sw run examples/valid/02_complete.starwars      # transpila, compila e executa
+./sw run examples/valid/02_complete.starwars < examples/valid/02_complete.input.txt
+./sw build arquivo.starwars    # gera build/arquivo.c e build/arquivo sem executar
+./sw c arquivo.starwars        # mostra o C gerado (aceita --tokens e --ast)
+./sw check arquivo.starwars    # só verifica erros léxicos, sintáticos e semânticos
+./sw test                      # roda a suíte de testes
+./sw regen                     # regenera examples/generated a partir das fontes
+./sw demo                      # executa os exemplos válidos e mostra cada tipo de erro
+./sw clean                     # apaga build/
+./sw                           # ajuda
 ```
 
 A entrada de demonstração contém `3` e `1.5`. A saída esperada está em
 [`examples/valid/02_complete.expected.txt`](examples/valid/02_complete.expected.txt).
-Para digitar os valores interativamente, execute `./examples/generated/complete.bin` sem o redirecionamento.
+Sem o redirecionamento `<`, os valores são digitados no terminal. O compilador C
+padrão é `gcc`; outro pode ser escolhido com a variável `CC`.
+
+## Executar passo a passo
+
+Os comandos abaixo mostram as etapas que o `./sw run` executa:
+
+```bash
+mkdir -p build
+python3 -m starwars examples/valid/02_complete.starwars -o build/02_complete.c
+gcc -std=c99 -Wall -Wextra build/02_complete.c -o build/02_complete
+./build/02_complete < examples/valid/02_complete.input.txt
+```
 
 O transpilador gera C; a execução do programa é uma etapa posterior, feita com GCC.
 Sem `-o`, o código C é impresso na saída padrão. Sem o argumento do arquivo,
@@ -65,14 +87,14 @@ e a gramática estão no [`RELATORIO.md`](RELATORIO.md).
 ## Testar
 
 ```bash
-python3 -B -m unittest discover -s tests -v
+./sw test                                     # ou: python3 -B -m unittest discover -s tests -v
 ```
 
 A suíte tem um arquivo por fase do transpilador (`tests/test_lexer.py`,
 `tests/test_parser.py`, `tests/test_semantic.py`, `tests/test_codegen.py`, ...), além de
 `tests/test_examples.py`, que confere que os arquivos em `examples/generated/`
 correspondem às fontes atuais e compila/executa os programas C em uma pasta temporária,
-e `tests/test_cli.py`, para os argumentos da interface.
+`tests/test_cli.py`, para os argumentos da interface, e `tests/test_script.py`, para o `./sw`.
 
 | Arquivo | Objetivo |
 | --- | --- |
@@ -88,15 +110,17 @@ e `tests/test_cli.py`, para os argumentos da interface.
 Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
 
 ```bash
-python3 -m starwars examples/invalid/03_lexical_error.starwars
-python3 -m starwars examples/invalid/04_syntax_error.starwars
-python3 -m starwars examples/invalid/05_semantic_error.starwars
+./sw check examples/invalid/03_lexical_error.starwars
+./sw check examples/invalid/04_syntax_error.starwars
+./sw check examples/invalid/05_semantic_error.starwars
 ```
+
+`./sw demo` executa todos os exemplos válidos e mostra o erro de cada exemplo inválido.
 
 ## Inspecionar as etapas
 
 ```bash
-python3 -m starwars examples/valid/01_basic.starwars --tokens --ast -o examples/generated/01_basic.c
+./sw c examples/valid/01_basic.starwars --tokens --ast
 ```
 
 `--tokens` mostra categoria, lexema, linha e coluna, e é impresso mesmo quando a análise
@@ -106,6 +130,7 @@ separadas do código C.
 
 ## Organização
 
+- `sw`: script com os comandos de uso rápido.
 - `starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`, `semantic`,
   `codegen`, `cli`, entre outros).
 - `RELATORIO.md`: especificação formal e explicação da implementação.
