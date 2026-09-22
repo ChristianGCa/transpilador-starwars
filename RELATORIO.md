@@ -92,6 +92,8 @@ reservadas são exatamente os apresentados na tabela.
 | FOR | `This is the way` | Repetição por intervalo |
 | FROM | `de` | Início do intervalo do `for` |
 | TO | `até` | Fim do intervalo do `for` |
+| FUNCTION | `Execute a ordem 66` | Definição de função |
+| RETURN | `Palpatine retornou` | Retorno de função |
 
 ### 3.3 Demais categorias
 
@@ -148,13 +150,15 @@ opcionalidade e `|` indica alternativa. Os nomes em maiúsculas são categorias 
 token da seção 3; aliases de um mesmo operador produzem a mesma categoria.
 
 ```text
-V = { Programa, Bloco, Tipo, Declaracao, Comando, Atribuicao,
-      Leitura, Escrita, ItemSaida, Condicional, Repeticao,
-      RepeticaoIntervalo, ExprLogica, OpRel, Expressao, Termo, Fator }
+V = { Programa, Funcao, Parametro, Bloco, Tipo, Declaracao, Comando,
+      Atribuicao, Leitura, Escrita, ItemSaida, Condicional, Repeticao,
+      RepeticaoIntervalo, ChamadaComando, Retorno, Chamada,
+      ExprLogica, OpRel, Expressao, Termo, Fator }
 
 T = { INICIA, LOGOUT, NUM_TYPE, REAL_TYPE, ASSIGN,
       PLUS, MINUS, STAR, SLASH, EQ, NEQ, GT, GE, LT, LE,
-      IF, ELSE, PRINT, INPUT, WHILE, FOR, FROM, TO, ID, NUM, STRING,
+      IF, ELSE, PRINT, INPUT, WHILE, FOR, FROM, TO, FUNCTION, RETURN,
+      ID, NUM, STRING,
       LPAREN, RPAREN, SEMI, COLON, COMMA, ARROW }
 
 S = Programa
@@ -166,12 +170,15 @@ SKIP, COMMENT e NEWLINE são descartados antes do parser. EOF é um marcador ext
 O conjunto P contém as seguintes produções:
 
 ```ebnf
-Programa    ::= INICIA Bloco LOGOUT
+Programa    ::= INICIA { Funcao } Bloco LOGOUT
+Funcao      ::= FUNCTION ID LPAREN [ Parametro { COMMA Parametro } ] RPAREN
+                [ COLON Tipo ] Bloco LOGOUT
+Parametro   ::= ID COLON Tipo
 Bloco       ::= { Declaracao | Comando }
 Tipo        ::= NUM_TYPE | REAL_TYPE
 Declaracao  ::= ( Tipo ID | ID COLON Tipo ) [ ASSIGN Expressao ] SEMI
 Comando     ::= Atribuicao | Leitura | Escrita | Condicional | Repeticao
-              | RepeticaoIntervalo
+              | RepeticaoIntervalo | ChamadaComando | Retorno
 Atribuicao  ::= ID ASSIGN Expressao SEMI
 Leitura     ::= INPUT LPAREN [ STRING ARROW ] ID RPAREN SEMI
 Escrita     ::= PRINT LPAREN ItemSaida { COMMA ItemSaida } RPAREN SEMI
@@ -179,16 +186,20 @@ ItemSaida   ::= STRING | Expressao
 Condicional ::= IF LPAREN ExprLogica RPAREN Bloco [ ELSE Bloco ] LOGOUT
 Repeticao   ::= WHILE LPAREN ExprLogica RPAREN Bloco LOGOUT
 RepeticaoIntervalo ::= FOR LPAREN ID FROM Expressao TO Expressao RPAREN Bloco LOGOUT
+ChamadaComando ::= Chamada SEMI
+Retorno     ::= RETURN [ Expressao ] SEMI
+Chamada     ::= ID LPAREN [ Expressao { COMMA Expressao } ] RPAREN
 ExprLogica  ::= Expressao OpRel Expressao
 OpRel       ::= EQ | NEQ | GT | GE | LT | LE
 Expressao   ::= Termo { ( PLUS | MINUS ) Termo }
 Termo       ::= Fator { ( STAR | SLASH ) Fator }
-Fator       ::= ID | NUM | LPAREN Expressao RPAREN
+Fator       ::= Chamada | ID | NUM | LPAREN Expressao RPAREN
 ```
 
 A gramática não usa recursão à esquerda. O parser é manual, por descida recursiva.
 O caso `ID COLON Tipo` usa antecipação de dois tokens para diferenciar declaração
-pós-fixada de atribuição. Multiplicação/divisão têm precedência sobre adição/subtração;
+pós-fixada de atribuição. Da mesma forma, `ID LPAREN` distingue uma chamada de uma
+atribuição, no início de um comando, e de uma variável, dentro de um fator. Multiplicação/divisão têm precedência sobre adição/subtração;
 operadores no mesmo nível associam à esquerda. Parênteses mudam o agrupamento.
 Comparações não são encadeadas; cada condição contém exatamente um operador relacional.
 
@@ -208,6 +219,9 @@ Um `LOGOUT` adicional encerra o programa. Blocos e alternativas podem ser vazios
 | Condicional | Condição, bloco verdadeiro e bloco alternativo opcional |
 | Repeticao | Condição e corpo |
 | RepeticaoIntervalo (`For`) | Variável de controle, início, fim e corpo |
+| Funcao, Parametro | Nome, parâmetros tipados, tipo de retorno opcional e corpo |
+| Chamada, ChamadaComando | Nome da função e argumentos, em expressão ou como comando |
+| Retorno | Expressão opcional |
 | ExprLogica | Operandos e operador relacional |
 | BinOp | Operandos e operador aritmético |
 | Num, Var, StringLit | Literal ou referência a uma variável |
@@ -253,7 +267,21 @@ as etapas seguintes. Não há substituição textual do programa fonte.
    inteira, é declarada pelo próprio laço e só existe no corpo. Ela não pode ser
    alterada por atribuição ou leitura, nem redeclarada no corpo; blocos internos
    podem sombreá-la. O fim é avaliado uma única vez, antes da primeira repetição.
-10. Erros semânticos informam linha e a regra violada; erros sobre variáveis também
+10. Funções são definidas logo após o início do programa e registradas antes de
+    qualquer verificação; por isso podem ser chamadas em qualquer ordem e de forma
+    recursiva. Nomes de funções não podem se repetir nem ser usados por variáveis,
+    parâmetros ou variáveis de controle. Os corpos são verificados antes do programa
+    principal, cada um em escopo próprio: uma função enxerga apenas seus parâmetros
+    e suas variáveis. Parâmetros são passados por valor e podem ser alterados.
+11. Uma chamada exige a função declarada e a mesma quantidade de argumentos que de
+    parâmetros. Argumento real não pode ser passado a parâmetro inteiro; o contrário é
+    permitido. Função sem tipo de retorno é um procedimento: pode ser chamada como
+    comando, mas não em expressões. Função com tipo pode ser chamada nos dois lugares.
+12. `Palpatine retornou` só existe dentro de funções. Em procedimentos, aparece sem
+    valor; em funções com tipo, exige valor compatível (real não retorna em função
+    inteira). Uma função com tipo precisa retornar em todos os caminhos: um bloco
+    retorna se contém um retorno ou um `if` cujos dois ramos retornam; laços não contam.
+13. Erros semânticos informam linha e a regra violada; erros sobre variáveis também
    identificam seu nome. Os limites numéricos em operações em tempo de execução,
    divisão por zero e entrada numérica fora da faixa não têm verificação adicional:
    os programas devem respeitar o domínio dos tipos do C adotado.
@@ -279,9 +307,15 @@ as etapas seguintes. Não há substituição textual do programa fonte.
   linha ao final se contiver pelo menos uma expressão numérica. Textos sozinhos
   não recebem quebra automática. O programador pode usar `\n` em textos.
 - A leitura com mensagem imprime o texto, descarrega stdout e chama `scanf` para
-  a variável correta. O retorno da leitura é verificado.
+  a variável correta. O retorno da leitura é verificado. No `main`, a falha usa
+  `return 1`; dentro de funções, `exit(1)`, pois `return` só sairia da função.
+- Cada função recebe um nome como `sw_f0` e vira uma função C antes do `main`, com
+  o tipo de retorno (`int`, `float` ou `void`) e os parâmetros tipados. Protótipos de
+  todas as funções vêm antes das definições, permitindo recursão e chamadas em
+  qualquer ordem. `stdlib.h` só é incluído quando há funções, por causa do `exit`.
 
-A linguagem não inclui funções, booleanos armazenáveis, vetores ou variáveis de texto.
+A linguagem não inclui booleanos armazenáveis, vetores, variáveis de texto nem
+variáveis globais visíveis dentro de funções.
 O `while` e o `for` atendem ao requisito de repetição e os dois tipos numéricos
 atendem ao mínimo de tipos primitivos.
 
@@ -295,11 +329,13 @@ atendem ao mínimo de tipos primitivos.
 | Semântico | `x: Você era o escolhido = 1.5;` | Incompatibilidade de tipos |
 | Semântico | Uso de nome local fora de seu bloco | Nome não declarado no escopo atual |
 | Semântico | Atribuição à variável de controle do `for` | Variável de controle não pode ser alterada |
+| Semântico | Chamada com quantidade errada de argumentos | Argumentos esperados e recebidos |
 
 Os arquivos 01 a 05 em `examples/valid/` e `examples/invalid/` cumprem os cinco casos
 mínimos do enunciado.
 Os arquivos 06 a 08 demonstram mais erros semânticos; 09 e 10 demonstram o `for`
-e a proteção da sua variável de controle. O programa completo contém
+e a proteção da sua variável de controle; 11 e 12 demonstram funções e a verificação
+dos argumentos. O programa completo contém
 leitura de inteiro e real, decisão com alternativa, repetição, saída composta,
 `2 + 3 * 4` e `(2 + 3) * 4`. Os arquivos de entrada e de saída esperada acompanham
 os exemplos. `examples/generated/` contém o código destino dos programas válidos.

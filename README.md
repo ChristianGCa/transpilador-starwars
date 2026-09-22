@@ -1,7 +1,7 @@
 # Transpilador Star Wars
 
 Linguagem temática com dois tipos numéricos, variáveis, aritmética, comparações,
-condicionais, repetição (`while` e `for`) e entrada/saída. O transpilador percorre as etapas:
+condicionais, repetição (`while` e `for`), funções e entrada/saída. O transpilador percorre as etapas:
 
 **fonte → tokens → parser → AST → análise semântica → código C**
 
@@ -71,6 +71,9 @@ Chewie, estamos em casa
 - `Eu sinto uma perturbação na força (...) ... Chewie, estamos em casa`: repetição enquanto a condição for verdadeira.
 - `This is the way (i de 1 até n) ... Chewie, estamos em casa`: repetição por intervalo inclusivo,
   com `i` inteiro criado pelo laço e que não pode ser alterado no corpo.
+- `Execute a ordem 66 nome(a: tipo, ...): tipo ... Chewie, estamos em casa`: função, definida
+  logo após o início do programa. Sem `: tipo`, é um procedimento. `Palpatine retornou valor;`
+  devolve o resultado, e a chamada é `nome(argumentos)`.
 - `Ajude-me Obi-Wan Kenobi (variavel);`: leitura sem mensagem.
 - `Hello There (...)`: saída de um ou vários textos/expressões separados por vírgulas.
 - `#`: comentário até o fim da linha.
@@ -122,6 +125,8 @@ correspondem às fontes atuais e compila/executa os programas C em uma pasta tem
 | `examples/invalid/08_scope_error.starwars` | Uso de variável fora do bloco |
 | `examples/valid/09_for.starwars` | Laço por intervalo (`This is the way`) |
 | `examples/invalid/10_loop_variable_error.starwars` | Alteração da variável de controle do laço |
+| `examples/valid/11_functions.starwars` | Funções com retorno, recursão e procedimento |
+| `examples/invalid/12_argument_error.starwars` | Chamada com quantidade errada de argumentos |
 
 Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
 
