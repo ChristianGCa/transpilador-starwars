@@ -35,6 +35,13 @@ class LexerTest(unittest.TestCase):
                     "Chewie, estamos em casa\nChewie, estamos em casa")
         self.assertEqual(kinds(thematic), kinds("INICIA_SISTEMA Faça, ou não faça (1 != 2) LOGOUT LOGOUT"))
 
+    def test_for_keywords(self):
+        self.assertEqual(kinds("This is the way (i de 1 até n)"),
+                         ["FOR", "LPAREN", "ID", "FROM", "NUM", "TO", "ID", "RPAREN", "EOF"])
+
+    def test_for_keywords_respect_word_boundary(self):
+        self.assertEqual(kinds("desde ate atéque de_novo"), ["ID", "ID", "ID", "ID", "EOF"])
+
     def test_comments_and_line_breaks(self):
         self.assertEqual(kinds("INICIA_SISTEMA\r\n# comentario\rLOGOUT"), kinds("INICIA_SISTEMA\nLOGOUT"))
         with self.assertRaises(CompilerError) as caught:

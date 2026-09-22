@@ -13,6 +13,9 @@ class TokenKind(Enum):
     IF = "'Faça, ou não faça'"
     ELSE = "'Tentativa não há'"
     WHILE = "'Eu sinto uma perturbação na força'"
+    FOR = "'This is the way'"
+    FROM = "'de'"
+    TO = "'até'"
     PRINT = "'Hello There'"
     INPUT = "'Ajude-me Obi-Wan Kenobi'"
     ASSIGN = "'='"
@@ -72,6 +75,9 @@ KEYWORD_PHRASES: List[Tuple[TokenKind, str]] = sorted([
     (TokenKind.PRINT, "Hello There"),
     (TokenKind.INPUT, "Ajude-me Obi-Wan Kenobi"),
     (TokenKind.WHILE, "Eu sinto uma perturbação na força"),
+    (TokenKind.FOR, "This is the way"),
+    (TokenKind.FROM, "de"),
+    (TokenKind.TO, "até"),
 ], key=lambda entry: -len(entry[1]))
 
 ARITHMETIC_OPERATORS: Dict[TokenKind, str] = {
