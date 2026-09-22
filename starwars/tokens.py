@@ -16,6 +16,8 @@ class TokenKind(Enum):
     FOR = "'This is the way'"
     FROM = "'de'"
     TO = "'até'"
+    FUNCTION = "'Execute a ordem 66'"
+    RETURN = "'Palpatine retornou'"
     PRINT = "'Hello There'"
     INPUT = "'Ajude-me Obi-Wan Kenobi'"
     ASSIGN = "'='"
@@ -78,6 +80,8 @@ KEYWORD_PHRASES: List[Tuple[TokenKind, str]] = sorted([
     (TokenKind.FOR, "This is the way"),
     (TokenKind.FROM, "de"),
     (TokenKind.TO, "até"),
+    (TokenKind.FUNCTION, "Execute a ordem 66"),
+    (TokenKind.RETURN, "Palpatine retornou"),
 ], key=lambda entry: -len(entry[1]))
 
 ARITHMETIC_OPERATORS: Dict[TokenKind, str] = {

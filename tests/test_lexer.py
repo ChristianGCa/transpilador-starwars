@@ -39,6 +39,11 @@ class LexerTest(unittest.TestCase):
         self.assertEqual(kinds("This is the way (i de 1 até n)"),
                          ["FOR", "LPAREN", "ID", "FROM", "NUM", "TO", "ID", "RPAREN", "EOF"])
 
+    def test_function_keywords(self):
+        self.assertEqual(kinds("Execute a ordem 66 dobro(x: y) Palpatine retornou x;"),
+                         ["FUNCTION", "ID", "LPAREN", "ID", "COLON", "ID", "RPAREN", "RETURN", "ID",
+                          "SEMI", "EOF"])
+
     def test_for_keywords_respect_word_boundary(self):
         self.assertEqual(kinds("desde ate atéque de_novo"), ["ID", "ID", "ID", "ID", "EOF"])
 
