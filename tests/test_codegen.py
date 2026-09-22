@@ -65,6 +65,38 @@ class CodegenTest(unittest.TestCase):
         self.assert_output("This is the way (i de 1 até 2) This is the way (j de i até 2) "
                            'Hello There (i, "x", j); LOGOUT LOGOUT', "1x1\n1x2\n2x2\n")
 
+    def test_functions_and_procedures(self):
+        self.assert_output(f"Execute a ordem 66 dobro(x: {INT_DECL}): {INT_DECL} "
+                           "Palpatine retornou x * 2; LOGOUT\n"
+                           f"Execute a ordem 66 metade(x: {FLOAT_DECL}): {FLOAT_DECL} "
+                           "Palpatine retornou x / 2; LOGOUT\n"
+                           f"Execute a ordem 66 mostrar(x: {INT_DECL}) Hello There (\"valor \", x); LOGOUT\n"
+                           'mostrar(dobro(4) + 1); Hello There (metade(3)); dobro(1);', "valor 9\n1.5\n")
+
+    def test_recursion_and_calls_to_later_functions(self):
+        self.assert_output(f"Execute a ordem 66 inicio(): {INT_DECL} "
+                           "Palpatine retornou fatorial(5); LOGOUT\n"
+                           f"Execute a ordem 66 fatorial(n: {INT_DECL}): {INT_DECL}\n"
+                           "Faça, ou não faça (n <= 1) Palpatine retornou 1; LOGOUT\n"
+                           "Palpatine retornou n * fatorial(n - 1); LOGOUT\n"
+                           "Hello There (inicio());", "120\n")
+
+    def test_arguments_are_passed_by_value(self):
+        self.assert_output(f"Execute a ordem 66 zerar(x: {INT_DECL}) x = 0; Palpatine retornou; LOGOUT\n"
+                           f"x: {INT_DECL} = 7; zerar(x); Hello There (x);", "7\n")
+
+    def test_invalid_input_inside_function(self):
+        result = self.run_program(f"Execute a ordem 66 ler() x: {INT_DECL}; "
+                                  "Ajude-me Obi-Wan Kenobi (x); LOGOUT\n"
+                                  'ler(); Hello There ("nao chega aqui");', "abc")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("ERRO DE ENTRADA", result.stderr)
+        self.assertEqual(result.stdout, "")
+
+    def test_program_without_functions_keeps_single_header(self):
+        c_code = transpile(program("Hello There (1);"))
+        self.assertTrue(c_code.startswith("#include <stdio.h>\n\nint main(void) {"))
+
     def test_int_float_and_prompt_input(self):
         self.assert_output(f"i: {INT_DECL}; r: {FLOAT_DECL};\n"
                            'Ajude-me Obi-Wan Kenobi (i); Ajude-me Obi-Wan Kenobi ("Real: " -> r);\n'
