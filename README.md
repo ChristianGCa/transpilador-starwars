@@ -154,16 +154,16 @@ A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.
 | --- | --- |
 | `examples/valid/01_basic.starwars` | Declaração, atribuição e saída |
 | `examples/valid/02_complete.starwars` | Dois tipos, entrada, saída, if/else, while, precedência e parênteses |
-| `examples/invalid/03_lexical_error.starwars` | Caractere inválido |
-| `examples/invalid/04_syntax_error.starwars` | Expressão ausente na declaração |
-| `examples/invalid/05_semantic_error.starwars` | Variável não declarada |
-| `examples/invalid/06_redeclaration_error.starwars` | Declaração duplicada no mesmo escopo |
-| `examples/invalid/07_type_error.starwars` | Real atribuído a inteiro na declaração |
-| `examples/invalid/08_scope_error.starwars` | Uso de variável fora do bloco |
+| `examples/invalid/01_lexical_error.starwars` | Caractere inválido |
+| `examples/invalid/02_syntax_error.starwars` | Expressão ausente na declaração |
+| `examples/invalid/03_semantic_error.starwars` | Variável não declarada |
+| `examples/invalid/04_redeclaration_error.starwars` | Declaração duplicada no mesmo escopo |
+| `examples/invalid/05_type_error.starwars` | Real atribuído a inteiro na declaração |
+| `examples/invalid/06_scope_error.starwars` | Uso de variável fora do bloco |
 | `examples/valid/09_for.starwars` | Laço por intervalo (`This is the way`) |
-| `examples/invalid/10_loop_variable_error.starwars` | Alteração da variável de controle do laço |
+| `examples/invalid/07_loop_variable_error.starwars` | Alteração da variável de controle do laço |
 | `examples/valid/11_functions.starwars` | Funções com retorno, recursão e procedimento |
-| `examples/invalid/12_argument_error.starwars` | Chamada com quantidade errada de argumentos |
+| `examples/invalid/08_argument_error.starwars` | Chamada com quantidade errada de argumentos |
 | `examples/valid/13_galaxy.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
 
 Cada exemplo válido tem um `.expected.txt` com a saída exata do programa. Os que leem
@@ -172,9 +172,9 @@ dados também têm um `.input.txt`, usado como entrada pelos testes e pelo `./sw
 Para ver uma mensagem de erro produzida pelo próprio transpilador:
 
 ```bash
-./sw check examples/invalid/03_lexical_error.starwars
-./sw check examples/invalid/04_syntax_error.starwars
-./sw check examples/invalid/05_semantic_error.starwars
+./sw check examples/invalid/01_lexical_error.starwars
+./sw check examples/invalid/02_syntax_error.starwars
+./sw check examples/invalid/03_semantic_error.starwars
 ```
 
 `./sw demo` executa todos os exemplos válidos e mostra o erro de cada exemplo inválido.

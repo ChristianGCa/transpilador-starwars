@@ -9,7 +9,7 @@ from support import EXAMPLES, ROOT, read
 SCRIPT = ROOT / "sw"
 BASIC = EXAMPLES / "valid" / "01_basic.starwars"
 COMPLETE = EXAMPLES / "valid" / "02_complete.starwars"
-SEMANTIC_ERROR = EXAMPLES / "invalid" / "05_semantic_error.starwars"
+SEMANTIC_ERROR = EXAMPLES / "invalid" / "03_semantic_error.starwars"
 
 
 class ScriptTest(unittest.TestCase):
@@ -52,7 +52,7 @@ class ScriptTest(unittest.TestCase):
         result = self.run_script("run", SEMANTIC_ERROR)
         self.assertEqual(result.returncode, 1)
         self.assertIn("ERRO SEMÂNTICO", result.stderr)
-        self.assertFalse((self.build / "05_semantic_error").exists())
+        self.assertFalse((self.build / "03_semantic_error").exists())
 
     def test_build_creates_c_and_binary_without_running(self):
         result = self.run_script("build", BASIC)

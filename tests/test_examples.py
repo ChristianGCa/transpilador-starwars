@@ -14,14 +14,14 @@ SOURCES = {
     "13_galaxy": VALID / "13_galaxy.starwars",
 }
 INVALID_KINDS = {
-    "03_lexical_error": ErrorKind.LEXICAL,
-    "04_syntax_error": ErrorKind.SYNTAX,
-    "05_semantic_error": ErrorKind.SEMANTIC,
-    "06_redeclaration_error": ErrorKind.SEMANTIC,
-    "07_type_error": ErrorKind.SEMANTIC,
-    "08_scope_error": ErrorKind.SEMANTIC,
-    "10_loop_variable_error": ErrorKind.SEMANTIC,
-    "12_argument_error": ErrorKind.SEMANTIC,
+    "01_lexical_error": ErrorKind.LEXICAL,
+    "02_syntax_error": ErrorKind.SYNTAX,
+    "03_semantic_error": ErrorKind.SEMANTIC,
+    "04_redeclaration_error": ErrorKind.SEMANTIC,
+    "05_type_error": ErrorKind.SEMANTIC,
+    "06_scope_error": ErrorKind.SEMANTIC,
+    "07_loop_variable_error": ErrorKind.SEMANTIC,
+    "08_argument_error": ErrorKind.SEMANTIC,
 }
 
 

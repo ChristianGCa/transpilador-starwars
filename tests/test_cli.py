@@ -38,13 +38,13 @@ class CliTest(unittest.TestCase):
 
     def test_error_keeps_existing_output(self):
         self.output.write_text("anterior", encoding="utf-8")
-        result = run_cli(EXAMPLES / "invalid" / "05_semantic_error.starwars", "-o", self.output)
+        result = run_cli(EXAMPLES / "invalid" / "03_semantic_error.starwars", "-o", self.output)
         self.assertEqual(result.returncode, 1)
         self.assertIn("ERRO SEMÂNTICO", result.stderr)
         self.assertEqual(read(self.output), "anterior")
 
     def test_error_does_not_create_output(self):
-        result = run_cli(EXAMPLES / "invalid" / "03_lexical_error.starwars", "-o", self.output)
+        result = run_cli(EXAMPLES / "invalid" / "01_lexical_error.starwars", "-o", self.output)
         self.assertEqual(result.returncode, 1)
         self.assertFalse(self.output.exists())
 
@@ -65,7 +65,7 @@ class CliTest(unittest.TestCase):
         self.assertIn("deve ser diferente", result.stderr)
 
     def test_prints_tokens_before_syntax_error(self):
-        result = run_cli(EXAMPLES / "invalid" / "04_syntax_error.starwars", "--tokens")
+        result = run_cli(EXAMPLES / "invalid" / "02_syntax_error.starwars", "--tokens")
         self.assertEqual(result.returncode, 1)
         self.assertIn("[BEGIN:", result.stderr)
         self.assertIn("ERRO SINTÁTICO", result.stderr)
@@ -77,7 +77,7 @@ class CliTest(unittest.TestCase):
         self.assertIn("usage: python3 -m starwars", result.stdout)
 
     def test_tokens_with_lexical_error(self):
-        result = run_cli(EXAMPLES / "invalid" / "03_lexical_error.starwars", "--tokens")
+        result = run_cli(EXAMPLES / "invalid" / "01_lexical_error.starwars", "--tokens")
         self.assertEqual(result.returncode, 1)
         self.assertIn("ERRO LÉXICO", result.stderr)
         self.assertNotIn("[BEGIN:", result.stderr)
