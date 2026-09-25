@@ -45,6 +45,11 @@ Execute a ordem 66 patente(taxa: Eu sou C3PO, ciborgue de relações humanas)
     Chewie, estamos em casa
 Chewie, estamos em casa
 
+Hello There ("=== Avaliação de tiro ao alvo do Esquadrão Rogue ===\n");
+Hello There ("Para cada piloto, informe os tiros disparados e quantos acertaram o alvo.\n");
+Hello There ("O programa calcula a precisão e a patente de cada piloto:\n");
+Hello There ("Jedi (80% ou mais), Padawan (50% ou mais) ou Youngling (abaixo de 50%).\n\n");
+
 pilotos: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
 Eu sinto uma perturbação na força (pilotos Você subestima meu poder 1)

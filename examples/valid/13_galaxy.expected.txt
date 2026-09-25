@@ -1,3 +1,8 @@
+=== Avaliação de tiro ao alvo do Esquadrão Rogue ===
+Para cada piloto, informe os tiros disparados e quantos acertaram o alvo.
+O programa calcula a precisão e a patente de cada piloto:
+Jedi (80% ou mais), Padawan (50% ou mais) ou Youngling (abaixo de 50%).
+
 Quantos pilotos? O esquadrão precisa de pelo menos 1 piloto.
 Quantos pilotos? Piloto 1:
 	tiros disparados: 	acertos: 	3 em cada 4 tiros (75%)

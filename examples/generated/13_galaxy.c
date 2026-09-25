@@ -45,11 +45,15 @@ void sw_f4(float sw_v9) {
 }
 
 int main(void) {
+    printf("%s", "=== Avaliação de tiro ao alvo do Esquadrão Rogue ===\n");
+    printf("%s", "Para cada piloto, informe os tiros disparados e quantos acertaram o alvo.\n");
+    printf("%s", "O programa calcula a precisão e a patente de cada piloto:\n");
+    printf("%s", "Jedi (80% ou mais), Padawan (50% ou mais) ou Youngling (abaixo de 50%).\n\n");
     int sw_v10 = 0;
     printf("%s", "Quantos pilotos\? ");
     fflush(stdout);
     if (scanf("%d", &sw_v10) != 1) {
-        fprintf(stderr, "ERRO DE ENTRADA (linha 49): esperado valor numerico.\n");
+        fprintf(stderr, "ERRO DE ENTRADA (linha 54): esperado valor numerico.\n");
         return 1;
     }
     while (sw_v10 < 1) {
@@ -57,7 +61,7 @@ int main(void) {
         printf("%s", "Quantos pilotos\? ");
         fflush(stdout);
         if (scanf("%d", &sw_v10) != 1) {
-            fprintf(stderr, "ERRO DE ENTRADA (linha 52): esperado valor numerico.\n");
+            fprintf(stderr, "ERRO DE ENTRADA (linha 57): esperado valor numerico.\n");
             return 1;
         }
     }
@@ -74,7 +78,7 @@ int main(void) {
         printf("%s", "\ttiros disparados: ");
         fflush(stdout);
         if (scanf("%d", &sw_v17) != 1) {
-            fprintf(stderr, "ERRO DE ENTRADA (linha 64): esperado valor numerico.\n");
+            fprintf(stderr, "ERRO DE ENTRADA (linha 69): esperado valor numerico.\n");
             return 1;
         }
         while (sw_v17 < 1) {
@@ -82,7 +86,7 @@ int main(void) {
             printf("%s", "\ttiros disparados: ");
             fflush(stdout);
             if (scanf("%d", &sw_v17) != 1) {
-                fprintf(stderr, "ERRO DE ENTRADA (linha 67): esperado valor numerico.\n");
+                fprintf(stderr, "ERRO DE ENTRADA (linha 72): esperado valor numerico.\n");
                 return 1;
             }
         }
@@ -90,7 +94,7 @@ int main(void) {
         printf("%s", "\tacertos: ");
         fflush(stdout);
         if (scanf("%d", &sw_v18) != 1) {
-            fprintf(stderr, "ERRO DE ENTRADA (linha 71): esperado valor numerico.\n");
+            fprintf(stderr, "ERRO DE ENTRADA (linha 76): esperado valor numerico.\n");
             return 1;
         }
         while (sw_f2(sw_v18, 0, sw_v17) == 0) {
@@ -101,7 +105,7 @@ int main(void) {
             printf("%s", "\tacertos: ");
             fflush(stdout);
             if (scanf("%d", &sw_v18) != 1) {
-                fprintf(stderr, "ERRO DE ENTRADA (linha 74): esperado valor numerico.\n");
+                fprintf(stderr, "ERRO DE ENTRADA (linha 79): esperado valor numerico.\n");
                 return 1;
             }
         }
