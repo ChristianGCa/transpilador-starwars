@@ -1,0 +1,256 @@
+{
+  "name": "starwars-language",
+  "displayName": "Linguagem Star Wars",
+  "description": "Destaque de sintaxe para a linguagem Star Wars (.starwars).",
+  "version": "0.1.0",
+  "publisher": "unijui-compiladores",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "starwars",
+        "aliases": [
+          "Star Wars",
+          "starwars"
+        ],
+        "extensions": [
+          ".starwars"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "starwars",
+        "scopeName": "source.starwars",
+        "path": "./syntaxes/starwars.tmLanguage.json"
+      }
+    ],
+    "configurationDefaults": {
+      "editor.tokenColorCustomizations": {
+        "textMateRules": [
+          {
+            "scope": "keyword.control.block.starwars",
+            "settings": {
+              "foreground": "#C586C0",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": [
+              "keyword.control.conditional.starwars",
+              "keyword.control.loop.starwars",
+              "keyword.control.return.starwars"
+            ],
+            "settings": {
+              "foreground": "#C586C0"
+            }
+          },
+          {
+            "scope": "storage.type.starwars",
+            "settings": {
+              "foreground": "#4EC9B0"
+            }
+          },
+          {
+            "scope": "storage.type.function.starwars",
+            "settings": {
+              "foreground": "#569CD6",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": [
+              "entity.name.function.definition.starwars",
+              "entity.name.function.call.starwars"
+            ],
+            "settings": {
+              "foreground": "#DCDCAA"
+            }
+          },
+          {
+            "scope": "support.function.io.starwars",
+            "settings": {
+              "foreground": "#F07178",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": [
+              "keyword.operator.assignment.starwars",
+              "keyword.operator.arithmetic.starwars",
+              "keyword.operator.comparison.starwars",
+              "keyword.operator.arrow.starwars"
+            ],
+            "settings": {
+              "foreground": "#FF9E64"
+            }
+          },
+          {
+            "scope": "variable.other.declaration.starwars",
+            "settings": {
+              "foreground": "#9CDCFE",
+              "fontStyle": "bold"
+            }
+          },
+          {
+            "scope": "variable.parameter.starwars",
+            "settings": {
+              "foreground": "#9CDCFE",
+              "fontStyle": "italic"
+            }
+          },
+          {
+            "scope": "variable.other.starwars",
+            "settings": {
+              "foreground": "#9CDCFE"
+            }
+          },
+          {
+            "scope": [
+              "constant.numeric.integer.starwars",
+              "constant.numeric.float.starwars"
+            ],
+            "settings": {
+              "foreground": "#B5CEA8"
+            }
+          },
+          {
+            "scope": "string.quoted.double.starwars",
+            "settings": {
+              "foreground": "#CE9178"
+            }
+          },
+          {
+            "scope": "constant.character.escape.starwars",
+            "settings": {
+              "foreground": "#D7BA7D"
+            }
+          },
+          {
+            "scope": "comment.line.number-sign.starwars",
+            "settings": {
+              "foreground": "#6A9955",
+              "fontStyle": "italic"
+            }
+          }
+        ],
+        "[*Light*]": {
+          "textMateRules": [
+            {
+              "scope": "keyword.control.block.starwars",
+              "settings": {
+                "foreground": "#AF00DB",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": [
+                "keyword.control.conditional.starwars",
+                "keyword.control.loop.starwars",
+                "keyword.control.return.starwars"
+              ],
+              "settings": {
+                "foreground": "#AF00DB"
+              }
+            },
+            {
+              "scope": "storage.type.starwars",
+              "settings": {
+                "foreground": "#267F99"
+              }
+            },
+            {
+              "scope": "storage.type.function.starwars",
+              "settings": {
+                "foreground": "#0000FF",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": [
+                "entity.name.function.definition.starwars",
+                "entity.name.function.call.starwars"
+              ],
+              "settings": {
+                "foreground": "#795E26"
+              }
+            },
+            {
+              "scope": "support.function.io.starwars",
+              "settings": {
+                "foreground": "#D1006C",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": [
+                "keyword.operator.assignment.starwars",
+                "keyword.operator.arithmetic.starwars",
+                "keyword.operator.comparison.starwars",
+                "keyword.operator.arrow.starwars"
+              ],
+              "settings": {
+                "foreground": "#C45500"
+              }
+            },
+            {
+              "scope": "variable.other.declaration.starwars",
+              "settings": {
+                "foreground": "#001080",
+                "fontStyle": "bold"
+              }
+            },
+            {
+              "scope": "variable.parameter.starwars",
+              "settings": {
+                "foreground": "#001080",
+                "fontStyle": "italic"
+              }
+            },
+            {
+              "scope": "variable.other.starwars",
+              "settings": {
+                "foreground": "#001080"
+              }
+            },
+            {
+              "scope": [
+                "constant.numeric.integer.starwars",
+                "constant.numeric.float.starwars"
+              ],
+              "settings": {
+                "foreground": "#098658"
+              }
+            },
+            {
+              "scope": "string.quoted.double.starwars",
+              "settings": {
+                "foreground": "#A31515"
+              }
+            },
+            {
+              "scope": "constant.character.escape.starwars",
+              "settings": {
+                "foreground": "#EE0000"
+              }
+            },
+            {
+              "scope": "comment.line.number-sign.starwars",
+              "settings": {
+                "foreground": "#008000",
+                "fontStyle": "italic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

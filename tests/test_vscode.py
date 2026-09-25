@@ -1,0 +1,54 @@
+import json
+import re
+import unittest
+from pathlib import Path
+
+from support import ROOT
+from starwars.tokens import KEYWORD_PHRASES
+
+EXTENSION = ROOT / "editors" / "vscode"
+GRAMMAR = EXTENSION / "syntaxes" / "starwars.tmLanguage.json"
+
+
+def read_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def grammar_regexes(node) -> list:
+    if isinstance(node, dict):
+        found = [node["match"]] if "match" in node else []
+        return found + [regex for value in node.values() for regex in grammar_regexes(value)]
+    if isinstance(node, list):
+        return [regex for item in node for regex in grammar_regexes(item)]
+    return []
+
+
+class VscodeExtensionTest(unittest.TestCase):
+    def test_grammar_highlights_every_keyword_phrase(self):
+        patterns = [re.compile(regex) for regex in grammar_regexes(read_json(GRAMMAR))]
+        for _, phrase in KEYWORD_PHRASES:
+            with self.subTest(phrase=phrase):
+                self.assertTrue(any(pattern.fullmatch(phrase) for pattern in patterns))
+
+    def test_extension_registers_language_and_grammar(self):
+        package = read_json(EXTENSION / "package.json")
+        language = package["contributes"]["languages"][0]
+        grammar = package["contributes"]["grammars"][0]
+        self.assertEqual(language["extensions"], [".starwars"])
+        self.assertEqual(grammar["scopeName"], read_json(GRAMMAR)["scopeName"])
+        self.assertTrue((EXTENSION / grammar["path"]).exists())
+        self.assertTrue((EXTENSION / language["configuration"]).exists())
+
+    def test_color_rules_only_touch_starwars_scopes(self):
+        colors = read_json(EXTENSION / "package.json")["contributes"]["configurationDefaults"]
+        customizations = colors["editor.tokenColorCustomizations"]
+        rules = customizations["textMateRules"] + customizations["[*Light*]"]["textMateRules"]
+        for rule in rules:
+            scopes = rule["scope"] if isinstance(rule["scope"], list) else [rule["scope"]]
+            for scope in scopes:
+                with self.subTest(scope=scope):
+                    self.assertTrue(scope.endswith(".starwars"))
+
+
+if __name__ == "__main__":
+    unittest.main()
