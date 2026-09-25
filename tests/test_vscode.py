@@ -57,6 +57,7 @@ class VscodeExtensionTest(unittest.TestCase):
         self.assertTrue((EXTENSION / grammar["path"]).exists())
         self.assertTrue((EXTENSION / language["configuration"]).exists())
         self.assertTrue((EXTENSION / package["main"]).exists())
+        self.assertTrue((EXTENSION / package["contributes"]["snippets"][0]["path"]).exists())
 
     def test_color_rules_only_touch_starwars_scopes(self):
         colors = read_json(EXTENSION / "package.json")["contributes"]["configurationDefaults"]
@@ -80,7 +81,8 @@ class VscodeExtensionTest(unittest.TestCase):
         self.assertLessEqual({"extension.vsixmanifest", "[Content_Types].xml",
                               "extension/syntaxes/starwars.tmLanguage.json",
                               "extension/language-configuration.json", "extension/extension.js",
-                              "extension/language.js", "extension/phrases.json"}, names)
+                              "extension/language.js", "extension/phrases.json",
+                              "extension/snippets.json"}, names)
         self.assertEqual(package["name"], "starwars-language")
 
 

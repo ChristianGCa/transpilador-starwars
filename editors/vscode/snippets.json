@@ -1,0 +1,143 @@
+{
+  "Programa": {
+    "prefix": [
+      "programa",
+      "inicio",
+      "main",
+      "Há muito tempo"
+    ],
+    "body": [
+      "Há muito tempo, em uma galáxia muito, muito distante",
+      "$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Esqueleto de um programa .starwars"
+  },
+  "Se (if)": {
+    "prefix": [
+      "se",
+      "if",
+      "Faça"
+    ],
+    "body": [
+      "Faça, ou não faça (${1:condição})",
+      "\t$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Condicional: Faça, ou não faça"
+  },
+  "Se/senão (if/else)": {
+    "prefix": [
+      "senao",
+      "ifelse",
+      "se senão"
+    ],
+    "body": [
+      "Faça, ou não faça (${1:condição})",
+      "\t${2}",
+      "Tentativa não há",
+      "\t$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Condicional com alternativa: Faça, ou não faça / Tentativa não há"
+  },
+  "Enquanto (while)": {
+    "prefix": [
+      "enquanto",
+      "while",
+      "Eu sinto"
+    ],
+    "body": [
+      "Eu sinto uma perturbação na força (${1:condição})",
+      "\t$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Repetição por condição: Eu sinto uma perturbação na força"
+  },
+  "Para (for)": {
+    "prefix": [
+      "para",
+      "for",
+      "This is the way"
+    ],
+    "body": [
+      "This is the way (${1:i} de ${2:1} até ${3:n})",
+      "\t$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Repetição por intervalo: This is the way"
+  },
+  "Função": {
+    "prefix": [
+      "funcao",
+      "função",
+      "func",
+      "def",
+      "Execute"
+    ],
+    "body": [
+      "Execute a ordem 66 ${1:nome}(${2:a}: ${3|Você era o escolhido,Eu sou C3PO\\, ciborgue de relações humanas|}): ${4|Você era o escolhido,Eu sou C3PO\\, ciborgue de relações humanas|}",
+      "\t$0",
+      "\tPalpatine retornou ${5:valor};",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Função com retorno: Execute a ordem 66 / Palpatine retornou"
+  },
+  "Procedimento": {
+    "prefix": [
+      "procedimento",
+      "proc",
+      "void"
+    ],
+    "body": [
+      "Execute a ordem 66 ${1:nome}(${2:a}: ${3|Você era o escolhido,Eu sou C3PO\\, ciborgue de relações humanas|})",
+      "\t$0",
+      "Chewie, estamos em casa"
+    ],
+    "description": "Função sem retorno (procedimento)"
+  },
+  "Variável inteira": {
+    "prefix": [
+      "int",
+      "inteiro",
+      "var"
+    ],
+    "body": [
+      "${1:nome}: Você era o escolhido Eu alterei o acordo ${2:0};"
+    ],
+    "description": "Declara uma variável inteira"
+  },
+  "Variável real": {
+    "prefix": [
+      "float",
+      "real"
+    ],
+    "body": [
+      "${1:nome}: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo ${2:0.0};"
+    ],
+    "description": "Declara uma variável real"
+  },
+  "Escrever": {
+    "prefix": [
+      "escrever",
+      "print",
+      "Hello"
+    ],
+    "body": [
+      "Hello There (\"${1:texto}\", ${2:valor});"
+    ],
+    "description": "Saída: Hello There"
+  },
+  "Ler": {
+    "prefix": [
+      "ler",
+      "input",
+      "read",
+      "Ajude"
+    ],
+    "body": [
+      "Ajude-me Obi-Wan Kenobi (\"${1:Mensagem}: \" -> ${2:variável});"
+    ],
+    "description": "Entrada com mensagem: Ajude-me Obi-Wan Kenobi"
+  }
+}
