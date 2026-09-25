@@ -1,15 +1,19 @@
 # Transpilador Star Wars
 
-Linguagem temática com dois tipos numéricos, variáveis, aritmética, comparações,
-condicionais, repetição (`while` e `for`), funções e entrada/saída. O transpilador percorre as etapas:
+Transpilador de uma linguagem de programação temática, com palavras-chave tiradas de falas
+de Star Wars, para C99. A linguagem tem dois tipos numéricos, variáveis, aritmética,
+comparações, condicionais, repetição (`while` e `for`), funções e entrada/saída.
+O transpilador percorre as etapas:
 
-**fonte → tokens → parser → AST → análise semântica → código C**
+**fonte → léxico → tokens → parser → AST → análise semântica → código C**
 
 ## Pré-requisitos
 
 - Python 3.8 ou superior, sem bibliotecas externas.
-- GCC com suporte a C99 para compilar os programas gerados e executar os testes.
-- Arquivos fonte em UTF-8. Os comandos abaixo são para Linux, executados nesta pasta.
+- GCC com suporte a C99, para compilar os programas gerados e executar os testes.
+- Arquivos fonte em UTF-8, com extensão `.starwars`.
+
+Os comandos abaixo são para Linux e partem da raiz do projeto.
 
 ## Uso rápido: `./sw`
 
@@ -29,10 +33,8 @@ Os arquivos gerados ficam em `build/`.
 ./sw                           # ajuda
 ```
 
-A entrada de demonstração contém `3` e `1.5`. A saída esperada está em
-[`examples/valid/02_complete.expected.txt`](examples/valid/02_complete.expected.txt).
-Sem o redirecionamento `<`, os valores são digitados no terminal. O compilador C
-padrão é `gcc`; outro pode ser escolhido com a variável `CC`.
+Sem o redirecionamento `<`, os valores de entrada são digitados no terminal. O compilador
+C padrão é `gcc`; outro pode ser escolhido com a variável `CC` (`CC=clang ./sw run ...`).
 
 ## Executar passo a passo
 
@@ -46,13 +48,14 @@ gcc -std=c99 -Wall -Wextra build/02_complete.c -o build/02_complete
 ```
 
 O transpilador gera C; a execução do programa é uma etapa posterior, feita com GCC.
-Sem `-o`, o código C é impresso na saída padrão. Sem o argumento do arquivo,
-o transpilador procura exatamente um `.starwars` na pasta atual.
-Se houver zero ou vários arquivos, é necessário informar o caminho explicitamente.
-A pasta de saída deve existir. Erros retornam código de saída 1 e não geram nem
-sobrescrevem o arquivo C solicitado; um arquivo antigo, se existir, permanece antigo.
 
-## Exemplo da linguagem
+- Sem `-o`, o código C é impresso na saída padrão.
+- Sem o arquivo de entrada, o transpilador procura exatamente um `.starwars` na pasta
+  atual; se houver zero ou vários, é preciso informar o caminho.
+- A pasta de saída precisa existir.
+- Em caso de erro, o código de saída é 1 e o arquivo C não é criado nem sobrescrito.
+
+## A linguagem
 
 ```text
 Há muito tempo, em uma galáxia muito, muito distante
@@ -63,20 +66,19 @@ Hello There ("Energia final: ", energia);
 Chewie, estamos em casa
 ```
 
-- `Você era o escolhido`: inteiro (`int`).
-- `Eu sou C3PO, ciborgue de relações humanas`: real (`float`).
-- `Há muito tempo, em uma galáxia muito, muito distante` ... `Chewie, estamos em casa`:
-  início e fim do programa (ou `INICIA_SISTEMA` ... `LOGOUT`). A frase de fim também fecha blocos.
-- `Faça, ou não faça (...) ... Tentativa não há ... Chewie, estamos em casa`: decisão.
-- `Eu sinto uma perturbação na força (...) ... Chewie, estamos em casa`: repetição enquanto a condição for verdadeira.
-- `This is the way (i de 1 até n) ... Chewie, estamos em casa`: repetição por intervalo inclusivo,
-  com `i` inteiro criado pelo laço e que não pode ser alterado no corpo.
-- `Execute a ordem 66 nome(a: tipo, ...): tipo ... Chewie, estamos em casa`: função, definida
-  logo após o início do programa. Sem `: tipo`, é um procedimento. `Palpatine retornou valor;`
-  devolve o resultado, e a chamada é `nome(argumentos)`.
-- `Ajude-me Obi-Wan Kenobi (variavel);`: leitura sem mensagem.
-- `Hello There (...)`: saída de um ou vários textos/expressões separados por vírgulas.
-- `#`: comentário até o fim da linha.
+| Construção | Sintaxe |
+| --- | --- |
+| Início e fim do programa | `Há muito tempo, em uma galáxia muito, muito distante` ... `Chewie, estamos em casa` (ou `INICIA_SISTEMA` ... `LOGOUT`) |
+| Tipos | `Você era o escolhido` (`int`) e `Eu sou C3PO, ciborgue de relações humanas` (`float`) |
+| Declaração | `nome: Tipo;` ou `nome: Tipo Eu alterei o acordo valor;` (também `Tipo nome ...;`) |
+| Decisão | `Faça, ou não faça (condição)` ... `Tentativa não há` ... `Chewie, estamos em casa` |
+| Repetição por condição | `Eu sinto uma perturbação na força (condição)` ... `Chewie, estamos em casa` |
+| Repetição por intervalo | `This is the way (i de 1 até n)` ... `Chewie, estamos em casa` |
+| Função | `Execute a ordem 66 nome(a: Tipo, ...): Tipo` ... `Chewie, estamos em casa` |
+| Retorno | `Palpatine retornou valor;` |
+| Leitura | `Ajude-me Obi-Wan Kenobi (variável);` ou `Ajude-me Obi-Wan Kenobi ("mensagem" -> variável);` |
+| Escrita | `Hello There (item, item, ...);` |
+| Comentário | `#` até o fim da linha |
 
 Cada operador tem uma frase temática, usada nos exemplos, e um símbolo equivalente:
 
@@ -89,29 +91,37 @@ Cada operador tem uma frase temática, usada nos exemplos, e um símbolo equival
 | `I have the high ground` / `A força é forte nele` | `>` / `>=` |
 | `Você subestima meu poder` / `Não, eu sou seu pai` | `<` / `<=` |
 
-A declaração `tipo nome = valor;` também é aceita.
-`-` representa subtração binária; para escrever um valor negativo em uma expressão,
-use `0 - valor`. A entrada de dados aceita valores negativos.
+Regras principais:
 
-Textos usam aspas duplas e aceitam `\n`, `\r`, `\t`, `\"` e `\\`.
-Na saída com vários itens, eles são concatenados sem separador automático. Se houver
-alguma expressão numérica, uma quebra de linha é adicionada ao final do comando;
-saída composta apenas por textos imprime exatamente o conteúdo informado.
+- `Chewie, estamos em casa` fecha o programa e cada bloco. No condicional, um único fim
+  fecha a decisão inteira, inclusive a alternativa.
+- As funções são definidas logo após o início do programa. Sem `: Tipo`, a função é um
+  procedimento, chamado como comando (`nome(argumentos);`).
+- No `for`, o intervalo é inclusivo e a variável de controle é criada pelo laço, é inteira
+  e não pode ser alterada no corpo.
+- Não há sinal negativo: escreva `0 Acabou anakin valor`. A entrada de dados aceita
+  valores negativos.
+- Textos usam aspas duplas e aceitam `\n`, `\r`, `\t`, `\"` e `\\`. Só aparecem na saída
+  e na mensagem de leitura.
+- Na saída, os itens são concatenados sem separador. Se houver alguma expressão numérica,
+  uma quebra de linha é adicionada ao final; saída só com textos imprime exatamente o texto.
 
-A especificação completa, as três decisões próprias de sintaxe, as regras de tipos
-e a gramática estão no [`RELATORIO.md`](RELATORIO.md).
+A referência completa da linguagem, com regras de tipos, escopo e mensagens de erro, está
+em [`.claude/skills/writing-starwars/`](.claude/skills/writing-starwars/).
 
-## Testar
+## Exemplos e testes
 
 ```bash
 ./sw test          # ou: PYTHONPATH=src python3 -B -m unittest discover -s tests -v
 ```
 
-A suíte tem um arquivo por fase do transpilador (`tests/test_lexer.py`,
-`tests/test_parser.py`, `tests/test_semantic.py`, `tests/test_codegen.py`, ...), além de
-`tests/test_examples.py`, que confere que os arquivos em `examples/generated/`
-correspondem às fontes atuais e compila/executa os programas C em uma pasta temporária,
-`tests/test_cli.py`, para os argumentos da interface, e `tests/test_script.py`, para o `./sw`.
+A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.py`,
+`test_semantic.py`, `test_codegen.py`, ...), além de:
+
+- `test_examples.py`: confere que os arquivos em `examples/generated/` correspondem às
+  fontes atuais e compila e executa cada exemplo válido;
+- `test_cli.py`: argumentos e erros da interface de linha de comando;
+- `test_script.py`: comandos do `./sw`.
 
 | Arquivo | Objetivo |
 | --- | --- |
@@ -129,7 +139,10 @@ correspondem às fontes atuais e compila/executa os programas C em uma pasta tem
 | `examples/invalid/12_argument_error.starwars` | Chamada com quantidade errada de argumentos |
 | `examples/valid/13_galaxy.starwars` | Programa completo: funções, recursão, `for`, `while`, `if` aninhado, leitura e escrita |
 
-Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
+Cada exemplo válido tem um `.expected.txt` com a saída exata do programa. Os que leem
+dados também têm um `.input.txt`, usado como entrada pelos testes e pelo `./sw demo`.
+
+Para ver uma mensagem de erro produzida pelo próprio transpilador:
 
 ```bash
 ./sw check examples/invalid/03_lexical_error.starwars
@@ -152,17 +165,17 @@ separadas do código C.
 
 ## Organização
 
+- `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`,
+  `semantic`, `codegen`, `cli`, entre outros).
+- `tests/`: suíte automatizada, um arquivo por módulo ou fase.
+- `examples/`: `valid/` e `invalid/` com os programas de exemplo e `generated/` com o C
+  gerado a partir dos válidos.
 - `sw`: script com os comandos de uso rápido.
-- `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`, `semantic`,
-  `codegen`, `cli`, entre outros).
-- `RELATORIO.md`: especificação formal e explicação da implementação.
-- `tests/`: suíte automatizada, um arquivo por módulo/fase.
-- `examples/`: `valid/` e `invalid/` com fontes de exemplo e `generated/` com o C gerado.
-- `docs/presentation.md`: sequência de demonstração e tópicos para a defesa técnica.
-- `docs/assignment.md`: enunciado do trabalho.
+- `.claude/skills/writing-starwars/`: referência da linguagem para escrever programas.
 
-## Autoria e apresentação
+## Autoria
 
-A revisão e complementação tiveram apoio do OpenAI Codex, conforme declarado no
-relatório. Antes da entrega, o grupo deve identificar seus integrantes no relatório,
-revisar e compreender as decisões implementadas e preparar a apresentação conjunta.
+Christian Gabriel Candeloni, Christian Mathias Michelson e Leonardo Daniel Becker.
+
+Trabalho Prático 1 de Linguagens Formais e Compiladores (Unijuí). O desenvolvimento teve
+apoio das ferramentas de IA Claude Code e OpenAI Codex, conforme declarado no relatório.
