@@ -14,12 +14,12 @@ fonte → lexer → tokens → parser → AST → análise semântica → códig
 ./sw                               # lista todos os comandos
 ```
 
-`./sw` apenas encadeia `python3 -m starwars` e `gcc -std=c99 -Wall -Wextra`.
+`./sw` apenas encadeia `python3 -m starwars` (com `PYTHONPATH=src`) e `gcc -std=c99 -Wall -Wextra`.
 
 - Somente a biblioteca padrão do Python (3.8+). Não adicione dependências externas.
 - Os arquivos em `examples/generated/` são verificados pelos testes: ao mudar a geração
   de C, regenere-os com `./sw regen`.
-- Estrutura: `starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`,
+- Estrutura: `src/starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`,
   `sw` (script de uso rápido, testado em `tests/test_script.py`).
 
 ## Idioma

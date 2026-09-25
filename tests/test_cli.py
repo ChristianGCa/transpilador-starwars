@@ -9,7 +9,7 @@ from support import EXAMPLES, ROOT, read
 
 BASIC = EXAMPLES / "valid" / "01_basic.starwars"
 BASIC_C = EXAMPLES / "generated" / "01_basic.c"
-ENV = {**os.environ, "PYTHONPATH": str(ROOT)}
+ENV = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
 
 
 def run_cli(*args, cwd=ROOT):

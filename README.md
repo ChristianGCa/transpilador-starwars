@@ -40,7 +40,7 @@ Os comandos abaixo mostram as etapas que o `./sw run` executa:
 
 ```bash
 mkdir -p build
-python3 -m starwars examples/valid/02_complete.starwars -o build/02_complete.c
+PYTHONPATH=src python3 -m starwars examples/valid/02_complete.starwars -o build/02_complete.c
 gcc -std=c99 -Wall -Wextra build/02_complete.c -o build/02_complete
 ./build/02_complete < examples/valid/02_complete.input.txt
 ```
@@ -104,7 +104,7 @@ e a gramática estão no [`RELATORIO.md`](RELATORIO.md).
 ## Testar
 
 ```bash
-./sw test                                     # ou: python3 -B -m unittest discover -s tests -v
+./sw test          # ou: PYTHONPATH=src python3 -B -m unittest discover -s tests -v
 ```
 
 A suíte tem um arquivo por fase do transpilador (`tests/test_lexer.py`,
@@ -153,7 +153,7 @@ separadas do código C.
 ## Organização
 
 - `sw`: script com os comandos de uso rápido.
-- `starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`, `semantic`,
+- `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`, `semantic`,
   `codegen`, `cli`, entre outros).
 - `RELATORIO.md`: especificação formal e explicação da implementação.
 - `tests/`: suíte automatizada, um arquivo por módulo/fase.

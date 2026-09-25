@@ -29,7 +29,7 @@ fail() {
 }
 
 transpiler() {
-    PYTHONPATH="$ROOT${PYTHONPATH:+:$PYTHONPATH}" python3 -B -m starwars "$@"
+    PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}" python3 -B -m starwars "$@"
 }
 
 require_source() {
@@ -99,7 +99,7 @@ case "$command" in
         ;;
     test)
         cd "$ROOT"
-        python3 -B -m unittest discover -s tests "$@"
+        PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}" python3 -B -m unittest discover -s tests "$@"
         ;;
     regen)
         destination="${1:-$ROOT/examples/generated}"
