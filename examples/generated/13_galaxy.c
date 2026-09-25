@@ -2,118 +2,149 @@
 #include <stdlib.h>
 
 int sw_f0(int sw_v0, int sw_v1);
-int sw_f1(int sw_v2);
-float sw_f2(int sw_v3, float sw_v4);
-void sw_f3(float sw_v5);
+int sw_f1(int sw_v2, int sw_v3);
+int sw_f2(int sw_v4, int sw_v5, int sw_v6);
+float sw_f3(int sw_v7, int sw_v8);
+void sw_f4(float sw_v9);
 
 int sw_f0(int sw_v0, int sw_v1) {
     return (sw_v0 - ((sw_v0 / sw_v1) * sw_v1));
 }
 
-int sw_f1(int sw_v2) {
-    if (sw_v2 <= 1) {
-        return 1;
+int sw_f1(int sw_v2, int sw_v3) {
+    if (sw_v3 != 0) {
+        return sw_f1(sw_v3, sw_f0(sw_v2, sw_v3));
     } else {
-        return (sw_v2 * sw_f1((sw_v2 - 1)));
+        return sw_v2;
     }
 }
 
-float sw_f2(int sw_v3, float sw_v4) {
-    return ((sw_v3 * sw_v4) / 100.0f);
+int sw_f2(int sw_v4, int sw_v5, int sw_v6) {
+    if (sw_v5 <= sw_v4) {
+        if (sw_v4 <= sw_v6) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
-void sw_f3(float sw_v5) {
-    if (sw_v5 < 0.0f) {
-        printf("%s", "\tpatente: inválida\n");
+float sw_f3(int sw_v7, int sw_v8) {
+    return ((sw_v7 * 100.0f) / sw_v8);
+}
+
+void sw_f4(float sw_v9) {
+    if (sw_v9 >= 80.0f) {
+        printf("%s", "\tpatente: Jedi\n");
         return;
     }
-    if (sw_v5 >= 80.0f) {
-        printf("%s", "\tpatente: \"Jedi\"\n");
+    if (sw_v9 >= 50.0f) {
+        printf("%s", "\tpatente: Padawan\n");
     } else {
-        if (sw_v5 > 50.0f) {
-            printf("%s", "\tpatente: Padawan\n");
-        } else {
-            printf("%s", "\tpatente: Youngling\n");
-        }
+        printf("%s", "\tpatente: Youngling\n");
     }
 }
 
 int main(void) {
-    int sw_v6 = 0;
+    int sw_v10 = 0;
     printf("%s", "Quantos pilotos\? ");
     fflush(stdout);
-    if (scanf("%d", &sw_v6) != 1) {
-        fprintf(stderr, "ERRO DE ENTRADA (linha 41): esperado valor numerico.\n");
+    if (scanf("%d", &sw_v10) != 1) {
+        fprintf(stderr, "ERRO DE ENTRADA (linha 49): esperado valor numerico.\n");
         return 1;
     }
-    float sw_v7 = 0.0f;
-    int sw_v8 = 0;
-    int sw_v9 = 0;
-    for (int sw_v10 = 1, sw_v11 = sw_v6; sw_v10 <= sw_v11; sw_v10++) {
-        int sw_v12 = 0;
-        float sw_v13 = 0;
-        printf("%s", "Piloto ");
-        printf("%d", sw_v10);
-        printf("%s", ":");
-        printf("\n");
-        printf("%s", "\tpontos: ");
+    while (sw_v10 < 1) {
+        printf("%s", "O esquadrão precisa de pelo menos 1 piloto.\n");
+        printf("%s", "Quantos pilotos\? ");
         fflush(stdout);
-        if (scanf("%d", &sw_v12) != 1) {
+        if (scanf("%d", &sw_v10) != 1) {
             fprintf(stderr, "ERRO DE ENTRADA (linha 52): esperado valor numerico.\n");
             return 1;
         }
-        printf("%s", "\tprecisão (%): ");
+    }
+    float sw_v11 = 0.0f;
+    int sw_v12 = 0;
+    int sw_v13 = 0;
+    float sw_v14 = (0 - 1.0f);
+    for (int sw_v15 = 1, sw_v16 = sw_v10; sw_v15 <= sw_v16; sw_v15++) {
+        printf("%s", "Piloto ");
+        printf("%d", sw_v15);
+        printf("%s", ":");
+        printf("\n");
+        int sw_v17 = 0;
+        printf("%s", "\ttiros disparados: ");
         fflush(stdout);
-        if (scanf("%f", &sw_v13) != 1) {
-            fprintf(stderr, "ERRO DE ENTRADA (linha 53): esperado valor numerico.\n");
+        if (scanf("%d", &sw_v17) != 1) {
+            fprintf(stderr, "ERRO DE ENTRADA (linha 64): esperado valor numerico.\n");
             return 1;
         }
-        float sw_v14 = sw_f2(sw_v12, sw_v13);
-        printf("%s", "\tnota: ");
-        printf("%g", (double)(sw_v14));
-        printf("\n");
-        sw_f3(sw_v14);
-        sw_v7 = (sw_v7 + sw_v14);
-        if (sw_f0(sw_v12, 2) == 0) {
-            sw_v8 = (sw_v8 + 1);
+        while (sw_v17 < 1) {
+            printf("%s", "\tinforme pelo menos 1 tiro.\n");
+            printf("%s", "\ttiros disparados: ");
+            fflush(stdout);
+            if (scanf("%d", &sw_v17) != 1) {
+                fprintf(stderr, "ERRO DE ENTRADA (linha 67): esperado valor numerico.\n");
+                return 1;
+            }
         }
-        if (sw_v12 > sw_v9) {
-            sw_v9 = sw_v12;
+        int sw_v18 = 0;
+        printf("%s", "\tacertos: ");
+        fflush(stdout);
+        if (scanf("%d", &sw_v18) != 1) {
+            fprintf(stderr, "ERRO DE ENTRADA (linha 71): esperado valor numerico.\n");
+            return 1;
+        }
+        while (sw_f2(sw_v18, 0, sw_v17) == 0) {
+            printf("%s", "\tos acertos devem ficar entre 0 e ");
+            printf("%d", sw_v17);
+            printf("%s", ".");
+            printf("\n");
+            printf("%s", "\tacertos: ");
+            fflush(stdout);
+            if (scanf("%d", &sw_v18) != 1) {
+                fprintf(stderr, "ERRO DE ENTRADA (linha 74): esperado valor numerico.\n");
+                return 1;
+            }
+        }
+        float sw_v19 = sw_f3(sw_v18, sw_v17);
+        int sw_v20 = sw_f1(sw_v18, sw_v17);
+        printf("%s", "\t");
+        printf("%d", (sw_v18 / sw_v20));
+        printf("%s", " em cada ");
+        printf("%d", (sw_v17 / sw_v20));
+        printf("%s", " tiros (");
+        printf("%g", (double)(sw_v19));
+        printf("%s", "%)");
+        printf("\n");
+        sw_f4(sw_v19);
+        sw_v11 = (sw_v11 + sw_v19);
+        if (sw_v19 >= 50.0f) {
+            sw_v12 = (sw_v12 + 1);
+        }
+        if (sw_v19 > sw_v14) {
+            sw_v13 = sw_v15;
+            sw_v14 = sw_v19;
         }
     }
-    if (sw_v6 > 0) {
-        float sw_v15 = (sw_v7 / sw_v6);
-        printf("%s", "Média do esquadrão: ");
-        printf("%g", (double)(sw_v15));
-        printf("\n");
-        printf("%s", "Pilotos com pontuação par: ");
-        printf("%d", sw_v8);
-        printf("\n");
-        printf("%s", "Melhor pontuação: ");
-        printf("%d", sw_v9);
-        printf("%s", " (faltam ");
-        printf("%d", (100 - sw_v9));
-        printf("%s", " para 100)");
-        printf("\n");
-        printf("%s", "Formações possíveis: ");
-        printf("%d", sw_f1(sw_v6));
-        printf("\n");
-    } else {
-        printf("%s", "Nenhum piloto para treinar.\n");
-    }
-    int sw_v16 = 3;
-    while (sw_v16 != 0) {
-        printf("%s", "Salto em ");
-        printf("%d", sw_v16);
-        printf("%s", "...");
-        printf("\n");
-        sw_v16 = (sw_v16 - 1);
-    }
-    int sw_v17 = (0 - 5);
-    printf("%s", "Desvio de rota corrigido: ");
-    printf("%d", sw_v17);
-    printf("%s", " graus");
+    float sw_v21 = (sw_v11 / sw_v10);
+    printf("%s", "Precisão média do esquadrão: ");
+    printf("%g", (double)(sw_v21));
+    printf("%s", "%");
     printf("\n");
-    printf("%s", "Que a Força esteja com vocês!\n");
+    printf("%s", "Pilotos aprovados: ");
+    printf("%d", sw_v12);
+    printf("%s", " de ");
+    printf("%d", sw_v10);
+    printf("\n");
+    printf("%s", "Melhor piloto: ");
+    printf("%d", sw_v13);
+    printf("%s", " (");
+    printf("%g", (double)(sw_v14));
+    printf("%s", "%)");
+    printf("\n");
+    if (sw_v12 == sw_v10) {
+        printf("%s", "Esquadrão pronto para a missão. Que a Força esteja com vocês!\n");
+    } else {
+        printf("%s", "Mais treino no simulador antes da missão.\n");
+    }
     return 0;
 }

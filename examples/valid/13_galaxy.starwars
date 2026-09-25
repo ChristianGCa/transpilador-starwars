@@ -1,86 +1,102 @@
 Há muito tempo, em uma galáxia muito, muito distante
-# Simulador de treinamento do Esquadrão Rogue
+# Avaliação de tiro ao alvo do Esquadrão Rogue.
+# Para cada piloto são lidos os tiros disparados e os acertos. O programa mostra a
+# precisão, a fração simplificada de acertos e a patente, e no fim resume o esquadrão.
 
-# resto da divisão inteira (a linguagem não tem operador de resto)
+# Resto da divisão inteira (a linguagem não tem operador de resto).
 Execute a ordem 66 resto(a: Você era o escolhido, b: Você era o escolhido): Você era o escolhido
     Palpatine retornou a Acabou anakin (a Eu sou todos os sith b) Eu sou todos os jedi b;
 Chewie, estamos em casa
 
-# formações possíveis do esquadrão: fatorial recursivo
-Execute a ordem 66 formacoes(n: Você era o escolhido): Você era o escolhido
-    Faça, ou não faça (n Não, eu sou seu pai 1)
-        Palpatine retornou 1;
+# Máximo divisor comum pelo algoritmo de Euclides, usado para simplificar a fração.
+Execute a ordem 66 mdc(a: Você era o escolhido, b: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (b Estes não são os droides que você procura 0)
+        Palpatine retornou mdc(b, resto(a, b));
     Tentativa não há
-        Palpatine retornou n Eu sou todos os jedi formacoes(n Acabou anakin 1);
+        Palpatine retornou a;
     Chewie, estamos em casa
 Chewie, estamos em casa
 
-# nota do piloto: pontos ponderados pela precisão (em %)
-Execute a ordem 66 nota(pontos: Você era o escolhido, precisao: Eu sou C3PO, ciborgue de relações humanas): Eu sou C3PO, ciborgue de relações humanas
-    Palpatine retornou pontos Eu sou todos os jedi precisao Eu sou todos os sith 100.0;
+# Devolve 1 se valor estiver entre minimo e maximo (inclusive), senão 0.
+Execute a ordem 66 entre(valor: Você era o escolhido, minimo: Você era o escolhido, maximo: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (minimo Não, eu sou seu pai valor)
+        Faça, ou não faça (valor Não, eu sou seu pai maximo)
+            Palpatine retornou 1;
+        Chewie, estamos em casa
+    Chewie, estamos em casa
+    Palpatine retornou 0;
 Chewie, estamos em casa
 
-# procedimento: mostra a patente conforme a nota
-Execute a ordem 66 patente(valor: Eu sou C3PO, ciborgue de relações humanas)
-    Faça, ou não faça (valor Você subestima meu poder 0.0)
-        Hello There ("\tpatente: inválida\n");
+# Precisão em porcentagem.
+Execute a ordem 66 precisao(acertos: Você era o escolhido, tiros: Você era o escolhido): Eu sou C3PO, ciborgue de relações humanas
+    Palpatine retornou acertos Eu sou todos os jedi 100.0 Eu sou todos os sith tiros;
+Chewie, estamos em casa
+
+# Mostra a patente correspondente à precisão.
+Execute a ordem 66 patente(taxa: Eu sou C3PO, ciborgue de relações humanas)
+    Faça, ou não faça (taxa A força é forte nele 80.0)
+        Hello There ("\tpatente: Jedi\n");
         Palpatine retornou;
     Chewie, estamos em casa
-    Faça, ou não faça (valor A força é forte nele 80.0)
-        Hello There ("\tpatente: \"Jedi\"\n");
+    Faça, ou não faça (taxa A força é forte nele 50.0)
+        Hello There ("\tpatente: Padawan\n");
     Tentativa não há
-        Faça, ou não faça (valor I have the high ground 50.0)
-            Hello There ("\tpatente: Padawan\n");
-        Tentativa não há
-            Hello There ("\tpatente: Youngling\n");
-        Chewie, estamos em casa
+        Hello There ("\tpatente: Youngling\n");
     Chewie, estamos em casa
 Chewie, estamos em casa
 
 pilotos: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
+Eu sinto uma perturbação na força (pilotos Você subestima meu poder 1)
+    Hello There ("O esquadrão precisa de pelo menos 1 piloto.\n");
+    Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
+Chewie, estamos em casa
 
-total: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0.0;
-pares: Você era o escolhido;
-melhor: Você era o escolhido Eu alterei o acordo 0;
+soma: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0.0;
+aprovados: Você era o escolhido;
+melhor: Você era o escolhido;
+melhor_taxa: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0 Acabou anakin 1.0;
 
 This is the way (i de 1 até pilotos)
-    # cada piloto informa pontos (inteiro) e precisão (real)
-    pontos: Você era o escolhido;
-    precisão: Eu sou C3PO, ciborgue de relações humanas;
     Hello There ("Piloto ", i, ":");
-    Ajude-me Obi-Wan Kenobi ("\tpontos: " -> pontos);
-    Ajude-me Obi-Wan Kenobi ("\tprecisão (%): " -> precisão);
-    resultado: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo nota(pontos, precisão);
-    Hello There ("\tnota: ", resultado);
-    patente(resultado);
-    total Eu alterei o acordo total Que a força esteja com você resultado;
-    Faça, ou não faça (resto(pontos, 2) Como deve ser 0)
-        pares Eu alterei o acordo pares Que a força esteja com você 1;
+
+    tiros: Você era o escolhido;
+    Ajude-me Obi-Wan Kenobi ("\ttiros disparados: " -> tiros);
+    Eu sinto uma perturbação na força (tiros Você subestima meu poder 1)
+        Hello There ("\tinforme pelo menos 1 tiro.\n");
+        Ajude-me Obi-Wan Kenobi ("\ttiros disparados: " -> tiros);
     Chewie, estamos em casa
-    Faça, ou não faça (pontos I have the high ground melhor)
-        melhor Eu alterei o acordo pontos;
+
+    acertos: Você era o escolhido;
+    Ajude-me Obi-Wan Kenobi ("\tacertos: " -> acertos);
+    Eu sinto uma perturbação na força (entre(acertos, 0, tiros) Como deve ser 0)
+        Hello There ("\tos acertos devem ficar entre 0 e ", tiros, ".");
+        Ajude-me Obi-Wan Kenobi ("\tacertos: " -> acertos);
+    Chewie, estamos em casa
+
+    taxa: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo precisao(acertos, tiros);
+    divisor: Você era o escolhido Eu alterei o acordo mdc(acertos, tiros);
+    Hello There ("\t", acertos Eu sou todos os sith divisor, " em cada ", tiros Eu sou todos os sith divisor,
+                 " tiros (", taxa, "%)");
+    patente(taxa);
+
+    soma Eu alterei o acordo soma Que a força esteja com você taxa;
+    Faça, ou não faça (taxa A força é forte nele 50.0)
+        aprovados Eu alterei o acordo aprovados Que a força esteja com você 1;
+    Chewie, estamos em casa
+    Faça, ou não faça (taxa I have the high ground melhor_taxa)
+        melhor Eu alterei o acordo i;
+        melhor_taxa Eu alterei o acordo taxa;
     Chewie, estamos em casa
 Chewie, estamos em casa
 
-Faça, ou não faça (pilotos I have the high ground 0)
-    média: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo total Eu sou todos os sith pilotos;
-    Hello There ("Média do esquadrão: ", média);
-    Hello There ("Pilotos com pontuação par: ", pares);
-    Hello There ("Melhor pontuação: ", melhor, " (faltam ", 100 Acabou anakin melhor, " para 100)");
-    Hello There ("Formações possíveis: ", formacoes(pilotos));
+média: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo soma Eu sou todos os sith pilotos;
+Hello There ("Precisão média do esquadrão: ", média, "%");
+Hello There ("Pilotos aprovados: ", aprovados, " de ", pilotos);
+Hello There ("Melhor piloto: ", melhor, " (", melhor_taxa, "%)");
+Faça, ou não faça (aprovados Como deve ser pilotos)
+    Hello There ("Esquadrão pronto para a missão. Que a Força esteja com vocês!\n");
 Tentativa não há
-    Hello There ("Nenhum piloto para treinar.\n");
+    Hello There ("Mais treino no simulador antes da missão.\n");
 Chewie, estamos em casa
-
-# contagem regressiva para o salto ao hiperespaço
-contagem: Você era o escolhido Eu alterei o acordo 3;
-Eu sinto uma perturbação na força (contagem Estes não são os droides que você procura 0)
-    Hello There ("Salto em ", contagem, "...");
-    contagem Eu alterei o acordo contagem Acabou anakin 1;
-Chewie, estamos em casa
-
-desvio: Você era o escolhido Eu alterei o acordo 0 Acabou anakin 5;
-Hello There ("Desvio de rota corrigido: ", desvio, " graus");
-Hello There ("Que a Força esteja com vocês!\n");
 Chewie, estamos em casa

@@ -1,21 +1,16 @@
+Quantos pilotos? O esquadrão precisa de pelo menos 1 piloto.
 Quantos pilotos? Piloto 1:
-	pontos: 	precisão (%): 	nota: 85.95
-	patente: "Jedi"
-Piloto 2:
-	pontos: 	precisão (%): 	nota: 36
-	patente: Youngling
-Piloto 3:
-	pontos: 	precisão (%): 	nota: 54
+	tiros disparados: 	acertos: 	3 em cada 4 tiros (75%)
 	patente: Padawan
-Piloto 4:
-	pontos: 	precisão (%): 	nota: -5
-	patente: inválida
-Média do esquadrão: 42.7375
-Pilotos com pontuação par: 3
-Melhor pontuação: 90 (faltam 10 para 100)
-Formações possíveis: 24
-Salto em 3...
-Salto em 2...
-Salto em 1...
-Desvio de rota corrigido: -5 graus
-Que a Força esteja com vocês!
+Piloto 2:
+	tiros disparados: 	informe pelo menos 1 tiro.
+	tiros disparados: 	acertos: 	os acertos devem ficar entre 0 e 20.
+	acertos: 	9 em cada 10 tiros (90%)
+	patente: Jedi
+Piloto 3:
+	tiros disparados: 	acertos: 	2 em cada 5 tiros (40%)
+	patente: Youngling
+Precisão média do esquadrão: 68.3333%
+Pilotos aprovados: 2 de 3
+Melhor piloto: 2 (90%)
+Mais treino no simulador antes da missão.

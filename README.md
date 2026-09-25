@@ -137,7 +137,7 @@ A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.
 | `examples/invalid/10_loop_variable_error.starwars` | Alteração da variável de controle do laço |
 | `examples/valid/11_functions.starwars` | Funções com retorno, recursão e procedimento |
 | `examples/invalid/12_argument_error.starwars` | Chamada com quantidade errada de argumentos |
-| `examples/valid/13_galaxy.starwars` | Programa completo: funções, recursão, `for`, `while`, `if` aninhado, leitura e escrita |
+| `examples/valid/13_galaxy.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
 
 Cada exemplo válido tem um `.expected.txt` com a saída exata do programa. Os que leem
 dados também têm um `.input.txt`, usado como entrada pelos testes e pelo `./sw demo`.
