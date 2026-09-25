@@ -39,7 +39,6 @@ Chewie, estamos em casa
 
 pilotos: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
-Hello There ("\n");
 
 total: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0.0;
 pares: Você era o escolhido;
@@ -49,10 +48,11 @@ This is the way (i de 1 até pilotos)
     # cada piloto informa pontos (inteiro) e precisão (real)
     pontos: Você era o escolhido;
     precisão: Eu sou C3PO, ciborgue de relações humanas;
-    Ajude-me Obi-Wan Kenobi (pontos);
-    Ajude-me Obi-Wan Kenobi (precisão);
+    Hello There ("Piloto ", i, ":");
+    Ajude-me Obi-Wan Kenobi ("\tpontos: " -> pontos);
+    Ajude-me Obi-Wan Kenobi ("\tprecisão (%): " -> precisão);
     resultado: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo nota(pontos, precisão);
-    Hello There ("Piloto ", i, ": nota ", resultado);
+    Hello There ("\tnota: ", resultado);
     patente(resultado);
     total Eu alterei o acordo total Que a força esteja com você resultado;
     Faça, ou não faça (resto(pontos, 2) Como deve ser 0)

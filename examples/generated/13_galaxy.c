@@ -46,25 +46,30 @@ int main(void) {
         fprintf(stderr, "ERRO DE ENTRADA (linha 41): esperado valor numerico.\n");
         return 1;
     }
-    printf("%s", "\n");
     float sw_v7 = 0.0f;
     int sw_v8 = 0;
     int sw_v9 = 0;
     for (int sw_v10 = 1, sw_v11 = sw_v6; sw_v10 <= sw_v11; sw_v10++) {
         int sw_v12 = 0;
         float sw_v13 = 0;
+        printf("%s", "Piloto ");
+        printf("%d", sw_v10);
+        printf("%s", ":");
+        printf("\n");
+        printf("%s", "\tpontos: ");
+        fflush(stdout);
         if (scanf("%d", &sw_v12) != 1) {
             fprintf(stderr, "ERRO DE ENTRADA (linha 52): esperado valor numerico.\n");
             return 1;
         }
+        printf("%s", "\tprecisão (%): ");
+        fflush(stdout);
         if (scanf("%f", &sw_v13) != 1) {
             fprintf(stderr, "ERRO DE ENTRADA (linha 53): esperado valor numerico.\n");
             return 1;
         }
         float sw_v14 = sw_f2(sw_v12, sw_v13);
-        printf("%s", "Piloto ");
-        printf("%d", sw_v10);
-        printf("%s", ": nota ");
+        printf("%s", "\tnota: ");
         printf("%g", (double)(sw_v14));
         printf("\n");
         sw_f3(sw_v14);

@@ -1,11 +1,14 @@
-Quantos pilotos? 
-Piloto 1: nota 85.95
+Quantos pilotos? Piloto 1:
+	pontos: 	precisão (%): 	nota: 85.95
 	patente: "Jedi"
-Piloto 2: nota 36
+Piloto 2:
+	pontos: 	precisão (%): 	nota: 36
 	patente: Youngling
-Piloto 3: nota 54
+Piloto 3:
+	pontos: 	precisão (%): 	nota: 54
 	patente: Padawan
-Piloto 4: nota -5
+Piloto 4:
+	pontos: 	precisão (%): 	nota: -5
 	patente: inválida
 Média do esquadrão: 42.7375
 Pilotos com pontuação par: 3
