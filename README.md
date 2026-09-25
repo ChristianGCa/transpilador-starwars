@@ -30,6 +30,7 @@ Os arquivos gerados ficam em `build/`.
 ./sw regen                     # regenera examples/generated a partir das fontes
 ./sw demo                      # executa os exemplos válidos e mostra cada tipo de erro
 ./sw clean                     # apaga build/
+./sw vscode                    # instala o destaque de sintaxe no VS Code
 ./sw                           # ajuda
 ```
 
@@ -109,6 +110,22 @@ Regras principais:
 A referência completa da linguagem, com regras de tipos, escopo e mensagens de erro, está
 em [`.claude/skills/writing-starwars/`](.claude/skills/writing-starwars/).
 
+## Destaque de sintaxe no VS Code
+
+```bash
+./sw vscode
+```
+
+Instala a extensão de `editors/vscode/`, que reconhece arquivos `.starwars` e dá uma cor
+para cada tipo de elemento: início e fim de blocos, controle de fluxo, tipos, funções,
+entrada e saída, operadores em frase ou símbolo, variáveis, números, textos e comentários.
+As cores funcionam sobre o tema atual do VS Code, com variações para temas escuros e
+claros. Uma frase reservada digitada errada, com espaço duplo ou sem acento, perde a cor
+de palavra reservada, o que ajuda a encontrar o erro antes de transpilar.
+
+Depois de instalar, recarregue a janela (`Ctrl+Shift+P` > `Developer: Reload Window`).
+Para só gerar o pacote, sem instalar: `./sw vscode starwars.vsix`.
+
 ## Exemplos e testes
 
 ```bash
@@ -171,6 +188,7 @@ separadas do código C.
 - `examples/`: `valid/` e `invalid/` com os programas de exemplo e `generated/` com o C
   gerado a partir dos válidos.
 - `sw`: script com os comandos de uso rápido.
+- `editors/vscode/`: extensão do VS Code com a gramática de destaque de sintaxe.
 - `.claude/skills/writing-starwars/`: referência da linguagem para escrever programas.
 
 ## Autoria

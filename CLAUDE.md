@@ -20,7 +20,9 @@ fonte → lexer → tokens → parser → AST → análise semântica → códig
 - Os arquivos em `examples/generated/` são verificados pelos testes: ao mudar a geração
   de C, regenere-os com `./sw regen`.
 - Estrutura: `src/starwars/` (um módulo por fase), `tests/` (um arquivo por fase), `examples/`, `docs/`,
-  `sw` (script de uso rápido, testado em `tests/test_script.py`).
+  `sw` (script de uso rápido, testado em `tests/test_script.py`), `editors/vscode/` (destaque
+  de sintaxe; ao criar ou mudar uma frase reservada, atualize a gramática — `tests/test_vscode.py`
+  confere que todas as frases do lexer são reconhecidas).
 
 ## Idioma
 
