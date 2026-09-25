@@ -38,7 +38,7 @@
           {
             "scope": "keyword.control.block.starwars",
             "settings": {
-              "foreground": "#C586C0",
+              "foreground": "#FF79C6",
               "fontStyle": "bold"
             }
           },
@@ -146,7 +146,7 @@
             {
               "scope": "keyword.control.block.starwars",
               "settings": {
-                "foreground": "#AF00DB",
+                "foreground": "#C2185B",
                 "fontStyle": "bold"
               }
             },
