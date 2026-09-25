@@ -1,20 +1,22 @@
 Há muito tempo, em uma galáxia muito, muito distante
 # Entrada de dados e expressões com inteiros e reais.
-naves: Você era o escolhido;
-tripulantes_por_nave: Você era o escolhido;
-combustivel: Eu sou C3PO, ciborgue de relações humanas;
-Ajude-me Obi-Wan Kenobi ("Naves na frota: " -> naves);
-Ajude-me Obi-Wan Kenobi ("Tripulantes por nave: " -> tripulantes_por_nave);
-Ajude-me Obi-Wan Kenobi ("Combustível total (toneladas): " -> combustivel);
+# Planeja os suprimentos de uma viagem: cada tripulante consome 1 ração por dia, as rações
+# vêm em caixas de 6 e cada uma custa 2.5 créditos, mais 100 créditos de taxa do porto.
+tripulantes: Você era o escolhido;
+dias: Você era o escolhido;
+Ajude-me Obi-Wan Kenobi ("Tripulantes a bordo: " -> tripulantes);
+Ajude-me Obi-Wan Kenobi ("Dias de viagem: " -> dias);
 
-tripulacao: Você era o escolhido Eu alterei o acordo naves Eu sou todos os jedi tripulantes_por_nave;
-Hello There ("\nTripulação total: ", tripulacao);
+racoes: Você era o escolhido Eu alterei o acordo tripulantes Eu sou todos os jedi dias;
+Hello There ("\nRações necessárias: ", racoes);
 
-# Real dividido por inteiro dá resultado real.
-Hello There ("Combustível por nave: ", combustivel Eu sou todos os sith naves, " t");
+# Divisão entre inteiros descarta a parte decimal; o que sobra fica avulso.
+caixas: Você era o escolhido Eu alterei o acordo racoes Eu sou todos os sith 6;
+avulsas: Você era o escolhido Eu alterei o acordo racoes Acabou anakin caixas Eu sou todos os jedi 6;
+Hello There ("Caixas de 6 rações: ", caixas, " cheias e ", avulsas, " rações avulsas");
 
-# Inteiro dividido por inteiro descarta a parte decimal; o resto sobra.
-esquadroes: Você era o escolhido Eu alterei o acordo tripulacao Eu sou todos os sith 4;
-sobra: Você era o escolhido Eu alterei o acordo tripulacao Acabou anakin esquadroes Eu sou todos os jedi 4;
-Hello There ("Esquadrões de 4 pilotos: ", esquadroes, " (sobram ", sobra, ")");
+# Com um número real na conta, o resultado é real. A multiplicação vem antes da soma.
+custo: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo racoes Eu sou todos os jedi 2.5 Que a força esteja com você 100;
+Hello There ("Custo total (rações + taxa do porto): ", custo, " créditos");
+Hello There ("Custo por tripulante: ", custo Eu sou todos os sith tripulantes, " créditos");
 Chewie, estamos em casa

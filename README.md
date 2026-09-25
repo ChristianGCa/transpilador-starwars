@@ -157,7 +157,7 @@ Exemplos válidos, em ordem de dificuldade:
 | `examples/valid/01_hello_world.starwars` | Estrutura mínima de um programa e saída de texto |
 | `examples/valid/02_if_else.starwars` | Leitura, decisão com alternativa e precedência (`nível + 3 * 4` e `(nível + 3) * 4`) |
 | `examples/valid/03_while_for.starwars` | Repetição por condição (`while`) e por intervalo (`for`) |
-| `examples/valid/04_input_expressions.starwars` | Leitura de inteiros e real, e expressões com divisão inteira e real |
+| `examples/valid/04_input_expressions.starwars` | Leitura de dados e expressões: planejamento de suprimentos com divisão inteira e resto, divisão real e precedência |
 | `examples/valid/05_functions.starwars` | Funções com retorno, recursão e procedimento |
 | `examples/valid/06_rogue_squadron.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
 

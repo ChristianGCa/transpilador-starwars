@@ -1,4 +1,5 @@
-Naves na frota: Tripulantes por nave: Combustível total (toneladas): 
-Tripulação total: 15
-Combustível por nave: 2.5 t
-Esquadrões de 4 pilotos: 3 (sobram 3)
+Tripulantes a bordo: Dias de viagem: 
+Rações necessárias: 40
+Caixas de 6 rações: 6 cheias e 4 rações avulsas
+Custo total (rações + taxa do porto): 200 créditos
+Custo por tripulante: 50 créditos
