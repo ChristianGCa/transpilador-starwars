@@ -1,24 +1,28 @@
 Há muito tempo, em uma galáxia muito, muito distante
-# Função com retorno inteiro e recursão, função real e procedimento.
-Execute a ordem 66 fatorial(n: Você era o escolhido): Você era o escolhido
-    Faça, ou não faça (n Não, eu sou seu pai 1)
+# Funções: com retorno, recursão e procedimento.
+
+# Cada Jedi treina 2 padawans por geração. Quantos Jedi existem na geração n? (recursiva)
+Execute a ordem 66 jedis(geracao: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (geracao Como deve ser 0)
         Palpatine retornou 1;
     Chewie, estamos em casa
-    Palpatine retornou n Eu sou todos os jedi fatorial(n Acabou anakin 1);
+    Palpatine retornou 2 Eu sou todos os jedi jedis(geracao Acabou anakin 1);
 Chewie, estamos em casa
 
-Execute a ordem 66 media(a: Eu sou C3PO, ciborgue de relações humanas, b: Eu sou C3PO, ciborgue de relações humanas): Eu sou C3PO, ciborgue de relações humanas
-    Palpatine retornou (a Que a força esteja com você b) Eu sou todos os sith 2;
+# Converte parsecs em anos-luz (1 parsec equivale a 3.26 anos-luz).
+Execute a ordem 66 anos_luz(parsecs: Eu sou C3PO, ciborgue de relações humanas): Eu sou C3PO, ciborgue de relações humanas
+    Palpatine retornou parsecs Eu sou todos os jedi 3.26;
 Chewie, estamos em casa
 
-Execute a ordem 66 linha()
-    Hello There ("----------\n");
+# Procedimento: não devolve valor, só mostra uma geração da Ordem Jedi.
+Execute a ordem 66 mostrar_geracao(geracao: Você era o escolhido)
+    Hello There ("Geração ", geracao, ": ", jedis(geracao), " Jedi");
 Chewie, estamos em casa
 
-linha();
-This is the way (i de 1 até 5)
-    Hello There (i, "! = ", fatorial(i));
+Hello There ("A Ordem Jedi cresce: cada Jedi treina 2 padawans por geração.\n");
+This is the way (g de 0 até 4)
+    mostrar_geracao(g);
 Chewie, estamos em casa
-linha();
-Hello There ("Média de 7 e 8: ", media(7, 8));
+
+Hello There ("\nKessel Run da Millennium Falcon: 12 parsecs = ", anos_luz(12), " anos-luz");
 Chewie, estamos em casa

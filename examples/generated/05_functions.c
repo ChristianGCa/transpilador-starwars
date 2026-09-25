@@ -2,35 +2,37 @@
 #include <stdlib.h>
 
 int sw_f0(int sw_v0);
-float sw_f1(float sw_v1, float sw_v2);
-void sw_f2(void);
+float sw_f1(float sw_v1);
+void sw_f2(int sw_v2);
 
 int sw_f0(int sw_v0) {
-    if (sw_v0 <= 1) {
+    if (sw_v0 == 0) {
         return 1;
     }
-    return (sw_v0 * sw_f0((sw_v0 - 1)));
+    return (2 * sw_f0((sw_v0 - 1)));
 }
 
-float sw_f1(float sw_v1, float sw_v2) {
-    return ((sw_v1 + sw_v2) / 2);
+float sw_f1(float sw_v1) {
+    return (sw_v1 * 3.26f);
 }
 
-void sw_f2(void) {
-    printf("%s", "----------\n");
+void sw_f2(int sw_v2) {
+    printf("%s", "Geração ");
+    printf("%d", sw_v2);
+    printf("%s", ": ");
+    printf("%d", sw_f0(sw_v2));
+    printf("%s", " Jedi");
+    printf("\n");
 }
 
 int main(void) {
-    sw_f2();
-    for (int sw_v3 = 1, sw_v4 = 5; sw_v3 <= sw_v4; sw_v3++) {
-        printf("%d", sw_v3);
-        printf("%s", "! = ");
-        printf("%d", sw_f0(sw_v3));
-        printf("\n");
+    printf("%s", "A Ordem Jedi cresce: cada Jedi treina 2 padawans por geração.\n");
+    for (int sw_v3 = 0, sw_v4 = 4; sw_v3 <= sw_v4; sw_v3++) {
+        sw_f2(sw_v3);
     }
-    sw_f2();
-    printf("%s", "Média de 7 e 8: ");
-    printf("%g", (double)(sw_f1(7, 8)));
+    printf("%s", "\nKessel Run da Millennium Falcon: 12 parsecs = ");
+    printf("%g", (double)(sw_f1(12)));
+    printf("%s", " anos-luz");
     printf("\n");
     return 0;
 }

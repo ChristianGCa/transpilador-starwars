@@ -1,8 +1,8 @@
-----------
-1! = 1
-2! = 2
-3! = 6
-4! = 24
-5! = 120
-----------
-Média de 7 e 8: 7.5
+A Ordem Jedi cresce: cada Jedi treina 2 padawans por geração.
+Geração 0: 1 Jedi
+Geração 1: 2 Jedi
+Geração 2: 4 Jedi
+Geração 3: 8 Jedi
+Geração 4: 16 Jedi
+
+Kessel Run da Millennium Falcon: 12 parsecs = 39.12 anos-luz
