@@ -18,6 +18,7 @@ Uso: ./sw <comando> [argumentos]
   ./sw regen [pasta]             regenera o C dos exemplos (padrão: examples/generated)
   ./sw demo                      executa os exemplos válidos e mostra cada tipo de erro
   ./sw clean                     apaga a pasta build
+  ./sw vscode [arquivo.vsix]     instala o destaque de sintaxe no VS Code (ou só gera o .vsix)
 
 Exemplo: ./sw run examples/valid/02_complete.starwars < examples/valid/02_complete.input.txt
 EOF
@@ -117,6 +118,17 @@ case "$command" in
         ;;
     clean)
         rm -rf "$BUILD_DIR"
+        ;;
+    vscode)
+        if [[ $# -gt 0 ]]; then
+            python3 "$ROOT/editors/vscode/build_vsix.py" "$1"
+            exit
+        fi
+        command -v code >/dev/null || fail "comando 'code' do VS Code não encontrado. Gere o pacote com ./sw vscode arquivo.vsix e instale pelo VS Code."
+        vsix="$BUILD_DIR/starwars-language.vsix"
+        python3 "$ROOT/editors/vscode/build_vsix.py" "$vsix"
+        code --install-extension "$vsix" --force
+        echo "Recarregue o VS Code (Ctrl+Shift+P > Developer: Reload Window) e abra um arquivo .starwars."
         ;;
     help | -h | --help)
         usage

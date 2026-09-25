@@ -1,6 +1,9 @@
 import json
 import re
+import subprocess
+import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 from support import ROOT
@@ -48,6 +51,20 @@ class VscodeExtensionTest(unittest.TestCase):
             for scope in scopes:
                 with self.subTest(scope=scope):
                     self.assertTrue(scope.endswith(".starwars"))
+
+    def test_sw_builds_installable_vsix(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            vsix = Path(tmp) / "starwars.vsix"
+            result = subprocess.run([str(ROOT / "sw"), "vscode", str(vsix)],
+                                    capture_output=True, text=True, timeout=30)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            with zipfile.ZipFile(vsix) as archive:
+                names = set(archive.namelist())
+                package = json.loads(archive.read("extension/package.json"))
+        self.assertLessEqual({"extension.vsixmanifest", "[Content_Types].xml",
+                              "extension/syntaxes/starwars.tmLanguage.json",
+                              "extension/language-configuration.json"}, names)
+        self.assertEqual(package["name"], "starwars-language")
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ class ScriptTest(unittest.TestCase):
     def test_help_lists_commands(self):
         result = self.run_script()
         self.assertEqual(result.returncode, 0, result.stderr)
-        for command in ("run", "build", "c", "check", "test", "regen", "demo", "clean"):
+        for command in ("run", "build", "c", "check", "test", "regen", "demo", "clean", "vscode"):
             self.assertIn(f"./sw {command}", result.stdout)
 
     def test_unknown_command(self):
