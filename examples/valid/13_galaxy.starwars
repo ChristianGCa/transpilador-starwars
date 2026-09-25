@@ -48,7 +48,9 @@ Chewie, estamos em casa
 Hello There ("=== Avaliação de tiro ao alvo do Esquadrão Rogue ===\n");
 Hello There ("Para cada piloto, informe os tiros disparados e quantos acertaram o alvo.\n");
 Hello There ("O programa calcula a precisão e a patente de cada piloto:\n");
-Hello There ("Jedi (80% ou mais), Padawan (50% ou mais) ou Youngling (abaixo de 50%).\n\n");
+Hello There ("Jedi (80% ou mais), Padawan (50% ou mais) ou Youngling (abaixo de 50%).\n");
+Hello There ("Um piloto é aprovado com 50% ou mais de precisão (Padawan ou Jedi).\n");
+Hello There ("O esquadrão só parte em missão se todos os pilotos forem aprovados.\n\n");
 
 pilotos: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Quantos pilotos? " -> pilotos);
@@ -60,6 +62,7 @@ Chewie, estamos em casa
 soma: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0.0;
 aprovados: Você era o escolhido;
 melhor: Você era o escolhido;
+empatados: Você era o escolhido;
 melhor_taxa: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 0 Acabou anakin 1.0;
 
 This is the way (i de 1 até pilotos)
@@ -89,19 +92,35 @@ This is the way (i de 1 até pilotos)
     Faça, ou não faça (taxa A força é forte nele 50.0)
         aprovados Eu alterei o acordo aprovados Que a força esteja com você 1;
     Chewie, estamos em casa
+    # guarda a melhor precisão e conta quantos pilotos empatam nela
     Faça, ou não faça (taxa I have the high ground melhor_taxa)
         melhor Eu alterei o acordo i;
         melhor_taxa Eu alterei o acordo taxa;
+        empatados Eu alterei o acordo 1;
+    Tentativa não há
+        Faça, ou não faça (taxa Como deve ser melhor_taxa)
+            empatados Eu alterei o acordo empatados Que a força esteja com você 1;
+        Chewie, estamos em casa
     Chewie, estamos em casa
 Chewie, estamos em casa
 
 média: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo soma Eu sou todos os sith pilotos;
-Hello There ("Precisão média do esquadrão: ", média, "%");
-Hello There ("Pilotos aprovados: ", aprovados, " de ", pilotos);
-Hello There ("Melhor piloto: ", melhor, " (", melhor_taxa, "%)");
-Faça, ou não faça (aprovados Como deve ser pilotos)
-    Hello There ("Esquadrão pronto para a missão. Que a Força esteja com vocês!\n");
+reprovados: Você era o escolhido Eu alterei o acordo pilotos Acabou anakin aprovados;
+Hello There ("\n=== Resultado do esquadrão ===\n");
+Hello There ("Precisão média: ", média, "%");
+Hello There ("Aprovados (50% ou mais): ", aprovados, " de ", pilotos);
+Faça, ou não faça (empatados Como deve ser 1)
+    Hello There ("Melhor piloto: ", melhor, " (", melhor_taxa, "%)");
 Tentativa não há
-    Hello There ("Mais treino no simulador antes da missão.\n");
+    Faça, ou não faça (empatados Como deve ser pilotos)
+        Hello There ("Melhor piloto: empate entre todos os ", pilotos, " pilotos (", melhor_taxa, "%)");
+    Tentativa não há
+        Hello There ("Melhor piloto: empate entre ", empatados, " pilotos (", melhor_taxa, "%)");
+    Chewie, estamos em casa
+Chewie, estamos em casa
+Faça, ou não faça (reprovados Como deve ser 0)
+    Hello There ("Todos aprovados: esquadrão pronto para a missão. Que a Força esteja com vocês!\n");
+Tentativa não há
+    Hello There ("Esquadrão não está pronto: ", reprovados, " piloto(s) abaixo de 50%. Mais treino no simulador.");
 Chewie, estamos em casa
 Chewie, estamos em casa
