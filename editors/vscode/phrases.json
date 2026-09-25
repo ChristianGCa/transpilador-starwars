@@ -1,0 +1,243 @@
+[
+  {
+    "phrase": "Há muito tempo, em uma galáxia muito, muito distante",
+    "aliases": ["INICIA_SISTEMA"],
+    "category": "início do programa",
+    "description": "Abre o programa. Deve ser a primeira coisa do arquivo; as funções vêm logo depois dela.",
+    "example": "Há muito tempo, em uma galáxia muito, muito distante\nHello There (\"Olá\\n\");\nChewie, estamos em casa",
+    "c": "int main(void) {",
+    "origin": "Abertura dos filmes",
+    "keywords": ["inicio", "programa", "main", "begin"]
+  },
+  {
+    "phrase": "Chewie, estamos em casa",
+    "aliases": ["LOGOUT"],
+    "category": "fim de bloco",
+    "description": "Fecha o programa e cada bloco: se/senão, enquanto, para e função. Nunca leva `;`. No se/senão, um único fim fecha a estrutura inteira.",
+    "example": "Faça, ou não faça (x I have the high ground 0)\n    Hello There (\"positivo\\n\");\nChewie, estamos em casa",
+    "c": "}",
+    "origin": "Han Solo, Episódio VII",
+    "keywords": ["fim", "end", "fechar"]
+  },
+  {
+    "phrase": "Você era o escolhido",
+    "category": "tipo inteiro",
+    "description": "Tipo de números inteiros. Sem valor inicial, a variável vale 0.",
+    "example": "vidas: Você era o escolhido Eu alterei o acordo 3;",
+    "c": "int",
+    "origin": "Obi-Wan para Anakin, Episódio III",
+    "keywords": ["int", "inteiro"]
+  },
+  {
+    "phrase": "Eu sou C3PO, ciborgue de relações humanas",
+    "category": "tipo real",
+    "description": "Tipo de números com casas decimais. Aceita valores inteiros; o contrário (real em variável inteira) é erro.",
+    "example": "nivel: Eu sou C3PO, ciborgue de relações humanas Eu alterei o acordo 1.5;",
+    "c": "float",
+    "origin": "Apresentação de C-3PO, Episódio IV",
+    "keywords": ["float", "real", "double"]
+  },
+  {
+    "phrase": "Eu alterei o acordo",
+    "symbol": "=",
+    "category": "atribuição",
+    "description": "Guarda o valor da direita na variável da esquerda. Também dá o valor inicial em uma declaração.",
+    "example": "x Eu alterei o acordo x Que a força esteja com você 1;",
+    "c": "x = x + 1;",
+    "origin": "Darth Vader, Episódio V",
+    "keywords": ["atribuir", "assign", "igual"]
+  },
+  {
+    "phrase": "Que a força esteja com você",
+    "symbol": "+",
+    "category": "soma",
+    "description": "Soma dois valores. Se algum deles for real, o resultado é real.",
+    "example": "total Eu alterei o acordo a Que a força esteja com você b;",
+    "c": "total = a + b;",
+    "origin": "Despedida clássica da saga",
+    "keywords": ["soma", "mais", "plus"]
+  },
+  {
+    "phrase": "Acabou anakin",
+    "symbol": "-",
+    "category": "subtração",
+    "description": "Subtrai o valor da direita do da esquerda. Não existe sinal negativo: escreva `0 Acabou anakin 5` para −5.",
+    "example": "resto Eu alterei o acordo a Acabou anakin b;",
+    "c": "resto = a - b;",
+    "origin": "Obi-Wan, Episódio III",
+    "keywords": ["subtrai", "menos", "minus"]
+  },
+  {
+    "phrase": "Eu sou todos os jedi",
+    "symbol": "*",
+    "category": "multiplicação",
+    "description": "Multiplica dois valores. Tem precedência sobre soma e subtração.",
+    "example": "area Eu alterei o acordo base Eu sou todos os jedi altura;",
+    "c": "area = base * altura;",
+    "origin": "Rey, Episódio IX",
+    "keywords": ["multiplica", "vezes", "times"]
+  },
+  {
+    "phrase": "Eu sou todos os sith",
+    "symbol": "/",
+    "category": "divisão",
+    "description": "Divide o valor da esquerda pelo da direita. Entre dois inteiros o resultado é truncado (7 / 2 = 3); com um real, é real (7 / 2.0 = 3.5).",
+    "example": "media Eu alterei o acordo soma Eu sou todos os sith 2.0;",
+    "c": "media = soma / 2.0f;",
+    "origin": "Palpatine, Episódio IX",
+    "keywords": ["divide", "dividido", "div"]
+  },
+  {
+    "phrase": "Como deve ser",
+    "symbol": "==",
+    "category": "igual",
+    "description": "Compara se os dois lados são iguais. Só aparece dentro da condição de um se, enquanto.",
+    "example": "Faça, ou não faça (x Como deve ser 0)",
+    "c": "if (x == 0)",
+    "keywords": ["igual", "equals"]
+  },
+  {
+    "phrase": "Estes não são os droides que você procura",
+    "symbol": "!=",
+    "category": "diferente",
+    "description": "Compara se os dois lados são diferentes.",
+    "example": "Faça, ou não faça (b Estes não são os droides que você procura 0)",
+    "c": "if (b != 0)",
+    "origin": "Obi-Wan, Episódio IV",
+    "keywords": ["diferente", "notequal"]
+  },
+  {
+    "phrase": "I have the high ground",
+    "symbol": ">",
+    "category": "maior",
+    "description": "Verdadeiro se o lado esquerdo for maior que o direito.",
+    "example": "Faça, ou não faça (vidas I have the high ground 0)",
+    "c": "if (vidas > 0)",
+    "origin": "Obi-Wan, Episódio III",
+    "keywords": ["maior", "greater"]
+  },
+  {
+    "phrase": "A força é forte nele",
+    "symbol": ">=",
+    "category": "maior ou igual",
+    "description": "Verdadeiro se o lado esquerdo for maior ou igual ao direito.",
+    "example": "Faça, ou não faça (nota A força é forte nele 6)",
+    "c": "if (nota >= 6)",
+    "origin": "Darth Vader, Episódio IV",
+    "keywords": ["maiorigual", "greaterequal"]
+  },
+  {
+    "phrase": "Você subestima meu poder",
+    "symbol": "<",
+    "category": "menor",
+    "description": "Verdadeiro se o lado esquerdo for menor que o direito.",
+    "example": "Eu sinto uma perturbação na força (i Você subestima meu poder 10)",
+    "c": "while (i < 10)",
+    "origin": "Anakin, Episódio III",
+    "keywords": ["menor", "less"]
+  },
+  {
+    "phrase": "Não, eu sou seu pai",
+    "symbol": "<=",
+    "category": "menor ou igual",
+    "description": "Verdadeiro se o lado esquerdo for menor ou igual ao direito.",
+    "example": "Faça, ou não faça (n Não, eu sou seu pai 1)",
+    "c": "if (n <= 1)",
+    "origin": "Darth Vader, Episódio V",
+    "keywords": ["menorigual", "lessequal"]
+  },
+  {
+    "phrase": "Faça, ou não faça",
+    "category": "se (condicional)",
+    "description": "Executa o bloco se a condição for verdadeira. A condição fica entre parênteses e tem um único operador de comparação. O bloco termina em `Tentativa não há` (senão) ou em `Chewie, estamos em casa`.",
+    "example": "Faça, ou não faça (nota A força é forte nele 6)\n    Hello There (\"Aprovado\\n\");\nTentativa não há\n    Hello There (\"Reprovado\\n\");\nChewie, estamos em casa",
+    "c": "if (nota >= 6) { ... } else { ... }",
+    "origin": "Yoda, Episódio V",
+    "keywords": ["se", "if", "condicao"]
+  },
+  {
+    "phrase": "Tentativa não há",
+    "category": "senão",
+    "description": "Começa o bloco executado quando a condição do `Faça, ou não faça` é falsa. Não coloque `Chewie, estamos em casa` antes dele: um único fim fecha o se e o senão.",
+    "example": "Faça, ou não faça (x I have the high ground 0)\n    Hello There (\"positivo\\n\");\nTentativa não há\n    Hello There (\"não positivo\\n\");\nChewie, estamos em casa",
+    "c": "} else {",
+    "origin": "Yoda, Episódio V",
+    "keywords": ["senao", "else"]
+  },
+  {
+    "phrase": "Eu sinto uma perturbação na força",
+    "category": "enquanto (repetição)",
+    "description": "Repete o bloco enquanto a condição for verdadeira. Atualize a variável da condição dentro do bloco para o laço terminar.",
+    "example": "Eu sinto uma perturbação na força (i Você subestima meu poder 3)\n    i Eu alterei o acordo i Que a força esteja com você 1;\nChewie, estamos em casa",
+    "c": "while (i < 3) { ... }",
+    "origin": "Variação da fala de Obi-Wan, Episódio IV",
+    "keywords": ["enquanto", "while", "loop"]
+  },
+  {
+    "phrase": "This is the way",
+    "category": "para (repetição por intervalo)",
+    "description": "Conta de 1 em 1, do início até o fim, incluindo os dois. A variável de controle é criada pelo laço, é inteira e não pode ser alterada no corpo.",
+    "example": "This is the way (i de 1 até 5)\n    Hello There (i);\nChewie, estamos em casa",
+    "c": "for (int i = 1; i <= 5; i++) { ... }",
+    "origin": "The Mandalorian",
+    "keywords": ["para", "for", "repetir"]
+  },
+  {
+    "phrase": "de",
+    "category": "início do intervalo",
+    "description": "Parte do `This is the way`: separa a variável de controle do valor inicial. É palavra reservada: não pode ser nome de variável.",
+    "example": "This is the way (i de 1 até n)",
+    "c": "for (int i = 1; ...)"
+  },
+  {
+    "phrase": "até",
+    "category": "fim do intervalo",
+    "description": "Parte do `This is the way`: separa o valor inicial do final, que também é executado. É palavra reservada e precisa do acento.",
+    "example": "This is the way (i de 1 até n)",
+    "c": "for (...; i <= n; i++)"
+  },
+  {
+    "phrase": "Execute a ordem 66",
+    "category": "definição de função",
+    "description": "Define uma função logo após o início do programa. Parâmetros usam `nome: Tipo`. Com `: Tipo` depois dos parênteses, a função devolve um valor; sem ele, é um procedimento. A função não enxerga as variáveis do programa principal.",
+    "example": "Execute a ordem 66 dobro(x: Você era o escolhido): Você era o escolhido\n    Palpatine retornou x Eu sou todos os jedi 2;\nChewie, estamos em casa",
+    "c": "int dobro(int x) { return x * 2; }",
+    "origin": "Palpatine, Episódio III",
+    "keywords": ["funcao", "function", "def", "procedimento"]
+  },
+  {
+    "phrase": "Palpatine retornou",
+    "category": "retorno de função",
+    "description": "Encerra a função devolvendo o valor. Em procedimentos, é usado sem valor. Uma função com tipo precisa retornar em todos os caminhos.",
+    "example": "Palpatine retornou a Que a força esteja com você b;",
+    "c": "return a + b;",
+    "origin": "Episódio IX",
+    "keywords": ["retorna", "return"]
+  },
+  {
+    "phrase": "Hello There",
+    "category": "escrita (saída)",
+    "description": "Imprime um ou mais itens separados por vírgula: textos entre aspas e expressões. Os itens saem colados; se houver algum número, pula linha no final.",
+    "example": "Hello There (\"Energia: \", energia);",
+    "c": "printf(\"%s\", \"Energia: \"); printf(\"%d\\n\", energia);",
+    "origin": "Obi-Wan, Episódio III",
+    "keywords": ["escrever", "imprimir", "print", "printf"]
+  },
+  {
+    "phrase": "Ajude-me Obi-Wan Kenobi",
+    "category": "leitura (entrada)",
+    "description": "Lê um número do teclado para uma variável já declarada. A mensagem opcional antes de `->` é mostrada antes da leitura, sem pular linha.",
+    "example": "Ajude-me Obi-Wan Kenobi (\"Idade: \" -> idade);",
+    "c": "printf(\"Idade: \"); scanf(\"%d\", &idade);",
+    "origin": "Princesa Leia, Episódio IV",
+    "keywords": ["ler", "input", "read", "scanf"]
+  },
+  {
+    "phrase": "->",
+    "kind": "symbol",
+    "category": "seta da leitura",
+    "description": "Na leitura, separa a mensagem mostrada da variável que recebe o valor.",
+    "example": "Ajude-me Obi-Wan Kenobi (\"Idade: \" -> idade);",
+    "c": "scanf(\"%d\", &idade);"
+  }
+]

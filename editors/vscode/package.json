@@ -1,15 +1,19 @@
 {
   "name": "starwars-language",
   "displayName": "Linguagem Star Wars",
-  "description": "Destaque de sintaxe para a linguagem Star Wars (.starwars).",
-  "version": "0.1.0",
+  "description": "Destaque de sintaxe, explicações ao passar o mouse e autocompletar para a linguagem Star Wars (.starwars).",
+  "version": "0.2.0",
   "publisher": "unijui-compiladores",
   "license": "UNLICENSED",
   "engines": {
-    "vscode": "^1.60.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Programming Languages"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:starwars"
   ],
   "contributes": {
     "languages": [

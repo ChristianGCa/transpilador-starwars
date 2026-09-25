@@ -1,5 +1,6 @@
 import json
 import re
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -11,6 +12,7 @@ from starwars.tokens import KEYWORD_PHRASES
 
 EXTENSION = ROOT / "editors" / "vscode"
 GRAMMAR = EXTENSION / "syntaxes" / "starwars.tmLanguage.json"
+JS_TESTS = ROOT / "tests" / "vscode" / "language.test.js"
 
 
 def read_json(path: Path) -> dict:
@@ -33,6 +35,19 @@ class VscodeExtensionTest(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertTrue(any(pattern.fullmatch(phrase) for pattern in patterns))
 
+    def test_hover_texts_cover_every_keyword_phrase(self):
+        documented = set()
+        for entry in read_json(EXTENSION / "phrases.json"):
+            documented.update([entry["phrase"], *entry.get("aliases", [])])
+        for _, phrase in KEYWORD_PHRASES:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, documented)
+
+    @unittest.skipUnless(shutil.which("node"), "Node.js é necessário para testar o hover e o autocompletar")
+    def test_hover_and_completion_logic(self):
+        result = subprocess.run(["node", "--test", str(JS_TESTS)], capture_output=True, text=True, timeout=60)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_extension_registers_language_and_grammar(self):
         package = read_json(EXTENSION / "package.json")
         language = package["contributes"]["languages"][0]
@@ -41,6 +56,7 @@ class VscodeExtensionTest(unittest.TestCase):
         self.assertEqual(grammar["scopeName"], read_json(GRAMMAR)["scopeName"])
         self.assertTrue((EXTENSION / grammar["path"]).exists())
         self.assertTrue((EXTENSION / language["configuration"]).exists())
+        self.assertTrue((EXTENSION / package["main"]).exists())
 
     def test_color_rules_only_touch_starwars_scopes(self):
         colors = read_json(EXTENSION / "package.json")["contributes"]["configurationDefaults"]
@@ -63,7 +79,8 @@ class VscodeExtensionTest(unittest.TestCase):
                 package = json.loads(archive.read("extension/package.json"))
         self.assertLessEqual({"extension.vsixmanifest", "[Content_Types].xml",
                               "extension/syntaxes/starwars.tmLanguage.json",
-                              "extension/language-configuration.json"}, names)
+                              "extension/language-configuration.json", "extension/extension.js",
+                              "extension/language.js", "extension/phrases.json"}, names)
         self.assertEqual(package["name"], "starwars-language")
 
 
