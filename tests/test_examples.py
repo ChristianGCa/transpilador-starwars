@@ -7,11 +7,12 @@ VALID = EXAMPLES / "valid"
 INVALID = EXAMPLES / "invalid"
 GENERATED = EXAMPLES / "generated"
 SOURCES = {
-    "01_basic": VALID / "01_basic.starwars",
-    "02_complete": VALID / "02_complete.starwars",
-    "09_for": VALID / "09_for.starwars",
-    "11_functions": VALID / "11_functions.starwars",
-    "13_galaxy": VALID / "13_galaxy.starwars",
+    "01_hello_world": VALID / "01_hello_world.starwars",
+    "02_if_else": VALID / "02_if_else.starwars",
+    "03_while_for": VALID / "03_while_for.starwars",
+    "04_input_expressions": VALID / "04_input_expressions.starwars",
+    "05_functions": VALID / "05_functions.starwars",
+    "06_rogue_squadron": VALID / "06_rogue_squadron.starwars",
 }
 INVALID_KINDS = {
     "01_lexical_error": ErrorKind.LEXICAL,
@@ -32,7 +33,7 @@ class ExamplesTest(unittest.TestCase):
                 self.assertEqual(transpile(read(source)), read(GENERATED / f"{name}.c"))
 
     def test_valid_examples_produce_expected_output(self):
-        for name in ("01_basic", "02_complete", "09_for", "11_functions", "13_galaxy"):
+        for name in SOURCES:
             with self.subTest(name=name):
                 stdin_file = VALID / f"{name}.input.txt"
                 stdin = read(stdin_file) if stdin_file.exists() else ""
@@ -40,11 +41,12 @@ class ExamplesTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(result.stdout, read(VALID / f"{name}.expected.txt"))
 
-    def test_complete_example_else_branch(self):
-        result = compile_and_run(self, transpile(read(SOURCES["02_complete"])), "0\n1\n")
+    def test_if_else_example_else_branch(self):
+        result = compile_and_run(self, transpile(read(SOURCES["02_if_else"])), "2\n")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, "Repeticoes: Nivel inicial: Resultado: 14 / 20\n"
-                                        "acesso negado\nCodigo: 0\nNivel: 1\n")
+        self.assertEqual(result.stdout, "Nível do cristal kyber (0 a 10): \nnível + 3 * 4 = 14\n"
+                                        "(nível + 3) * 4 = 20\n"
+                                        "O cristal ainda está fraco: são necessários 40 de energia.\n")
 
     def test_invalid_examples(self):
         self.assertEqual(sorted(path.stem for path in INVALID.glob("*.starwars")), sorted(INVALID_KINDS))

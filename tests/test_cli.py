@@ -7,8 +7,8 @@ from pathlib import Path
 
 from support import EXAMPLES, ROOT, read
 
-BASIC = EXAMPLES / "valid" / "01_basic.starwars"
-BASIC_C = EXAMPLES / "generated" / "01_basic.c"
+BASIC = EXAMPLES / "valid" / "01_hello_world.starwars"
+BASIC_C = EXAMPLES / "generated" / "01_hello_world.c"
 ENV = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
 
 

@@ -20,7 +20,7 @@ Uso: ./sw <comando> [argumentos]
   ./sw clean                     apaga a pasta build
   ./sw vscode [arquivo.vsix]     instala o destaque de sintaxe no VS Code (ou só gera o .vsix)
 
-Exemplo: ./sw run examples/valid/02_complete.starwars < examples/valid/02_complete.input.txt
+Exemplo: ./sw run examples/valid/02_if_else.starwars < examples/valid/02_if_else.input.txt
 EOF
 }
 

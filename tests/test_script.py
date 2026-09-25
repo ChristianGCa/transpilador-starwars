@@ -7,8 +7,8 @@ from pathlib import Path
 from support import EXAMPLES, ROOT, read
 
 SCRIPT = ROOT / "sw"
-BASIC = EXAMPLES / "valid" / "01_basic.starwars"
-COMPLETE = EXAMPLES / "valid" / "02_complete.starwars"
+BASIC = EXAMPLES / "valid" / "01_hello_world.starwars"
+IF_ELSE = EXAMPLES / "valid" / "02_if_else.starwars"
 SEMANTIC_ERROR = EXAMPLES / "invalid" / "03_semantic_error.starwars"
 
 
@@ -38,15 +38,15 @@ class ScriptTest(unittest.TestCase):
     def test_run_executes_program(self):
         result = self.run_script("run", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, "Energia: 14\n")
+        self.assertEqual(result.stdout, "Olá, galáxia muito, muito distante!\n")
         self.assertEqual(result.stderr, "")
 
     def test_run_forwards_stdin_from_any_directory(self):
-        relative = os.path.relpath(COMPLETE, self.folder)
+        relative = os.path.relpath(IF_ELSE, self.folder)
         result = self.run_script("run", relative, cwd=self.folder,
-                                 stdin=read(EXAMPLES / "valid" / "02_complete.input.txt"))
+                                 stdin=read(EXAMPLES / "valid" / "02_if_else.input.txt"))
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, read(EXAMPLES / "valid" / "02_complete.expected.txt"))
+        self.assertEqual(result.stdout, read(EXAMPLES / "valid" / "02_if_else.expected.txt"))
 
     def test_run_stops_on_compiler_error(self):
         result = self.run_script("run", SEMANTIC_ERROR)
@@ -57,14 +57,15 @@ class ScriptTest(unittest.TestCase):
     def test_build_creates_c_and_binary_without_running(self):
         result = self.run_script("build", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(read(self.build / "01_basic.c"), read(EXAMPLES / "generated" / "01_basic.c"))
-        self.assertTrue(os.access(self.build / "01_basic", os.X_OK))
-        self.assertNotIn("Energia", result.stdout)
+        self.assertEqual(read(self.build / "01_hello_world.c"),
+                         read(EXAMPLES / "generated" / "01_hello_world.c"))
+        self.assertTrue(os.access(self.build / "01_hello_world", os.X_OK))
+        self.assertNotIn("Olá", result.stdout)
 
     def test_c_prints_generated_code(self):
         result = self.run_script("c", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, read(EXAMPLES / "generated" / "01_basic.c"))
+        self.assertEqual(result.stdout, read(EXAMPLES / "generated" / "01_hello_world.c"))
 
     def test_c_forwards_inspection_options(self):
         result = self.run_script("c", BASIC, "--ast")
@@ -107,8 +108,8 @@ class ScriptTest(unittest.TestCase):
         result = self.run_script("demo")
         self.assertEqual(result.returncode, 0, result.stderr)
         output = result.stdout + result.stderr
-        for expected in ("Energia: 14", "Resultado: 14 / 20", "ERRO LÉXICO", "ERRO SINTÁTICO",
-                         "ERRO SEMÂNTICO"):
+        for expected in ("Olá, galáxia", "Kessel Run completada em 12 parsecs",
+                         "ERRO LÉXICO", "ERRO SINTÁTICO", "ERRO SEMÂNTICO"):
             self.assertIn(expected, output)
 
     def test_clean_removes_build_directory(self):

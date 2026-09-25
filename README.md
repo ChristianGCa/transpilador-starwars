@@ -21,8 +21,8 @@ O script `./sw` reúne as etapas em comandos curtos e pode ser chamado de qualqu
 Os arquivos gerados ficam em `build/`.
 
 ```bash
-./sw run examples/valid/02_complete.starwars      # transpila, compila e executa
-./sw run examples/valid/02_complete.starwars < examples/valid/02_complete.input.txt
+./sw run examples/valid/02_if_else.starwars      # transpila, compila e executa
+./sw run examples/valid/02_if_else.starwars < examples/valid/02_if_else.input.txt
 ./sw build arquivo.starwars    # gera build/arquivo.c e build/arquivo sem executar
 ./sw c arquivo.starwars        # mostra o C gerado (aceita --tokens e --ast)
 ./sw check arquivo.starwars    # só verifica erros léxicos, sintáticos e semânticos
@@ -43,9 +43,9 @@ Os comandos abaixo mostram as etapas que o `./sw run` executa:
 
 ```bash
 mkdir -p build
-PYTHONPATH=src python3 -m starwars examples/valid/02_complete.starwars -o build/02_complete.c
-gcc -std=c99 -Wall -Wextra build/02_complete.c -o build/02_complete
-./build/02_complete < examples/valid/02_complete.input.txt
+PYTHONPATH=src python3 -m starwars examples/valid/02_if_else.starwars -o build/02_if_else.c
+gcc -std=c99 -Wall -Wextra build/02_if_else.c -o build/02_if_else
+./build/02_if_else < examples/valid/02_if_else.input.txt
 ```
 
 O transpilador gera C; a execução do programa é uma etapa posterior, feita com GCC.
@@ -150,21 +150,29 @@ A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.
 - `test_cli.py`: argumentos e erros da interface de linha de comando;
 - `test_script.py`: comandos do `./sw`.
 
-| Arquivo | Objetivo |
+Exemplos válidos, em ordem de dificuldade:
+
+| Arquivo | O que mostra |
 | --- | --- |
-| `examples/valid/01_basic.starwars` | Declaração, atribuição e saída |
-| `examples/valid/02_complete.starwars` | Dois tipos, entrada, saída, if/else, while, precedência e parênteses |
-| `examples/invalid/01_lexical_error.starwars` | Caractere inválido |
-| `examples/invalid/02_syntax_error.starwars` | Expressão ausente na declaração |
-| `examples/invalid/03_semantic_error.starwars` | Variável não declarada |
-| `examples/invalid/04_redeclaration_error.starwars` | Declaração duplicada no mesmo escopo |
-| `examples/invalid/05_type_error.starwars` | Real atribuído a inteiro na declaração |
-| `examples/invalid/06_scope_error.starwars` | Uso de variável fora do bloco |
-| `examples/valid/09_for.starwars` | Laço por intervalo (`This is the way`) |
-| `examples/invalid/07_loop_variable_error.starwars` | Alteração da variável de controle do laço |
-| `examples/valid/11_functions.starwars` | Funções com retorno, recursão e procedimento |
-| `examples/invalid/08_argument_error.starwars` | Chamada com quantidade errada de argumentos |
-| `examples/valid/13_galaxy.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
+| `examples/valid/01_hello_world.starwars` | Estrutura mínima de um programa e saída de texto |
+| `examples/valid/02_if_else.starwars` | Leitura, decisão com alternativa e precedência (`nível + 3 * 4` e `(nível + 3) * 4`) |
+| `examples/valid/03_while_for.starwars` | Repetição por condição (`while`) e por intervalo (`for`) |
+| `examples/valid/04_input_expressions.starwars` | Leitura de inteiros e real, e expressões com divisão inteira e real |
+| `examples/valid/05_functions.starwars` | Funções com retorno, recursão e procedimento |
+| `examples/valid/06_rogue_squadron.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
+
+Exemplos inválidos, um por tipo de erro:
+
+| Arquivo | Erro |
+| --- | --- |
+| `examples/invalid/01_lexical_error.starwars` | Léxico: caractere inválido |
+| `examples/invalid/02_syntax_error.starwars` | Sintático: expressão ausente na declaração |
+| `examples/invalid/03_semantic_error.starwars` | Semântico: variável não declarada |
+| `examples/invalid/04_redeclaration_error.starwars` | Semântico: declaração duplicada no mesmo escopo |
+| `examples/invalid/05_type_error.starwars` | Semântico: real atribuído a inteiro na declaração |
+| `examples/invalid/06_scope_error.starwars` | Semântico: uso de variável fora do bloco |
+| `examples/invalid/07_loop_variable_error.starwars` | Semântico: alteração da variável de controle do laço |
+| `examples/invalid/08_argument_error.starwars` | Semântico: chamada com quantidade errada de argumentos |
 
 Cada exemplo válido tem um `.expected.txt` com a saída exata do programa. Os que leem
 dados também têm um `.input.txt`, usado como entrada pelos testes e pelo `./sw demo`.
@@ -182,7 +190,7 @@ Para ver uma mensagem de erro produzida pelo próprio transpilador:
 ## Inspecionar as etapas
 
 ```bash
-./sw c examples/valid/01_basic.starwars --tokens --ast
+./sw c examples/valid/02_if_else.starwars --tokens --ast
 ```
 
 `--tokens` mostra categoria, lexema, linha e coluna, e é impresso mesmo quando a análise

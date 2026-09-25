@@ -1,0 +1,20 @@
+Há muito tempo, em uma galáxia muito, muito distante
+# Entrada de dados e expressões com inteiros e reais.
+naves: Você era o escolhido;
+tripulantes_por_nave: Você era o escolhido;
+combustivel: Eu sou C3PO, ciborgue de relações humanas;
+Ajude-me Obi-Wan Kenobi ("Naves na frota: " -> naves);
+Ajude-me Obi-Wan Kenobi ("Tripulantes por nave: " -> tripulantes_por_nave);
+Ajude-me Obi-Wan Kenobi ("Combustível total (toneladas): " -> combustivel);
+
+tripulacao: Você era o escolhido Eu alterei o acordo naves Eu sou todos os jedi tripulantes_por_nave;
+Hello There ("\nTripulação total: ", tripulacao);
+
+# Real dividido por inteiro dá resultado real.
+Hello There ("Combustível por nave: ", combustivel Eu sou todos os sith naves, " t");
+
+# Inteiro dividido por inteiro descarta a parte decimal; o resto sobra.
+esquadroes: Você era o escolhido Eu alterei o acordo tripulacao Eu sou todos os sith 4;
+sobra: Você era o escolhido Eu alterei o acordo tripulacao Acabou anakin esquadroes Eu sou todos os jedi 4;
+Hello There ("Esquadrões de 4 pilotos: ", esquadroes, " (sobram ", sobra, ")");
+Chewie, estamos em casa
