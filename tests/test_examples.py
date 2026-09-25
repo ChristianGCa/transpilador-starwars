@@ -12,7 +12,6 @@ SOURCES = {
     "09_for": VALID / "09_for.starwars",
     "11_functions": VALID / "11_functions.starwars",
     "13_galaxy": VALID / "13_galaxy.starwars",
-    "demo": EXAMPLES / "demo.starwars",
 }
 INVALID_KINDS = {
     "03_lexical_error": ErrorKind.LEXICAL,
@@ -46,11 +45,6 @@ class ExamplesTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout, "Repeticoes: Nivel inicial: Resultado: 14 / 20\n"
                                         "acesso negado\nCodigo: 0\nNivel: 1\n")
-
-    def test_demo_output(self):
-        result = compile_and_run(self, transpile(read(SOURCES["demo"])))
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, "3\n2\n1\nacesso liberado")
 
     def test_invalid_examples(self):
         self.assertEqual(sorted(path.stem for path in INVALID.glob("*.starwars")), sorted(INVALID_KINDS))

@@ -157,8 +157,7 @@ separadas do código C.
   `codegen`, `cli`, entre outros).
 - `RELATORIO.md`: especificação formal e explicação da implementação.
 - `tests/`: suíte automatizada, um arquivo por módulo/fase.
-- `examples/`: `valid/` e `invalid/` com fontes de exemplo, `generated/` com o C gerado
-  e `demo.starwars` com o exemplo de demonstração.
+- `examples/`: `valid/` e `invalid/` com fontes de exemplo e `generated/` com o C gerado.
 - `docs/presentation.md`: sequência de demonstração e tópicos para a defesa técnica.
 - `docs/assignment.md`: enunciado do trabalho.
 

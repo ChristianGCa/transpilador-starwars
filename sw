@@ -103,12 +103,12 @@ case "$command" in
         ;;
     regen)
         destination="${1:-$ROOT/examples/generated}"
-        for source in "$ROOT"/examples/valid/*.starwars "$ROOT"/examples/demo.starwars; do
+        for source in "$ROOT"/examples/valid/*.starwars; do
             transpiler "$source" -o "$destination/$(basename "$source" .starwars).c"
         done
         ;;
     demo)
-        for source in "$ROOT"/examples/valid/*.starwars "$ROOT"/examples/demo.starwars; do
+        for source in "$ROOT"/examples/valid/*.starwars; do
             show_program "$source"
         done
         for source in "$ROOT"/examples/invalid/*.starwars; do

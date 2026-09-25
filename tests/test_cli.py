@@ -7,8 +7,8 @@ from pathlib import Path
 
 from support import EXAMPLES, ROOT, read
 
-DEMO = EXAMPLES / "demo.starwars"
-DEMO_C = EXAMPLES / "generated" / "demo.c"
+BASIC = EXAMPLES / "valid" / "01_basic.starwars"
+BASIC_C = EXAMPLES / "generated" / "01_basic.c"
 ENV = {**os.environ, "PYTHONPATH": str(ROOT)}
 
 
@@ -25,16 +25,16 @@ class CliTest(unittest.TestCase):
         self.output = self.folder / "out.c"
 
     def test_writes_c_and_prints_tokens_and_ast(self):
-        result = run_cli(DEMO, "-o", self.output, "--tokens", "--ast")
+        result = run_cli(BASIC, "-o", self.output, "--tokens", "--ast")
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("linha 1, coluna 1: [BEGIN:INICIA_SISTEMA]", result.stderr)
+        self.assertIn("linha 1, coluna 1: [BEGIN:", result.stderr)
         self.assertIn('"node": "Program"', result.stderr)
-        self.assertEqual(read(self.output), read(DEMO_C))
+        self.assertEqual(read(self.output), read(BASIC_C))
 
     def test_prints_c_without_output_option(self):
-        result = run_cli(DEMO)
+        result = run_cli(BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, read(DEMO_C))
+        self.assertEqual(result.stdout, read(BASIC_C))
 
     def test_error_keeps_existing_output(self):
         self.output.write_text("anterior", encoding="utf-8")
@@ -54,13 +54,13 @@ class CliTest(unittest.TestCase):
         self.assertIn("Informe o arquivo .starwars", result.stderr)
 
     def test_uses_single_source_in_current_directory(self):
-        (self.folder / "programa.starwars").write_text(read(DEMO), encoding="utf-8")
+        (self.folder / "programa.starwars").write_text(read(BASIC), encoding="utf-8")
         result = run_cli(cwd=self.folder)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, read(DEMO_C))
+        self.assertEqual(result.stdout, read(BASIC_C))
 
     def test_output_must_differ_from_source(self):
-        result = run_cli(DEMO, "-o", DEMO)
+        result = run_cli(BASIC, "-o", BASIC)
         self.assertEqual(result.returncode, 1)
         self.assertIn("deve ser diferente", result.stderr)
 

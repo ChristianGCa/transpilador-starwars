@@ -7,7 +7,7 @@ from pathlib import Path
 from support import EXAMPLES, ROOT, read
 
 SCRIPT = ROOT / "sw"
-DEMO = EXAMPLES / "demo.starwars"
+BASIC = EXAMPLES / "valid" / "01_basic.starwars"
 COMPLETE = EXAMPLES / "valid" / "02_complete.starwars"
 SEMANTIC_ERROR = EXAMPLES / "invalid" / "05_semantic_error.starwars"
 
@@ -36,9 +36,9 @@ class ScriptTest(unittest.TestCase):
         self.assertIn("comando desconhecido: voar", result.stderr)
 
     def test_run_executes_program(self):
-        result = self.run_script("run", DEMO)
+        result = self.run_script("run", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, "3\n2\n1\nacesso liberado")
+        self.assertEqual(result.stdout, "Energia: 14\n")
         self.assertEqual(result.stderr, "")
 
     def test_run_forwards_stdin_from_any_directory(self):
@@ -55,24 +55,24 @@ class ScriptTest(unittest.TestCase):
         self.assertFalse((self.build / "05_semantic_error").exists())
 
     def test_build_creates_c_and_binary_without_running(self):
-        result = self.run_script("build", DEMO)
+        result = self.run_script("build", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(read(self.build / "demo.c"), read(EXAMPLES / "generated" / "demo.c"))
-        self.assertTrue(os.access(self.build / "demo", os.X_OK))
-        self.assertNotIn("acesso liberado", result.stdout)
+        self.assertEqual(read(self.build / "01_basic.c"), read(EXAMPLES / "generated" / "01_basic.c"))
+        self.assertTrue(os.access(self.build / "01_basic", os.X_OK))
+        self.assertNotIn("Energia", result.stdout)
 
     def test_c_prints_generated_code(self):
-        result = self.run_script("c", DEMO)
+        result = self.run_script("c", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(result.stdout, read(EXAMPLES / "generated" / "demo.c"))
+        self.assertEqual(result.stdout, read(EXAMPLES / "generated" / "01_basic.c"))
 
     def test_c_forwards_inspection_options(self):
-        result = self.run_script("c", DEMO, "--ast")
+        result = self.run_script("c", BASIC, "--ast")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('"node": "Program"', result.stderr)
 
     def test_check_accepts_valid_program(self):
-        result = self.run_script("check", DEMO)
+        result = self.run_script("check", BASIC)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("nenhum erro", result.stdout)
 
@@ -92,7 +92,7 @@ class ScriptTest(unittest.TestCase):
         self.assertIn("arquivo não encontrado: inexistente.starwars", result.stderr)
 
     def test_missing_c_compiler(self):
-        result = self.run_script("run", DEMO, env={**self.env, "CC": "compilador-inexistente"})
+        result = self.run_script("run", BASIC, env={**self.env, "CC": "compilador-inexistente"})
         self.assertEqual(result.returncode, 1)
         self.assertIn("compilador C 'compilador-inexistente' não encontrado", result.stderr)
 
@@ -107,12 +107,12 @@ class ScriptTest(unittest.TestCase):
         result = self.run_script("demo")
         self.assertEqual(result.returncode, 0, result.stderr)
         output = result.stdout + result.stderr
-        for expected in ("acesso liberado", "Resultado: 14 / 20", "ERRO LÉXICO", "ERRO SINTÁTICO",
+        for expected in ("Energia: 14", "Resultado: 14 / 20", "ERRO LÉXICO", "ERRO SINTÁTICO",
                          "ERRO SEMÂNTICO"):
             self.assertIn(expected, output)
 
     def test_clean_removes_build_directory(self):
-        self.run_script("build", DEMO)
+        self.run_script("build", BASIC)
         result = self.run_script("clean")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertFalse(self.build.exists())
