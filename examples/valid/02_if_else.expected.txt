@@ -1,0 +1,4 @@
+Nível do cristal kyber (0 a 10): 
+nível + 3 * 4 = 19
+(nível + 3) * 4 = 40
+O sabre de luz acendeu!

@@ -1,0 +1,40 @@
+{
+  "comments": {
+    "lineComment": "#"
+  },
+  "brackets": [
+    [
+      "(",
+      ")"
+    ]
+  ],
+  "autoClosingPairs": [
+    {
+      "open": "(",
+      "close": ")"
+    },
+    {
+      "open": "\"",
+      "close": "\"",
+      "notIn": [
+        "string",
+        "comment"
+      ]
+    }
+  ],
+  "surroundingPairs": [
+    [
+      "(",
+      ")"
+    ],
+    [
+      "\"",
+      "\""
+    ]
+  ],
+  "wordPattern": "[A-Za-z_À-ÖØ-öø-ÿ][A-Za-z_À-ÖØ-öø-ÿ0-9]*|[0-9]+(?:\\.[0-9]+)?",
+  "indentationRules": {
+    "increaseIndentPattern": "^\\s*(Faça, ou não faça|Tentativa não há|Eu sinto uma perturbação na força|This is the way|Execute a ordem 66)(?![A-Za-z_À-ÖØ-öø-ÿ0-9]).*$",
+    "decreaseIndentPattern": "^\\s*(Chewie, estamos em casa|LOGOUT|Tentativa não há)(?![A-Za-z_À-ÖØ-öø-ÿ0-9])"
+  }
+}

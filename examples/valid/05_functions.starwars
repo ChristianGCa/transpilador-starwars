@@ -1,0 +1,24 @@
+Há muito tempo, em uma galáxia muito, muito distante
+# Função com retorno inteiro e recursão, função real e procedimento.
+Execute a ordem 66 fatorial(n: Você era o escolhido): Você era o escolhido
+    Faça, ou não faça (n Não, eu sou seu pai 1)
+        Palpatine retornou 1;
+    Chewie, estamos em casa
+    Palpatine retornou n Eu sou todos os jedi fatorial(n Acabou anakin 1);
+Chewie, estamos em casa
+
+Execute a ordem 66 media(a: Eu sou C3PO, ciborgue de relações humanas, b: Eu sou C3PO, ciborgue de relações humanas): Eu sou C3PO, ciborgue de relações humanas
+    Palpatine retornou (a Que a força esteja com você b) Eu sou todos os sith 2;
+Chewie, estamos em casa
+
+Execute a ordem 66 linha()
+    Hello There ("----------\n");
+Chewie, estamos em casa
+
+linha();
+This is the way (i de 1 até 5)
+    Hello There (i, "! = ", fatorial(i));
+Chewie, estamos em casa
+linha();
+Hello There ("Média de 7 e 8: ", media(7, 8));
+Chewie, estamos em casa

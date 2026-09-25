@@ -1,0 +1,9 @@
+Salto para o hiperespaço em 3...
+Salto para o hiperespaço em 2...
+Salto para o hiperespaço em 1...
+Salto!
+Salto 1: 3 parsecs percorridos
+Salto 2: 6 parsecs percorridos
+Salto 3: 9 parsecs percorridos
+Salto 4: 12 parsecs percorridos
+Kessel Run completada em 12 parsecs!

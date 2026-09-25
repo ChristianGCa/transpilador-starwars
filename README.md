@@ -1,119 +1,217 @@
 # Transpilador Star Wars
 
-Linguagem temática com dois tipos numéricos, variáveis, aritmética, comparações,
-condicionais, repetição e entrada/saída. O transpilador percorre as etapas:
+Transpilador de uma linguagem de programação temática, com palavras-chave tiradas de falas
+de Star Wars, para C99. A linguagem tem dois tipos numéricos, variáveis, aritmética,
+comparações, condicionais, repetição (`while` e `for`), funções e entrada/saída.
+O transpilador percorre as etapas:
 
-**fonte → tokens → parser → AST → análise semântica → código C**
+**fonte → léxico → tokens → parser → AST → análise semântica → código C**
 
 ## Pré-requisitos
 
 - Python 3.8 ou superior, sem bibliotecas externas.
-- GCC com suporte a C99 para compilar os programas gerados e executar os testes.
-- Arquivos fonte em UTF-8. Os comandos abaixo são para Linux, executados nesta pasta.
+- GCC com suporte a C99, para compilar os programas gerados e executar os testes.
+- Arquivos fonte em UTF-8, com extensão `.starwars`.
 
-## Executar um programa
+Os comandos abaixo são para Linux e partem da raiz do projeto.
+
+## Uso rápido: `./sw`
+
+O script `./sw` reúne as etapas em comandos curtos e pode ser chamado de qualquer pasta.
+Os arquivos gerados ficam em `build/`.
 
 ```bash
-python3 transpilador_hacker.py testes/02_valido_completo.starwars -o gerados/02_valido_completo.c
-gcc -std=c99 -Wall -Wextra gerados/02_valido_completo.c -o gerados/completo.bin
-./gerados/completo.bin < testes/02_valido_completo.entrada.txt
+./sw run examples/valid/02_if_else.starwars      # transpila, compila e executa
+./sw run examples/valid/02_if_else.starwars < examples/valid/02_if_else.input.txt
+./sw build arquivo.starwars    # gera build/arquivo.c e build/arquivo sem executar
+./sw c arquivo.starwars        # mostra o C gerado (aceita --tokens e --ast)
+./sw check arquivo.starwars    # só verifica erros léxicos, sintáticos e semânticos
+./sw test                      # roda a suíte de testes
+./sw regen                     # regenera examples/generated a partir das fontes
+./sw demo                      # executa os exemplos válidos e mostra cada tipo de erro
+./sw clean                     # apaga build/
+./sw vscode                    # instala a extensão do VS Code
+./sw                           # ajuda
 ```
 
-A entrada de demonstração contém `3` e `1.5`. A saída esperada está em
-[`testes/02_valido_completo.esperado.txt`](testes/02_valido_completo.esperado.txt).
-Para digitar os valores interativamente, execute `./gerados/completo.bin` sem o redirecionamento.
+Sem o redirecionamento `<`, os valores de entrada são digitados no terminal. O compilador
+C padrão é `gcc`; outro pode ser escolhido com a variável `CC` (`CC=clang ./sw run ...`).
+
+## Executar passo a passo
+
+Os comandos abaixo mostram as etapas que o `./sw run` executa:
+
+```bash
+mkdir -p build
+PYTHONPATH=src python3 -m starwars examples/valid/02_if_else.starwars -o build/02_if_else.c
+gcc -std=c99 -Wall -Wextra build/02_if_else.c -o build/02_if_else
+./build/02_if_else < examples/valid/02_if_else.input.txt
+```
 
 O transpilador gera C; a execução do programa é uma etapa posterior, feita com GCC.
-Sem `-o`, o código C é impresso na saída padrão. Sem o argumento do arquivo,
-o transpilador procura exatamente um `.starwars` na pasta atual, preservando o uso
-original de `python3 transpilador_hacker.py` com `teste.starwars`.
-Se houver zero ou vários arquivos, é necessário informar o caminho explicitamente.
-A pasta de saída deve existir. Erros retornam código de saída 1 e não geram nem
-sobrescrevem o arquivo C solicitado; um arquivo antigo, se existir, permanece antigo.
 
-## Exemplo da linguagem
+- Sem `-o`, o código C é impresso na saída padrão.
+- Sem o arquivo de entrada, o transpilador procura exatamente um `.starwars` na pasta
+  atual; se houver zero ou vários, é preciso informar o caminho.
+- A pasta de saída precisa existir.
+- Em caso de erro, o código de saída é 1 e o arquivo C não é criado nem sobrescrito.
+
+## A linguagem
 
 ```text
-INICIA_SISTEMA
+Há muito tempo, em uma galáxia muito, muito distante
 energia: Você era o escolhido;
 Ajude-me Obi-Wan Kenobi ("Informe a energia: " -> energia);
-energia = energia + 3 * 4;
+energia Eu alterei o acordo energia Que a força esteja com você 3 Eu sou todos os jedi 4;
 Hello There ("Energia final: ", energia);
-LOGOUT
+Chewie, estamos em casa
 ```
 
-- `Você era o escolhido`: inteiro (`int`).
-- `Eu sou C3PO, ciborgue de relações humanas`: real (`float`).
-- `Faça, ou não faça (...) ... Tentativa não há ... LOGOUT`: decisão.
-- `Eu sinto uma perturbação na força (...) ... LOGOUT`: repetição enquanto a condição for verdadeira.
-- `Ajude-me Obi-Wan Kenobi (variavel);`: leitura sem mensagem.
-- `Hello There (...)`: saída de um ou vários textos/expressões separados por vírgulas.
-- `#`: comentário até o fim da linha.
-
-Os operadores `+ - * / = == != > >= < <=` são aceitos. As frases temáticas
-originais também continuam válidas, assim como a declaração `tipo nome = valor;`.
-`-` representa subtração binária; para escrever um valor negativo em uma expressão,
-use `0 - valor`. A entrada de dados aceita valores negativos.
-
-Textos usam aspas duplas e aceitam `\n`, `\r`, `\t`, `\"` e `\\`.
-Na saída com vários itens, eles são concatenados sem separador automático. Se houver
-alguma expressão numérica, uma quebra de linha é adicionada ao final do comando;
-saída composta apenas por textos imprime exatamente o conteúdo informado.
-
-A especificação completa, as três decisões próprias de sintaxe, as regras de tipos
-e a gramática estão no [`RELATORIO.md`](RELATORIO.md).
-
-## Testar
-
-```bash
-python3 -B -m unittest discover -s testes -v
-```
-
-A suíte testa o lexer, a AST, erros semânticos, escopos, entrada/saída, argumentos
-da interface e a compilação/execução real dos programas C em uma pasta temporária.
-Ela também confere que os arquivos em `gerados/` correspondem às fontes atuais.
-
-| Arquivo | Objetivo |
+| Construção | Sintaxe |
 | --- | --- |
-| `testes/01_valido_basico.starwars` | Declaração, atribuição e saída |
-| `testes/02_valido_completo.starwars` | Dois tipos, entrada, saída, if/else, while, precedência e parênteses |
-| `testes/03_erro_lexico.starwars` | Caractere inválido |
-| `testes/04_erro_sintatico.starwars` | Expressão ausente na declaração |
-| `testes/05_erro_semantico.starwars` | Variável não declarada |
-| `testes/06_erro_redeclaracao.starwars` | Declaração duplicada no mesmo escopo |
-| `testes/07_erro_tipo.starwars` | Real atribuído a inteiro na declaração |
-| `testes/08_erro_escopo.starwars` | Uso de variável fora do bloco |
+| Início e fim do programa | `Há muito tempo, em uma galáxia muito, muito distante` ... `Chewie, estamos em casa` (ou `INICIA_SISTEMA` ... `LOGOUT`) |
+| Tipos | `Você era o escolhido` (`int`) e `Eu sou C3PO, ciborgue de relações humanas` (`float`) |
+| Declaração | `nome: Tipo;` ou `nome: Tipo Eu alterei o acordo valor;` (também `Tipo nome ...;`) |
+| Decisão | `Faça, ou não faça (condição)` ... `Tentativa não há` ... `Chewie, estamos em casa` |
+| Repetição por condição | `Eu sinto uma perturbação na força (condição)` ... `Chewie, estamos em casa` |
+| Repetição por intervalo | `This is the way (i de 1 até n)` ... `Chewie, estamos em casa` |
+| Função | `Execute a ordem 66 nome(a: Tipo, ...): Tipo` ... `Chewie, estamos em casa` |
+| Retorno | `Palpatine retornou valor;` |
+| Leitura | `Ajude-me Obi-Wan Kenobi (variável);` ou `Ajude-me Obi-Wan Kenobi ("mensagem" -> variável);` |
+| Escrita | `Hello There (item, item, ...);` |
+| Comentário | `#` até o fim da linha |
 
-Para demonstrar uma mensagem de erro produzida pelo próprio transpilador:
+Cada operador tem uma frase temática, usada nos exemplos, e um símbolo equivalente:
+
+| Frase | Símbolo |
+| --- | --- |
+| `Eu alterei o acordo` | `=` |
+| `Que a força esteja com você` / `Acabou anakin` | `+` / `-` |
+| `Eu sou todos os jedi` / `Eu sou todos os sith` | `*` / `/` |
+| `Como deve ser` / `Estes não são os droides que você procura` | `==` / `!=` |
+| `I have the high ground` / `A força é forte nele` | `>` / `>=` |
+| `Você subestima meu poder` / `Não, eu sou seu pai` | `<` / `<=` |
+
+Regras principais:
+
+- `Chewie, estamos em casa` fecha o programa e cada bloco. No condicional, um único fim
+  fecha a decisão inteira, inclusive a alternativa.
+- As funções são definidas logo após o início do programa. Sem `: Tipo`, a função é um
+  procedimento, chamado como comando (`nome(argumentos);`).
+- No `for`, o intervalo é inclusivo e a variável de controle é criada pelo laço, é inteira
+  e não pode ser alterada no corpo.
+- Não há sinal negativo: escreva `0 Acabou anakin valor`. A entrada de dados aceita
+  valores negativos.
+- Textos usam aspas duplas e aceitam `\n`, `\r`, `\t`, `\"` e `\\`. Só aparecem na saída
+  e na mensagem de leitura.
+- Na saída, os itens são concatenados sem separador. Se houver alguma expressão numérica,
+  uma quebra de linha é adicionada ao final; saída só com textos imprime exatamente o texto.
+
+A referência completa da linguagem, com regras de tipos, escopo e mensagens de erro, está
+em [`.claude/skills/writing-starwars/`](.claude/skills/writing-starwars/).
+
+## Extensão do VS Code
 
 ```bash
-python3 transpilador_hacker.py testes/03_erro_lexico.starwars
-python3 transpilador_hacker.py testes/04_erro_sintatico.starwars
-python3 transpilador_hacker.py testes/05_erro_semantico.starwars
+./sw vscode
 ```
+
+Instala a extensão de `editors/vscode/` para arquivos `.starwars`:
+
+- **Cores:** cada tipo de elemento tem uma cor (início e fim de blocos, controle de fluxo,
+  tipos, funções, entrada e saída, operadores, variáveis, números, textos e comentários),
+  aplicada sobre o tema atual, com variações para temas escuros e claros. Uma frase
+  reservada digitada errada, com espaço duplo ou sem acento, perde a cor de palavra
+  reservada.
+- **Explicação ao passar o mouse:** sobre uma frase, mostra o que ela faz, o símbolo
+  equivalente, um exemplo, o código C correspondente e a origem da fala; sobre um símbolo
+  (`=`, `==`, `->`...), a frase equivalente; sobre uma variável, o tipo e a linha da
+  declaração; sobre uma função, a assinatura.
+- **Autocompletar:** sugere as frases enquanto você digita, mesmo sem acento (`Faca`) ou
+  por palavras como `if`, `while`, `print` e `int`.
+- **Modelos de estruturas:** `se`, `senao`, `enquanto`, `para`, `funcao`, `procedimento`,
+  `int`, `real`, `ler`, `escrever` e `programa` (ou `if`, `while`, `for`, `func`, `input`,
+  `print`) inserem a estrutura completa, com o fim de bloco no lugar certo.
+
+Depois de instalar, recarregue a janela (`Ctrl+Shift+P` > `Developer: Reload Window`).
+Para só gerar o pacote, sem instalar: `./sw vscode starwars.vsix`.
+
+## Exemplos e testes
+
+```bash
+./sw test          # ou: PYTHONPATH=src python3 -B -m unittest discover -s tests -v
+```
+
+A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.py`,
+`test_semantic.py`, `test_codegen.py`, ...), além de:
+
+- `test_examples.py`: confere que os arquivos em `examples/generated/` correspondem às
+  fontes atuais e compila e executa cada exemplo válido;
+- `test_cli.py`: argumentos e erros da interface de linha de comando;
+- `test_script.py`: comandos do `./sw`.
+
+Exemplos válidos, em ordem de dificuldade:
+
+| Arquivo | O que mostra |
+| --- | --- |
+| `examples/valid/01_hello_world.starwars` | Estrutura mínima de um programa e saída de texto |
+| `examples/valid/02_if_else.starwars` | Leitura, decisão com alternativa e precedência (`nível + 3 * 4` e `(nível + 3) * 4`) |
+| `examples/valid/03_while_for.starwars` | Repetição por condição (`while`) e por intervalo (`for`) |
+| `examples/valid/04_input_expressions.starwars` | Leitura de inteiros e real, e expressões com divisão inteira e real |
+| `examples/valid/05_functions.starwars` | Funções com retorno, recursão e procedimento |
+| `examples/valid/06_rogue_squadron.starwars` | Programa completo: avaliação de tiro ao alvo com funções, recursão (MDC), `for`, validação com `while`, `if` aninhado, leitura e escrita |
+
+Exemplos inválidos, um por tipo de erro:
+
+| Arquivo | Erro |
+| --- | --- |
+| `examples/invalid/01_lexical_error.starwars` | Léxico: caractere inválido |
+| `examples/invalid/02_syntax_error.starwars` | Sintático: expressão ausente na declaração |
+| `examples/invalid/03_semantic_error.starwars` | Semântico: variável não declarada |
+| `examples/invalid/04_redeclaration_error.starwars` | Semântico: declaração duplicada no mesmo escopo |
+| `examples/invalid/05_type_error.starwars` | Semântico: real atribuído a inteiro na declaração |
+| `examples/invalid/06_scope_error.starwars` | Semântico: uso de variável fora do bloco |
+| `examples/invalid/07_loop_variable_error.starwars` | Semântico: alteração da variável de controle do laço |
+| `examples/invalid/08_argument_error.starwars` | Semântico: chamada com quantidade errada de argumentos |
+
+Cada exemplo válido tem um `.expected.txt` com a saída exata do programa. Os que leem
+dados também têm um `.input.txt`, usado como entrada pelos testes e pelo `./sw demo`.
+
+Para ver uma mensagem de erro produzida pelo próprio transpilador:
+
+```bash
+./sw check examples/invalid/01_lexical_error.starwars
+./sw check examples/invalid/02_syntax_error.starwars
+./sw check examples/invalid/03_semantic_error.starwars
+```
+
+`./sw demo` executa todos os exemplos válidos e mostra o erro de cada exemplo inválido.
 
 ## Inspecionar as etapas
 
 ```bash
-python3 transpilador_hacker.py testes/01_valido_basico.starwars --tokens --ast -o gerados/01_valido_basico.c
+./sw c examples/valid/02_if_else.starwars --tokens --ast
 ```
 
-`--tokens` mostra categoria, lexema e linha. `--ast` mostra a árvore em JSON,
-anotada pela análise semântica com tipos e nomes de destino. Essas informações vão
-para a saída de diagnóstico (`stderr`), separadas do código C.
+`--tokens` mostra categoria, lexema, linha e coluna, e é impresso mesmo quando a análise
+sintática falha. `--ast` mostra a árvore em JSON, anotada pela análise semântica com
+tipos e nomes de destino. Essas informações vão para a saída de diagnóstico (`stderr`),
+separadas do código C.
 
 ## Organização
 
-- `transpilador_hacker.py`: implementação, mantido o nome original do arquivo.
-- `RELATORIO.md`: especificação formal e explicação da implementação.
-- `testes/`: fontes válidas/inválidas, entrada, saídas esperadas e suíte automatizada.
-- `gerados/`: C dos dois exemplos obrigatórios e do exemplo original.
-- `teste.starwars`: exemplo original preservado.
-- `ROTEIRO_APRESENTACAO.md`: sequência de demonstração e tópicos para a defesa técnica.
-- O arquivo com `Trabalho_Pratico_1_Linguagem_Tematica_v6` no nome é o enunciado.
+- `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`,
+  `semantic`, `codegen`, `cli`, entre outros).
+- `tests/`: suíte automatizada, um arquivo por módulo ou fase.
+- `examples/`: `valid/` e `invalid/` com os programas de exemplo e `generated/` com o C
+  gerado a partir dos válidos.
+- `sw`: script com os comandos de uso rápido.
+- `editors/vscode/`: extensão do VS Code (cores, explicações, autocompletar e modelos).
+- `.claude/skills/writing-starwars/`: referência da linguagem para escrever programas.
 
-## Autoria e apresentação
+## Autoria
 
-A revisão e complementação tiveram apoio do OpenAI Codex, conforme declarado no
-relatório. Antes da entrega, o grupo deve identificar seus integrantes no relatório,
-revisar e compreender as decisões implementadas e preparar a apresentação conjunta.
+Christian Gabriel Candeloni, Christian Mathias Michelson e Leonardo Daniel Becker.
+
+Trabalho Prático 1 de Linguagens Formais e Compiladores (Unijuí). O desenvolvimento teve
+apoio das ferramentas de IA Claude Code e OpenAI Codex, conforme declarado no relatório.

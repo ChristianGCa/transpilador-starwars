@@ -1,0 +1,4 @@
+Naves na frota: Tripulantes por nave: Combustível total (toneladas): 
+Tripulação total: 15
+Combustível por nave: 2.5 t
+Esquadrões de 4 pilotos: 3 (sobram 3)

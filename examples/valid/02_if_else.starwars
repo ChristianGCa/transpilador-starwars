@@ -1,0 +1,18 @@
+Há muito tempo, em uma galáxia muito, muito distante
+# Decisão com alternativa (if/else).
+# A energia do sabre é (nível + 3) * 4. A conta sem parênteses mostra a precedência:
+# a multiplicação vem antes da soma, então nível + 3 * 4 dá outro resultado.
+nivel: Você era o escolhido;
+Ajude-me Obi-Wan Kenobi ("Nível do cristal kyber (0 a 10): " -> nivel);
+
+sem_parenteses: Você era o escolhido Eu alterei o acordo nivel Que a força esteja com você 3 Eu sou todos os jedi 4;
+energia: Você era o escolhido Eu alterei o acordo (nivel Que a força esteja com você 3) Eu sou todos os jedi 4;
+Hello There ("\nnível + 3 * 4 = ", sem_parenteses);
+Hello There ("(nível + 3) * 4 = ", energia);
+
+Faça, ou não faça (energia A força é forte nele 40)
+    Hello There ("O sabre de luz acendeu!\n");
+Tentativa não há
+    Hello There ("O cristal ainda está fraco: são necessários 40 de energia.\n");
+Chewie, estamos em casa
+Chewie, estamos em casa
