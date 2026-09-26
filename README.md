@@ -25,6 +25,7 @@ Os arquivos gerados ficam em `build/`.
 ./sw run examples/valid/02_if_else.starwars < examples/valid/02_if_else.input.txt
 ./sw build arquivo.starwars    # gera build/arquivo.c e build/arquivo sem executar
 ./sw c arquivo.starwars        # mostra o C gerado (aceita --tokens e --ast)
+./sw asm arquivo.starwars      # mostra o assembly gerado pelo GCC a partir do C
 ./sw check arquivo.starwars    # só verifica erros léxicos, sintáticos e semânticos
 ./sw test                      # roda a suíte de testes
 ./sw regen                     # regenera examples/generated a partir das fontes
@@ -198,6 +199,20 @@ sintática falha. `--ast` mostra a árvore em JSON, anotada pela análise semân
 tipos e nomes de destino. Essas informações vão para a saída de diagnóstico (`stderr`),
 separadas do código C.
 
+Para ir um passo além e ver o assembly que o GCC gera a partir do C:
+
+```bash
+./sw asm examples/valid/02_if_else.starwars            # sem otimização (-O0)
+./sw asm examples/valid/02_if_else.starwars -O2        # com otimização
+./sw asm examples/valid/02_if_else.starwars -fverbose-asm
+```
+
+O assembly aparece no terminal e fica salvo em `build/<nome>.s`. Opções depois do arquivo
+vão direto para o GCC. Em processadores x86-64 é usada a sintaxe Intel (`mov eax, 5`).
+No exemplo `02_if_else`, dá para ver a precedência chegar até o assembly: `nível + 3 * 4`
+vira `add eax, 12` (o GCC já calcula `3 * 4`), e `(nível + 3) * 4` vira `add eax, 3`
+seguido de `sal eax, 2` (multiplicar por 4 é deslocar 2 bits).
+
 ## Organização
 
 - `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`,
@@ -214,4 +229,4 @@ separadas do código C.
 Christian Gabriel Candeloni, Christian Mathias Michelson e Leonardo Daniel Becker.
 
 Trabalho Prático 1 de Linguagens Formais e Compiladores (Unijuí). O desenvolvimento teve
-apoio das ferramentas de IA Claude Code e OpenAI Codex, conforme declarado no relatório.
+apoio das ferramentas de IA Claude Code e Codex.
