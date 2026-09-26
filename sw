@@ -13,6 +13,9 @@ Uso: ./sw <comando> [argumentos]
   ./sw run arquivo.starwars      transpila, compila e executa (aceita entrada com <)
   ./sw build arquivo.starwars    gera build/<nome>.c e build/<nome> sem executar
   ./sw c arquivo.starwars        mostra o C gerado (aceita --tokens e --ast)
+  ./sw asm arquivo.starwars [-O2]
+                                 mostra o assembly gerado pelo GCC e o salva em build/<nome>.s
+                                 (opções depois do arquivo vão para o GCC)
   ./sw check arquivo.starwars    só verifica erros léxicos, sintáticos e semânticos
   ./sw test                      roda a suíte de testes
   ./sw regen [pasta]             regenera o C dos exemplos (padrão: examples/generated)
@@ -38,19 +41,41 @@ require_source() {
     [[ -f "$1" ]] || fail "arquivo não encontrado: $1"
 }
 
-build_program() {
+require_compiler() {
+    command -v "$CC" >/dev/null || fail "compilador C '$CC' não encontrado. Instale o GCC (Fedora: sudo dnf install gcc; Debian/Ubuntu: sudo apt install gcc)."
+}
+
+generate_c_file() {
     local source="$1"
     local name
     name="$(basename "$source" .starwars)"
     C_FILE="$BUILD_DIR/$name.c"
     BINARY="$BUILD_DIR/$name"
-    command -v "$CC" >/dev/null || fail "compilador C '$CC' não encontrado. Instale o GCC (Fedora: sudo dnf install gcc; Debian/Ubuntu: sudo apt install gcc)."
     mkdir -p "$BUILD_DIR"
     local errors
     if ! errors="$(transpiler "$source" -o "$C_FILE" 2>&1 >/dev/null)"; then
         fail "$errors"
     fi
+}
+
+build_program() {
+    require_compiler
+    generate_c_file "$1"
     "$CC" "${CFLAGS[@]}" "$C_FILE" -o "$BINARY"
+}
+
+show_assembly() {
+    require_compiler
+    generate_c_file "$1"
+    local asm_file="${C_FILE%.c}.s"
+    local flags=(-S -fno-asynchronous-unwind-tables)
+    # A sintaxe Intel só existe no GCC para x86; em outras arquiteturas fica a padrão.
+    if [[ "$(uname -m)" == x86_64 ]]; then
+        flags+=(-masm=intel)
+    fi
+    "$CC" "${CFLAGS[@]}" "${flags[@]}" "${@:2}" "$C_FILE" -o "$asm_file"
+    cat "$asm_file"
+    echo "Assembly salvo em $(realpath --relative-base=. "$asm_file")" >&2
 }
 
 show_program() {
@@ -92,6 +117,10 @@ case "$command" in
     c)
         require_source "$@"
         transpiler "$@"
+        ;;
+    asm)
+        require_source "$@"
+        show_assembly "$@"
         ;;
     check)
         require_source "$@"

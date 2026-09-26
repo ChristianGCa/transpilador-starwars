@@ -27,7 +27,7 @@ class ScriptTest(unittest.TestCase):
     def test_help_lists_commands(self):
         result = self.run_script()
         self.assertEqual(result.returncode, 0, result.stderr)
-        for command in ("run", "build", "c", "check", "test", "regen", "demo", "clean", "vscode"):
+        for command in ("run", "build", "c", "asm", "check", "test", "regen", "demo", "clean", "vscode"):
             self.assertIn(f"./sw {command}", result.stdout)
 
     def test_unknown_command(self):
@@ -71,6 +71,24 @@ class ScriptTest(unittest.TestCase):
         result = self.run_script("c", BASIC, "--ast")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn('"node": "Program"', result.stderr)
+
+    def test_asm_shows_and_saves_assembly(self):
+        result = self.run_script("asm", BASIC)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("main", result.stdout)
+        self.assertEqual(read(self.build / "01_hello_world.s"), result.stdout)
+        self.assertIn("Assembly salvo em", result.stderr)
+
+    def test_asm_forwards_gcc_options(self):
+        result = self.run_script("asm", BASIC, "-fverbose-asm")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("options passed", result.stdout)
+
+    def test_asm_stops_on_compiler_error(self):
+        result = self.run_script("asm", SEMANTIC_ERROR)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("ERRO SEMÂNTICO", result.stderr)
+        self.assertFalse((self.build / "03_semantic_error.s").exists())
 
     def test_check_accepts_valid_program(self):
         result = self.run_script("check", BASIC)
