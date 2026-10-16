@@ -189,6 +189,15 @@ Instala a extensão de `editors/vscode/` para arquivos `.starwars`:
 Depois de instalar, recarregue a janela (`Ctrl+Shift+P` > `Developer: Reload Window`).
 Para só gerar o pacote, sem instalar: `./sw vscode starwars.vsix`.
 
+A extensão também está na
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=ChristianMichelson.starwars-language):
+procure por "Linguagem Star Wars" na aba de extensões ou rode
+`code --install-extension ChristianMichelson.starwars-language`.
+
+Para publicar uma nova versão, aumente `version` em `editors/vscode/package.json`, gere o
+pacote com `cd editors/vscode && npx @vscode/vsce package --out ../../build/` e envie o
+`.vsix` pela página do publisher em <https://marketplace.visualstudio.com/manage>.
+
 ## Exemplos e testes
 
 ```bash
