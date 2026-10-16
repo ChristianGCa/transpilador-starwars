@@ -28,7 +28,7 @@ Os arquivos gerados ficam em `build/`.
 ./sw asm arquivo.starwars      # mostra o assembly gerado pelo GCC a partir do C
 ./sw check arquivo.starwars    # só verifica erros léxicos, sintáticos e semânticos
 ./sw test                      # roda a suíte de testes
-./sw regen                     # regenera examples/generated a partir das fontes
+./sw regen [pasta]             # regenera examples/generated (ou outra pasta) a partir das fontes
 ./sw demo                      # executa os exemplos válidos e mostra cada tipo de erro
 ./sw clean                     # apaga build/
 ./sw vscode                    # instala a extensão do VS Code
@@ -37,6 +37,8 @@ Os arquivos gerados ficam em `build/`.
 
 Sem o redirecionamento `<`, os valores de entrada são digitados no terminal. O compilador
 C padrão é `gcc`; outro pode ser escolhido com a variável `CC` (`CC=clang ./sw run ...`).
+A pasta dos artefatos pode ser trocada com `SW_BUILD_DIR`. Os programas são compilados com
+`-std=c99 -Wall -Wextra`.
 
 ## Executar passo a passo
 
@@ -107,9 +109,59 @@ Regras principais:
   e na mensagem de leitura.
 - Na saída, os itens são concatenados sem separador. Se houver alguma expressão numérica,
   uma quebra de linha é adicionada ao final; saída só com textos imprime exatamente o texto.
+- A condição de `if` e `while` é uma única comparação entre duas expressões; não há
+  operadores lógicos.
+- Identificadores aceitam letras acentuadas (`nível`, `ação`).
+
+### Tipos, escopo e funções
+
+- Uma expressão com algum operando real é real; só com inteiros, é inteira. A divisão entre
+  inteiros descarta a parte fracionária, como no C (`7 / 2` vale `3`).
+- Um inteiro pode ser atribuído a uma variável real, mas não o contrário. A mesma regra vale
+  para argumentos de função e valores de retorno.
+- Literais precisam caber no tipo: inteiros até `2147483647` e reais até o limite do `float`.
+- Variáveis declaradas dentro de um bloco só existem nele. Um nome não pode ser declarado
+  duas vezes no mesmo escopo nem coincidir com o nome de uma função; em blocos internos, pode
+  esconder uma variável de fora.
+- Uma função enxerga apenas seus parâmetros e suas variáveis, não as do programa principal.
+  Ela pode chamar a si mesma e outras funções, inclusive as definidas depois dela.
+- Uma função com tipo de retorno precisa terminar em `Palpatine retornou` em todos os
+  caminhos; um procedimento não pode ser usado dentro de expressões.
+
+### Mensagens de erro
+
+O transpilador para no primeiro erro e informa a categoria, a linha e a coluna:
+
+```text
+ERRO LÉXICO (linha 2, coluna 1): caractere inválido '@'
+ERRO SINTÁTICO (linha 2, coluna 51): esperado identificador, número ou '(', encontrado ';'
+ERRO SEMÂNTICO (linha 3, coluna 5): variável de controle 'i' não pode ser alterada dentro do laço
+```
+
+Durante a execução do programa gerado, uma leitura que não recebe um número encerra o
+programa com `ERRO DE ENTRADA (linha N): esperado valor numerico.`
 
 A referência completa da linguagem, com regras de tipos, escopo e mensagens de erro, está
 em [`.claude/skills/writing-starwars/`](.claude/skills/writing-starwars/).
+
+## O código C gerado
+
+O C gerado é autocontido e usa apenas `stdio.h` (e `stdlib.h` quando há funções):
+
+- `Você era o escolhido` vira `int` e `Eu sou C3PO, ciborgue de relações humanas` vira
+  `float`; variáveis sem valor inicial começam em `0`.
+- Variáveis e funções são renomeadas para `sw_v0`, `sw_v1`, ... e `sw_f0`, `sw_f1`, ...
+  Assim, nomes acentuados ou iguais a palavras reservadas do C (`int`, `printf`) funcionam,
+  e variáveis de blocos diferentes nunca colidem.
+- Toda operação recebe parênteses explícitos, refletindo a precedência da árvore sintática:
+  `nível + 3 * 4` vira `(sw_v0 + (3 * 4))`.
+- As funções ganham protótipos antes das definições, o que permite recursão e chamadas em
+  qualquer ordem.
+- No `for`, o limite final é calculado uma única vez, antes da primeira repetição.
+- A escrita usa `printf` com `%d` para inteiros e `%g` para reais; a leitura usa `scanf` e
+  verifica se um número foi lido.
+
+Os arquivos de `examples/generated/` mostram o C produzido para cada exemplo válido.
 
 ## Extensão do VS Code
 
@@ -149,7 +201,13 @@ A suíte tem um arquivo por fase do transpilador (`test_lexer.py`, `test_parser.
 - `test_examples.py`: confere que os arquivos em `examples/generated/` correspondem às
   fontes atuais e compila e executa cada exemplo válido;
 - `test_cli.py`: argumentos e erros da interface de linha de comando;
-- `test_script.py`: comandos do `./sw`.
+- `test_script.py`: comandos do `./sw`;
+- `test_vscode.py`: gramática, explicações e pacote da extensão, conferindo que toda frase
+  reservada do transpilador tem cor e explicação. A lógica de explicação e autocompletar
+  (`tests/vscode/language.test.js`) só roda se o Node.js estiver instalado.
+
+Argumentos extras do `./sw test` vão para o `unittest`, por exemplo
+`./sw test -v` ou `./sw test -k semantic`.
 
 Exemplos válidos, em ordem de dificuldade:
 
@@ -217,7 +275,8 @@ seguido de `sal eax, 2` (multiplicar por 4 é deslocar 2 bits).
 
 - `src/starwars/`: pacote do transpilador, um módulo por fase (`lexer`, `parser`,
   `semantic`, `codegen`, `cli`, entre outros).
-- `tests/`: suíte automatizada, um arquivo por módulo ou fase.
+- `tests/`: suíte automatizada, um arquivo por módulo ou fase (e `tests/vscode/` para a
+  extensão).
 - `examples/`: `valid/` e `invalid/` com os programas de exemplo e `generated/` com o C
   gerado a partir dos válidos.
 - `sw`: script com os comandos de uso rápido.
