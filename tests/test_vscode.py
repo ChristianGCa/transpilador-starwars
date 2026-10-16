@@ -59,6 +59,13 @@ class VscodeExtensionTest(unittest.TestCase):
         self.assertTrue((EXTENSION / package["main"]).exists())
         self.assertTrue((EXTENSION / package["contributes"]["snippets"][0]["path"]).exists())
 
+    def test_package_is_ready_for_marketplace(self):
+        package = read_json(EXTENSION / "package.json")
+        self.assertEqual(package["publisher"], "ChristianMichelson")
+        self.assertEqual(package["license"], "MIT")
+        self.assertIn("github.com/ChristianGCa/transpilador-starwars", package["repository"]["url"])
+        self.assertIn("MIT License", (EXTENSION / "LICENSE").read_text(encoding="utf-8"))
+
     def test_color_rules_only_touch_starwars_scopes(self):
         colors = read_json(EXTENSION / "package.json")["contributes"]["configurationDefaults"]
         customizations = colors["editor.tokenColorCustomizations"]

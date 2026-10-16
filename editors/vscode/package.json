@@ -3,8 +3,16 @@
   "displayName": "Linguagem Star Wars",
   "description": "Destaque de sintaxe, explicações ao passar o mouse e autocompletar para a linguagem Star Wars (.starwars).",
   "version": "0.2.0",
-  "publisher": "unijui-compiladores",
-  "license": "UNLICENSED",
+  "publisher": "ChristianMichelson",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ChristianGCa/transpilador-starwars.git"
+  },
+  "homepage": "https://github.com/ChristianGCa/transpilador-starwars#readme",
+  "bugs": {
+    "url": "https://github.com/ChristianGCa/transpilador-starwars/issues"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
